@@ -36,13 +36,13 @@ loads and remote connections can be exercised on the same data.
 
 | Phase | Theme | Units | Status |
 | ----- | ----- | ----- | ------ |
-| P0 | Tenant & governance setup | 01 | todo |
-| P1 | Ingestion | | todo |
-| P2 | Transformation | | todo |
-| P3 | Semantic layer | | todo |
+| P0 | Tenant & governance setup | 01 | in progress |
+| P1 | Ingestion | 01 (intro) | todo |
+| P2 | Transformation | 01 (intro) | todo |
+| P3 | Semantic layer | 01 (intro) | todo |
 | P4 | Security & sharing | | todo |
 | P5 | Orchestration | | todo |
-| P6 | Consumption (SAC, Power BI) | | todo |
+| P6 | Consumption (SAC, Power BI) | 01 (intro) | todo |
 | P7 | Microsoft / BDC integration | | todo |
 
 The phase plan is provisional. It adapts to the course order, and every change is logged in
@@ -52,13 +52,14 @@ The phase plan is provisional. It adapts to the course order, and every change i
 
 | Unit | Topic | Phase | Status |
 | ---- | ----- | ----- | ------ |
-| 01   | Spaces: creation and configuration | P0 | todo |
+| [01](units/01-space-model-remote/README.md) | Space, first model and report, remote source | P0 (slice of P1–P3, P6) | in progress |
 
 ## How to follow along
 
 1. Get access to an SAP Datasphere tenant (trial or training tenant).
-2. Read `syllabus.md` for the unit objectives.
-3. Open the unit folder under `units\` and work through its exercise and acceptance criteria.
+2. Run `python scripts\export_northwind.py` to generate the sample CSV files.
+3. Read `syllabus.md` for the unit objectives.
+4. Open the unit folder under `units\` and work through its exercise and acceptance criteria.
 
 ## Layout
 
@@ -67,7 +68,8 @@ The phase plan is provisional. It adapts to the course order, and every change i
   results and gotchas (see `units\_template\`).
 - `units\NN-slug\assets\` — screenshots (scrubbed of tenant URLs and user names).
 - `docs\` — architecture, decision log, naming convention and per-phase summaries.
-- `data\` — public/synthetic sample datasets used by the exercises.
+- `data\` — source and licence notes for the datasets; raw files are generated locally.
+- `scripts\` — helper scripts, e.g. `export_northwind.py` that builds the CSV files.
 
 ## Author
 
