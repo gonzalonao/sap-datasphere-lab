@@ -103,6 +103,9 @@ Same method as the Fabric projects:
   quiz, then the click-level steps. Every quiz question must map to a lesson point taught
   in chat; material that only appears in the guide doesn't count. Post-build checks get
   their own short lesson first (what was built and what it implies).
+- **📸 Screenshot list:** `docs/private/screenshots.md` holds every evidence shot still to
+  take (file, step, what it shows, what to scrub). Add a row at each 📸 marker and keep it
+  current; I take them in batches.
 - **🎓 Learning checkpoints** before (concepts) and after (what was built) each part:
   quiz with `AskUserQuestion`, following the rules at the top of
   `docs/private/learning-log.md` (plausible distractors, shuffled answer positions, log
