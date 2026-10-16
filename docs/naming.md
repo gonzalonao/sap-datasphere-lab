@@ -30,7 +30,7 @@ types appear (rows marked *planned* are reserved, not yet used).
 | Text view | `TXT_<DOMAIN>_<ENTITY>` | `TXT_NW_CATEGORY` | Semantic usage *Text*. *Planned (P3).* |
 | Hierarchy view | `HIER_<DOMAIN>_<ENTITY>` | `HIER_NW_EMPLOYEE` | *Planned (P3).* |
 | Fact view | `FACT_<DOMAIN>_<ENTITY>` | `FACT_NW_SALES` | Semantic usage *Fact*. |
-| Analytic model | `AM_<DOMAIN>_<ENTITY>` | `AM_NW_SALES` | *Planned (P3).* |
+| Analytic model | `AM_<DOMAIN>_<ENTITY>` | `AM_NW_SALES` | Minimal in unit 01, extended in P3. |
 | Replication flow | `RF_<DOMAIN>_<ENTITY>` | `RF_NW_ORDERS` | *Planned (P1).* |
 | Data flow | `DF_<DOMAIN>_<ENTITY>` | `DF_NW_CUSTOMER` | *Planned (P1).* |
 | Transformation flow | `TF_<DOMAIN>_<ENTITY>` | `TF_NW_SALES` | *Planned (P2).* |

@@ -2,6 +2,18 @@
 
 Design decisions and changes to the project plan, newest first.
 
+## 2026-10-16 — Unit 01 plan corrected before tenant work
+
+- **Decision:** Reordered unit 01 to follow the course order (space → first model → first
+  story → remote source → time dimension and associations) and made a minimal analytic
+  model `AM_NW_SALES` part of the unit instead of an optional fallback.
+- **Why:** SAC stories read analytic models, not Fact views directly, so the first story
+  needs one. The course introduces the time dimension and associations after the remote
+  source, and the story is extended once they exist. Other fixes: space creation needs the
+  global DW Administrator role, `PostalCode` must be imported as string, the source swap
+  uses the drop-on-node *Replace* action, and associations are inspected in the analytic
+  model rather than in the view.
+
 ## 2026-10-15 — Unit 01 is a vertical slice across phases
 
 - **Decision:** Unit 01 covers space setup (P0) *and* a first pass through ingestion (P1),
