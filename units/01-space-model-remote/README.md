@@ -270,6 +270,8 @@ with comprehension checks after each part.
   imported with *Import CSV File* into folder `NW_LAB`, with keys and String / Number /
   Date types as planned. Counts confirmed in *Monitoring → Data Integration → Local
   Tables*.
+- `FACT_NW_SALES` deployed as a *Fact* (measures `REVENUE`, `Quantity`): inner join on
+  `OrderID` returns all 2,155 lines; spot check order 10248 / product 11 = 168.00.
 
 ## Gotchas
 
