@@ -31,7 +31,9 @@ flowchart LR
 
 ## Current state
 
-Unit 01 is documented but not yet executed in the tenant, so nothing is confirmed built.
+Unit 01 in progress. Everything is built in the trainer-provided shared space, inside
+folder `NW_LAB` (see `docs/decisions.md`); the ingestion/modelling spaces in the target
+picture are folders until a second real space is needed (P4).
 Planned objects (see `units/01-space-model-remote`): space `NW_LAB`, local tables
 `LT_NW_CUSTOMERS`/`LT_NW_ORDERS`/`LT_NW_ORDER_DETAILS`, views `DIM_NW_CUSTOMER` and
 `FACT_NW_SALES`, analytic model `AM_NW_SALES`, connection `CN_NW_ODATA`, remote table

@@ -2,6 +2,19 @@
 
 Design decisions and changes to the project plan, newest first.
 
+## 2026-10-16 — Work in the trainer-provided space, folders as pseudo-spaces
+
+- **Decision:** No own space for now. All objects are built in the shared training space
+  (`LABORATORIO`) inside a Data Builder folder `NW_LAB`; later layers get their own
+  folders as if each were a space. The space-creation procedure stays documented in unit
+  01 as reference.
+- **Why:** In the training tenant only the trainer is meant to create spaces.
+- **Limits accepted:** a folder is organisational only. There's no isolation, no own
+  technical-name namespace (names must not collide with the other trainee's), no own
+  schema or database users, and a shared time dimension and connections.
+- **Revisit:** P4 (cross-space sharing) needs a second real space; P1/P3 may too if the
+  ingestion/modelling split should be real rather than folder-only.
+
 ## 2026-10-16 — Private click-level journal and quiz checkpoints
 
 - **Decision:** Click-level build guides, a progress tracker and a learning log live in a

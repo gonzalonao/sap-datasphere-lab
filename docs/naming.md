@@ -22,6 +22,7 @@ types appear (rows marked *planned* are reserved, not yet used).
 | Object | Prefix | Example | Notes |
 | ------ | ------ | ------- | ----- |
 | Space | `NW_<PURPOSE>` | `NW_LAB` | Space IDs are tenant-unique. If taken in a shared training tenant, append a short suffix (e.g. `NW_LAB_07`) and log it in `decisions.md`. |
+| Folder | `NW_<PURPOSE>` | `NW_LAB` | Data Builder folder standing in for a space while working in a shared space. Same pattern as space IDs so a later move to a real space keeps the name. |
 | Connection | `CN_<SOURCE>_<PROTOCOL>` | `CN_NW_ODATA` | One connection per source system and protocol. |
 | Local table | `LT_<DOMAIN>_<ENTITY>` | `LT_NW_ORDERS` | Loaded from file upload. |
 | Remote table | `RT_<DOMAIN>_<ENTITY>` | `RT_NW_ORDERS` | Federated or replicated; the data-access mode is set in the object, not the name. |
@@ -36,6 +37,12 @@ types appear (rows marked *planned* are reserved, not yet used).
 | Transformation flow | `TF_<DOMAIN>_<ENTITY>` | `TF_NW_SALES` | *Planned (P2).* |
 | Task chain | `TC_<DOMAIN>_<PURPOSE>` | `TC_NW_DAILY_LOAD` | *Planned (P5).* |
 | Data access control | `DAC_<DOMAIN>_<CRITERION>` | `DAC_NW_COUNTRY` | *Planned (P4).* |
+
+## Shared spaces
+
+Technical names are unique per **space**, not per folder. When working in a shared space,
+search for the name before creating an object; the `NW_` domain token keeps collisions
+unlikely.
 
 ## Columns
 

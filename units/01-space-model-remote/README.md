@@ -106,6 +106,10 @@ with comprehension checks after each part.
 
 #### A. Space
 
+> **As executed:** the training tenant reserves space creation for the trainer, so this
+> unit runs in the trainer-provided shared space inside a folder `NW_LAB` (see
+> `docs/decisions.md`). Steps 3–5 are kept as the procedure for an own space.
+
 1. **Check your access.** Open *Space Management* and see whether *Create* is offered. Check
    your roles in your user profile (⚠ verify: or *Security → Users*). Note both in
    **Results**: they decide the rest of part A.
@@ -229,8 +233,9 @@ with comprehension checks after each part.
 
 ### Acceptance criteria
 
-- [ ] Space `NW_LAB` exists, deployed, with storage assigned and me as member (or the
-      deviation and its reason are documented).
+- [ ] Space `NW_LAB` exists, deployed, with storage assigned and me as member, **or**
+      (as executed) folder `NW_LAB` exists in the shared space, with no name collisions
+      and the deviation documented.
 - [ ] `LT_NW_CUSTOMERS` (91), `LT_NW_ORDERS` (830) and `LT_NW_ORDER_DETAILS` (2,155) are
       deployed with key columns, `PostalCode` as string and date/decimal types.
 - [ ] `FACT_NW_SALES` (Fact, measures `REVENUE` and `Quantity`) and `AM_NW_SALES` are
