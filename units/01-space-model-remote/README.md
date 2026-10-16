@@ -254,11 +254,24 @@ with comprehension checks after each part.
 
 ## Results
 
-_To be filled in from what I report back from the tenant._
+### Part A — Space
+
+- Worked in the trainer-provided shared space (quota enabled, 2 GB disk / 1 GB in-memory,
+  deployed), inside a new Data Builder folder `NW_LAB`. Own-space creation was not used.
+- The space's time data already exists with a 1900–2050 range, so it covers the Northwind
+  order dates (1996–1998) and step 25 is not needed.
+- A search for this project's prefixes found no technical-name collisions with the other
+  trainee's objects.
+- Space priority and statement limits are not on the space page in the current release:
+  they are tenant-level, under *System → Configuration → Workload Management*.
 
 ## Gotchas
 
-_To be filled in from what I report back from the tenant._
+- The space card title in *Space Management* is not a link: open a space with the card's
+  **Edit** button.
+- Technical names are unique per space, folders don't create a namespace: search before
+  creating objects in a shared space.
+- Deleting a folder deletes its contents irreversibly; move objects out first.
 
 ## Link to next unit
 
