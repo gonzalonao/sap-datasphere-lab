@@ -100,7 +100,9 @@ Same method as the Fabric projects:
   continue. Don't dump a whole unit at once.
 - **Teach, then test.** Each part opens with a lesson in chat: what the concepts are,
   why they matter, and analogies to the Microsoft/Databricks stack I know. Only then the
-  quiz, then the click-level steps.
+  quiz, then the click-level steps. Every quiz question must map to a lesson point taught
+  in chat; material that only appears in the guide doesn't count. Post-build checks get
+  their own short lesson first (what was built and what it implies).
 - **🎓 Learning checkpoints** before (concepts) and after (what was built) each part:
   quiz with `AskUserQuestion`, following the rules at the top of
   `docs/private/learning-log.md` (plausible distractors, shuffled answer positions, log
