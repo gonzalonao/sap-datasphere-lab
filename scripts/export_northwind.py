@@ -85,7 +85,7 @@ def fetch_pages(url: str) -> Iterator[dict[str, Any]]:
         next_url = urllib.parse.urljoin(next_url, link) if link else None
 
 
-def clean(column: str, value: Any) -> str:
+def clean(column: str, value: object) -> str:
     """Render a value for CSV; date-times are cut down to ISO dates.
 
     Args:
