@@ -283,6 +283,13 @@ with comprehension checks after each part.
 - Technical names are unique per space, folders don't create a namespace: search before
   creating objects in a shared space.
 - Deleting a folder deletes its contents irreversibly; move objects out first.
+- A calculated column's *Decimal* type needs an explicit **scale**: left at 0, every line's
+  revenue was truncated to whole units (total 1,265,326 instead of ~1,265,793). Spot-check
+  calculations on a value that has decimals.
+- *Validate* on a calculated column re-derives its data type from the expression and
+  overwrites a manually set precision/scale: validate first, then set the type.
+- Reducing scale **truncates** (163.625 → 163.62); use `ROUND(…, 2)` when cent rounding is
+  wanted.
 
 ## Link to next unit
 
