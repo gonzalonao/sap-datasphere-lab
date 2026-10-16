@@ -76,9 +76,14 @@ The README progress table and this map must stay in sync.
    `docs/architecture.md` and `docs/decisions.md`.
 5. When a phase closes, write its summary in `docs/phases/PN-slug.md`.
 
-You can't see the tenant, so the UI steps come from your knowledge. Flag steps you're unsure
-of (menu names, availability on trial tenants, version changes) with **⚠ verify**. I'll
-correct them.
+You can't see the tenant. **Before writing or presenting UI steps, check the current SAP
+documentation**: the SAP Help Portal guides are published as markdown in
+[SAP-docs/sap-datasphere](https://github.com/SAP-docs/sap-datasphere) (`docs/`; list the
+tree with `gh api repos/SAP-docs/sap-datasphere/git/trees/main?recursive=1` and read files
+from `raw.githubusercontent.com`). The Help Portal itself renders client-side, so use the
+GitHub source. Take menu paths and labels from the docs, record the doc file in the guide
+step, and mark only what the docs don't settle with **⚠ verify**. When my report
+contradicts the docs, my tenant wins: fix the guide and note the deviation.
 
 ## Build journal and learning method
 

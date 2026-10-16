@@ -130,20 +130,20 @@ with comprehension checks after each part.
 
 #### B. First model: CSV → local tables → graphical view
 
-7. **Import `customers.csv`.** *Data Builder* (space `NW_LAB`) → *Import → Import CSV
-   File*. Delimiter `,`, header row on, UTF-8. In the column settings, set **`PostalCode`
-   to String** (values like `05021` lose their leading zero if inferred as integer).
-   Technical name `LT_NW_CUSTOMERS`, business name per the objects table. Deploy.
-8. **Import `orders.csv`** as `LT_NW_ORDERS`. Types: `OrderDate`, `RequiredDate`,
-   `ShippedDate` **Date** (21 orders have no `ShippedDate`: nulls are expected); `Freight`
-   Decimal(15,2).
-9. **Import `order_details.csv`** as `LT_NW_ORDER_DETAILS`. Types: `UnitPrice`
-   Decimal(15,2), `Quantity` Integer, `Discount` Decimal(5,2).
-10. **Set the keys and check the data.** Open each table in the table editor and mark the
-    key columns: `CustomerID`; `OrderID`; `OrderID` + `ProductID` (⚠ verify: whether keys
-    can be set in the import dialog or only afterwards). Deploy and open *Data Preview*:
-    91, 830 and 2,155 rows. *Why keys:* a Dimension needs one for associations, and keys
-    let the engine skip joins it doesn't need.
+7. **Import `customers.csv`.** *Data Builder* → *Import → Import CSV File* → *Select
+   Source File* → *Use first row as column header*, delimiter auto-detect → *Upload*. In
+   the side panel open each column's *Details*: the importer offers only *Boolean,
+   Integer, Number (Decimal(38,19)), String (String(5000)), Date, Time, Date and Time*.
+   Set **`PostalCode` to String** (values like `05021` would lose the leading zero) and
+   **Set as Key** on `CustomerID`. *Deploy* as `LT_NW_CUSTOMERS`.
+8. **Import `orders.csv`** as `LT_NW_ORDERS`: key `OrderID`; `OrderDate`, `RequiredDate`,
+   `ShippedDate` as **Date** (21 orders have no `ShippedDate`: nulls are expected);
+   `Freight` as **Number**, never *REAL* (binary floating point: `1.1` becomes
+   `1.100000023841858`).
+9. **Import `order_details.csv`** as `LT_NW_ORDER_DETAILS`: keys `OrderID` + `ProductID`;
+   `UnitPrice` and `Discount` **Number**, `Quantity` Integer.
+10. **Check the tables.** Open each in the table editor (keys, types) and *Preview Data*.
+    Row counts in *Monitoring → Data Integration → Local Tables*: 91, 830 and 2,155.
 11. **Build the fact view.** *Data Builder → New Graphical View*, then on the canvas:
     1. Drag `LT_NW_ORDER_DETAILS` from the repository onto the canvas.
     2. Drag `LT_NW_ORDERS` onto the first node and drop it on **Join**. In the join
