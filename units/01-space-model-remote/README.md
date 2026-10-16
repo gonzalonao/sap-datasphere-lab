@@ -144,26 +144,25 @@ with comprehension checks after each part.
    `UnitPrice` and `Discount` **Number**, `Quantity` Integer.
 10. **Check the tables.** Open each in the table editor (keys, types) and *Preview Data*.
     Row counts in *Monitoring → Data Integration → Local Tables*: 91, 830 and 2,155.
-11. **Build the fact view.** *Data Builder → New Graphical View*, then on the canvas:
-    1. Drag `LT_NW_ORDER_DETAILS` from the repository onto the canvas.
-    2. Drag `LT_NW_ORDERS` onto the first node and drop it on **Join**. In the join
-       properties: inner join on `OrderID`, cardinality *n:1* (⚠ verify: label).
-    3. From the join node's toolbar add **Calculated Columns**:
-       `REVENUE` = `"UnitPrice" * "Quantity" * (1 - "Discount")`, Decimal(15,2), and
-       `ORDER_DATE` = `TO_DATE("OrderDate")`, Date.
+11. **Build the fact view.** *Data Builder → New Graphical View*:
+    1. Drag `LT_NW_ORDER_DETAILS` from the *Source Browser* onto the canvas; an output node
+       is created automatically.
+    2. Drop `LT_NW_ORDERS` onto that node (it turns green) to create a **Join**: *Inner*,
+       cardinality `MANY TO ONE`, mapped on `OrderID`. Datasphere adds a **Projection**
+       after the join to remove duplicate columns; exclude the columns not needed there.
+    3. Add a **Calculated Columns** node: `REVENUE` = `"UnitPrice" * "Quantity" *
+       (1 - "Discount")` (Decimal 15,2) and `ORDER_DATE` = `TO_DATE("OrderDate")` (Date).
        *Why `ORDER_DATE`:* `TO_DATE` works on both a date and a timestamp, so the source
        swap in part D (OData returns a timestamp) needs no change in the view.
-    4. Add a **Projection** and keep only `OrderID`, `ProductID`, `CustomerID`,
-       `ShipCountry`, `ORDER_DATE`, `Quantity`, `UnitPrice`, `Discount`, `REVENUE`.
-       Duplicate join columns (`OrderID` from both sides) are resolved here.
-    5. Output node: technical name `FACT_NW_SALES`, semantic usage **Fact**; mark
-       `REVENUE` and `Quantity` as **Measures** (aggregation SUM), the rest as attributes.
-    6. Save and deploy.
-12. **Learn the editor.** On `FACT_NW_SALES` try: *Preview Data* on each node (see how the
-    row count changes after the join); the **SQL** shown for the view (⚠ verify: *Preview
-    SQL* / *Show SQL*); *Impact and Lineage Analysis*; *Validate*. Then add a **Filter** node
-    (`"ShipCountry" = 'Germany'`), preview, and **delete it again** so totals stay
-    comparable in part D. Note which node types the toolbar offers.
+    4. Output node: technical name `FACT_NW_SALES` (fixed once saved), semantic usage
+       **Fact**; *Change to Measure* on `REVENUE` and `Quantity` (aggregation SUM).
+       *Expose for Consumption* stays off: an analytic model doesn't need it.
+    5. Save and deploy. Each source or join takes at most one *Filter*, *Projection*,
+       *Calculated Columns* and *Aggregation* node.
+12. **Learn the editor.** *Preview Data* on every node (the join must still return
+    2,155 rows), *Preview SQL* from the preview panel, *Impact and Lineage Analysis*, and
+    a temporary *Filter* (`"ShipCountry" = 'Germany'`) that is removed again so totals
+    stay comparable in part D.
 
 #### C. First report: analytic model and SAC story
 
@@ -264,6 +263,13 @@ with comprehension checks after each part.
   trainee's objects.
 - Space priority and statement limits are not on the space page in the current release:
   they are tenant-level, under *System → Configuration → Workload Management*.
+
+### Part B — Local tables
+
+- `LT_NW_CUSTOMERS` (91 rows), `LT_NW_ORDERS` (830) and `LT_NW_ORDER_DETAILS` (2,155)
+  imported with *Import CSV File* into folder `NW_LAB`, with keys and String / Number /
+  Date types as planned. Counts confirmed in *Monitoring → Data Integration → Local
+  Tables*.
 
 ## Gotchas
 
