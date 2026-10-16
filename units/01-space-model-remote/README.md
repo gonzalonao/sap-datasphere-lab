@@ -171,8 +171,8 @@ with comprehension checks after each part.
     measures `REVENUE`, `Quantity` and dimensions `ShipCountry`, `CustomerID`,
     `ORDER_DATE` (fact attributes are called *dimensions* in the analytic model). Name
     `AM_NW_SALES`, save, deploy. In the analytical preview the totals are `Quantity` =
-    **51,317** and `REVENUE` ≈ **1,265,793** (cent-level differences come from line
-    rounding).
+    **51,317** and `REVENUE` = **1,265,792.64** (each line truncated to 2 decimals; the
+    exact sum is 1,265,793.04, see *Gotchas*).
     *Why an analytic model:* it is the object SAC reads; it decides which measures and
     dimensions consumers see.
 14. **Create the story.** In SAC: *Main Menu → Stories → Canvas* → *Add New Data* → the

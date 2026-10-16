@@ -2,6 +2,14 @@
 
 Design decisions and changes to the project plan, newest first.
 
+## 2026-10-16 — REVENUE keeps truncation to 2 decimals
+
+- **Decision:** `REVENUE` stays `Decimal(15,2)` without explicit `ROUND`; the reference
+  total is **1,265,792.64** (exact sum 1,265,793.04).
+- **Why:** The engine truncates on scale reduction; the 0.40 difference is understood and
+  documented. Totals are compared against this reference in later units (source swap).
+- **Revisit:** if a consumer needs cent rounding, switch to `ROUND(…, 2)` (→ 1,265,793.29).
+
 ## 2026-10-16 — Work in the trainer-provided space, folders as pseudo-spaces
 
 - **Decision:** No own space for now. All objects are built in the shared training space
