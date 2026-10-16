@@ -2,6 +2,14 @@
 
 Design decisions and changes to the project plan, newest first.
 
+## 2026-10-16 — Private click-level journal and quiz checkpoints
+
+- **Decision:** Click-level build guides, a progress tracker and a learning log live in a
+  private, gitignored journal (`docs/private/`); public unit READMEs keep the condensed,
+  reproducible version. Each part has pre- and post-build quiz checkpoints.
+- **Why:** Same split as my Fabric projects. The public repo shows the solution; the
+  journal holds the noisier build detail and personal learning records.
+
 ## 2026-10-16 — Unit 01 plan corrected before tenant work
 
 - **Decision:** Reordered unit 01 to follow the course order (space → first model → first

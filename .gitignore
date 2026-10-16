@@ -4,3 +4,6 @@
 Thumbs.db
 # raw downloads too large or not redistributable; document the source URL instead
 data/raw/
+
+# private build journal (separate local repo)
+docs/private/

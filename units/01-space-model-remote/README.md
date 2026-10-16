@@ -101,6 +101,9 @@ flowchart LR
 
 ### Steps
 
+Condensed, reproducible steps. The build itself was run from a click-level private guide
+with comprehension checks after each part.
+
 #### A. Space
 
 1. **Check your access.** Open *Space Management* and see whether *Create* is offered. Check

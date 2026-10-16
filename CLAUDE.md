@@ -80,6 +80,24 @@ You can't see the tenant, so the UI steps come from your knowledge. Flag steps y
 of (menu names, availability on trial tenants, version changes) with **⚠ verify**. I'll
 correct them.
 
+## Build journal and learning method
+
+Same method as the Fabric projects:
+
+- **Private build journal** in `docs/private/` (separate local git repo, gitignored by
+  this repo): click-level guides `units/NN-slug.md`, the tracker `progress.md`, and
+  `learning-log.md`. At session start, read `progress.md` and the guide it points at.
+  The public unit README keeps concepts, exercise, condensed steps and results.
+- **Instructions to me are always click-level**: which app in the side navigation, where
+  on the screen a button sits, what to type, and how to verify the result. This applies
+  to ad-hoc guidance in chat too. Uncertain UI details get **⚠ verify**.
+- **Interactive pace:** present one part at a time in chat, wait for my report, then
+  continue. Don't dump a whole unit at once.
+- **🎓 Learning checkpoints** before (concepts) and after (what was built) each part:
+  quiz with `AskUserQuestion`, following the rules at the top of
+  `docs/private/learning-log.md` (plausible distractors, shuffled answer positions, log
+  misses with corrections, re-test open misconceptions).
+
 ## Documentation standards
 
 - English, clear and professional, readable without the course material.
