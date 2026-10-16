@@ -166,21 +166,24 @@ with comprehension checks after each part.
 
 #### C. First report: analytic model and SAC story
 
-13. **Create the analytic model.** *Data Builder → New Analytic Model* → source
-    `FACT_NW_SALES`. Keep measures `REVENUE` and `Quantity`, attributes `ShipCountry` and
-    `OrderID`. Technical name `AM_NW_SALES`. Use the model's *Data Preview* to check the totals:
-    `Quantity` = **51,317**, `REVENUE` ≈ **1,265,793** (small cent differences come from
-    rounding each line to 2 decimals). Deploy.
-    *Why an analytic model:* it is the object SAC (and later Power BI's live path) reads;
-    it decides which measures and dimensions consumers see.
-14. **Create the story.** In SAC: create a new story (⚠ verify: optimized story experience
-    / canvas), *Add data* → live connection to Datasphere → space `NW_LAB` → `AM_NW_SALES`.
-15. **Chart: revenue by ship country.** Bar chart, measure `REVENUE`, dimension
-    `ShipCountry`, sorted descending, top 10.
-16. **Tiles:** numeric points for total `REVENUE` and total `Quantity`. Write both totals
-    in **Results**: they must match step 13 and are the reference for part D.
-17. **Save** as `Northwind Sales Overview`. Screenshot to `assets\` (scrub URL and user
-    name).
+13. **Create the analytic model.** *Data Builder → New Analytic Model* → drag
+    `FACT_NW_SALES` from the repository (only facts and analytic models are offered). Keep
+    measures `REVENUE`, `Quantity` and dimensions `ShipCountry`, `CustomerID`,
+    `ORDER_DATE` (fact attributes are called *dimensions* in the analytic model). Name
+    `AM_NW_SALES`, save, deploy. In the analytical preview the totals are `Quantity` =
+    **51,317** and `REVENUE` ≈ **1,265,793** (cent-level differences come from line
+    rounding).
+    *Why an analytic model:* it is the object SAC reads; it decides which measures and
+    dimensions consumers see.
+14. **Create the story.** In SAC: *Main Menu → Stories → Canvas* → *Add New Data* → the
+    SAP Datasphere live connection → the space → `AM_NW_SALES`. Consuming Datasphere
+    data in stories requires the *DW Consumer* role in Datasphere.
+15. **Chart: revenue by ship country.** Bar/column chart, measure `REVENUE`, dimension
+    `ShipCountry`; *More Actions → Rank → Top N* (10), which also sorts.
+16. **Numeric points** for total `REVENUE` and `Quantity` (ranking isn't available for
+    this chart type). Record both totals: they must match step 13 and are the reference
+    for part D.
+17. **Save** as `Northwind Sales Overview`.
 
 #### D. Remote source: connection and remote table
 
