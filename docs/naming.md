@@ -58,4 +58,5 @@ unlikely.
   (`SAP.TIME.*`). They are not renamed; the space-level time settings are documented in the
   unit that creates them.
 - **SAC stories and other consumer-side artefacts** are named in plain English
-  (`Northwind Sales Overview`) because they are shown to end users.
+  (`Northwind Sales Overview`) because they are shown to end users. They are saved in a
+  private SAC folder `NW_LAB` under *My Files*, mirroring the Datasphere folder.
