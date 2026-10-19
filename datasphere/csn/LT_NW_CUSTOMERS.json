@@ -1,0 +1,68 @@
+{
+  "definitions": {
+    "LT_NW_CUSTOMERS": {
+      "kind": "entity",
+      "@ObjectModel.modelingPattern": {
+        "#": "DATA_STRUCTURE"
+      },
+      "@ObjectModel.supportedCapabilities": [
+        {
+          "#": "DATA_STRUCTURE"
+        }
+      ],
+      "@DataWarehouse.dataSource.schema": "<SOURCE_SPACE>#<INTERNAL_SCHEMA>",
+      "@DataWarehouse.dataSource.entity": "<INTERNAL_DATASET_ID>",
+      "@EndUserText.label": "Northwind Customers (file)",
+      "elements": {
+        "CustomerID": {
+          "type": "cds.String",
+          "length": 5000,
+          "key": true,
+          "@EndUserText.label": "CustomerID"
+        },
+        "CompanyName": {
+          "type": "cds.String",
+          "length": 5000,
+          "@EndUserText.label": "CompanyName"
+        },
+        "ContactTitle": {
+          "type": "cds.String",
+          "length": 5000,
+          "@EndUserText.label": "ContactTitle"
+        },
+        "City": {
+          "type": "cds.String",
+          "length": 5000,
+          "@EndUserText.label": "City"
+        },
+        "Region": {
+          "type": "cds.String",
+          "length": 5000,
+          "@EndUserText.label": "Region"
+        },
+        "PostalCode": {
+          "type": "cds.String",
+          "length": 5000,
+          "@EndUserText.label": "PostalCode"
+        },
+        "Country": {
+          "type": "cds.String",
+          "length": 5000,
+          "@EndUserText.label": "Country"
+        }
+      },
+      "_meta": {
+        "dependencies": {
+          "folderAssignment": "Folder_RSYEEFPI"
+        }
+      }
+    }
+  },
+  "version": {
+    "csn": "1.0"
+  },
+  "meta": {
+    "creator": "CDS Compiler v1.19.2"
+  },
+  "$version": "1.0"
+}
