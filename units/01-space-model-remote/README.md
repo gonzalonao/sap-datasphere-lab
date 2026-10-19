@@ -286,6 +286,19 @@ with comprehension checks after each part.
   totals but was not saved before the session ended; it is rebuilt on the own space (see
   *Gotchas*).
 
+### Part M — Own space
+
+- Space `NW_LAB` created (2 GB disk / 1 GB memory) with time data 1900–2050. Unit 01's
+  objects were moved from the shared training space by CSN/JSON export → import (the
+  committed, sanitized files in `datasphere/csn/` imported as-is) → deploy → CSV reload.
+  Counts and totals unchanged: 91 / 830 / 2,155 rows, `Quantity` 51,317, `REVENUE`
+  1,265,792.64.
+- `CN_NW_ODATA` recreated in `NW_LAB`; it validated on the first try because the trusted
+  certificate is tenant-wide.
+- SAC story `Northwind Sales Overview` built on `NW_LAB`'s `AM_NW_SALES` and saved in a
+  private folder: revenue by ship country (top 10) and two numeric points. The ten
+  country totals match an independent calculation from the CSV files to the cent.
+
 ### Part D — Remote source
 
 - `CN_NW_ODATA` (Generic OData V4, no authentication) validates after adding the
