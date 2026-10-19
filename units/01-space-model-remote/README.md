@@ -285,6 +285,12 @@ with comprehension checks after each part.
 - SAC story `Northwind Sales Overview` (live connection, private folder) with revenue by
   ship country, top 10.
 
+### Part D — Remote source
+
+- `CN_NW_ODATA` (Generic OData V4, no authentication) validates after adding the
+  *DigiCert Global Root G2* TLS server certificate to the tenant: remote tables and data
+  flows available, replication flows not supported for this connection type.
+
 ## Gotchas
 
 - The space card title in *Space Management* is not a link: open a space with the card's
@@ -297,6 +303,9 @@ with comprehension checks after each part.
   calculations on a value that has decimals.
 - *Validate* on a calculated column re-derives its data type from the expression and
   overwrites a manually set precision/scale: validate first, then set the type.
+- A tenant may already hold an older root with a similar name (*DigiCert Global Root
+  CA*); trust works on the exact certificate, so the chain's own root (*G2*) still has to
+  be uploaded.
 - Reducing scale **truncates** (163.625 → 163.62); use `ROUND(…, 2)` when cent rounding is
   wanted.
 
