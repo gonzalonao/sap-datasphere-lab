@@ -282,8 +282,9 @@ with comprehension checks after each part.
 - `AM_NW_SALES` deployed on `FACT_NW_SALES`; analytical preview and SAC numeric points
   agree: `Quantity` **51,317**, `REVENUE` **1,265,792.64** (after fixing the `REVENUE`
   scale, see *Gotchas*).
-- SAC story `Northwind Sales Overview` (live connection, private folder) with revenue by
-  ship country, top 10.
+- A first SAC story (revenue by ship country, top 10, two numeric points) showed the same
+  totals but was not saved before the session ended; it is rebuilt on the own space (see
+  *Gotchas*).
 
 ### Part D — Remote source
 
@@ -309,6 +310,8 @@ with comprehension checks after each part.
 - Adding a space to the scopes of an existing scoped role assigns **all users already in
   that role** to the new space. Review the space's *Users* area afterwards and remove
   anyone who shouldn't be there.
+- SAC doesn't keep an unsaved new story: save it as soon as data is added, then after
+  each widget.
 - Reducing scale **truncates** (163.625 → 163.62); use `ROUND(…, 2)` when cent rounding is
   wanted.
 
