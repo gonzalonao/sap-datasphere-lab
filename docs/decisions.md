@@ -2,6 +2,20 @@
 
 Design decisions and changes to the project plan, newest first.
 
+## 2026-10-19 — Replicate `RT_NW_ORDERS` (snapshot) instead of pure federation
+
+- **Decision:** Switch `RT_NW_ORDERS` from remote access to a **snapshot replication**
+  (*Start Data Replication*), refreshed on demand for now (a schedule follows in P5).
+- **Why:** With pure federation the fact view's preview and the SAC story hit the
+  3-minute query timeout. The *Remote Queries* monitor showed one full `Orders` fetch
+  per query (column pruning via `$select`). Fetches finished in 2–5 s or stalled part-way
+  (680 or 819 of 830 rows) for up to 20 minutes, so the public OData service is
+  unreliable under repeated, concurrent requests. Replication reads the source once and
+  serves every query locally.
+- **Trade-off:** The data is only as fresh as the last snapshot, and it uses a little
+  storage (830 rows). That's acceptable for a static sample source, and it's the
+  federation-vs-replication choice the project is meant to show.
+
 ## 2026-10-19 — Align join key types at the source boundary
 
 - **Decision:** After swapping `LT_NW_ORDERS` for `RT_NW_ORDERS`, cast the remote
