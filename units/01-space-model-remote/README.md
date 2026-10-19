@@ -306,6 +306,9 @@ with comprehension checks after each part.
 - A tenant may already hold an older root with a similar name (*DigiCert Global Root
   CA*); trust works on the exact certificate, so the chain's own root (*G2*) still has to
   be uploaded.
+- Adding a space to the scopes of an existing scoped role assigns **all users already in
+  that role** to the new space. Review the space's *Users* area afterwards and remove
+  anyone who shouldn't be there.
 - Reducing scale **truncates** (163.625 → 163.62); use `ROUND(…, 2)` when cent rounding is
   wanted.
 
