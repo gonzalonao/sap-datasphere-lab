@@ -2,6 +2,15 @@
 
 Design decisions and changes to the project plan, newest first.
 
+## 2026-10-19 — Align join key types at the source boundary
+
+- **Decision:** After swapping `LT_NW_ORDERS` for `RT_NW_ORDERS`, cast the remote
+  `OrderID` (Integer) to Integer64 with `TO_BIGINT` in a calculated column right after the
+  remote source. The join then compares Integer64 with Integer64.
+- **Why:** The join raised a data-type-mismatch warning. Results were correct through
+  implicit widening, but aligning types once at the boundary keeps the model free of
+  warnings, avoids per-row conversion, and widening can't lose values.
+
 ## 2026-10-19 — Move to an own space `NW_LAB`
 
 - **Decision:** Create space `NW_LAB` and move the unit 01 objects out of the shared
