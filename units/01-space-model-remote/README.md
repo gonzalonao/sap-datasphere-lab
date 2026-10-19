@@ -212,24 +212,24 @@ with comprehension checks after each part.
 
 #### E. Time dimension and associations
 
-25. **Generate the time dimension.** *Space Management → `NW_LAB` → Time Data → Create
+24. **Generate the time dimension.** *Space Management → `NW_LAB` → Time Data → Create
     Time Tables and Dimensions*. Years **1996 to 1999** (orders run 1996-07 to 1998-05).
     Create.
-26. **Find the generated objects** in the Data Builder: the table
+25. **Find the generated objects** in the Data Builder: the table
     `SAP.TIME.M_TIME_DIMENSION` and views `SAP.TIME.VIEW_DIMENSION_DAY/WEEK/MONTH/QUARTER/YEAR`
     (⚠ verify names). Preview the day view: key `DATE_SQL`, attributes for year, quarter,
     month, and a Year → Quarter → Month → Day hierarchy.
-27. **Create the customer dimension.** *New Graphical View* → `LT_NW_CUSTOMERS` → output
+26. **Create the customer dimension.** *New Graphical View* → `LT_NW_CUSTOMERS` → output
     semantic usage **Dimension**, key `CustomerID`, business names for attributes.
     Technical name `DIM_NW_CUSTOMER`. Deploy.
-28. **Add the associations** in `FACT_NW_SALES` → output node → *Associations*:
+27. **Add the associations** in `FACT_NW_SALES` → output node → *Associations*:
     `CustomerID` → `DIM_NW_CUSTOMER.CustomerID`, and `ORDER_DATE` →
     `SAP.TIME.VIEW_DIMENSION_DAY.DATE_SQL`. Deploy. The fact view's own columns don't
     change: nothing was joined.
-29. **Extend the analytic model.** Open `AM_NW_SALES`: the two associated dimensions now
+28. **Extend the analytic model.** Open `AM_NW_SALES`: the two associated dimensions now
     appear as available dimensions. Add them, selecting `CompanyName`, `City`, `Country`
     and the time attributes. Deploy.
-30. **Use them in the story.** Add a time-series chart of `REVENUE` by the order-date
+29. **Use them in the story.** Add a time-series chart of `REVENUE` by the order-date
     dimension, drilling Year → Quarter → Month (⚠ verify: select the hierarchy in the
     chart builder). Add a bar chart of `REVENUE` by customer `Country` and compare it with
     the `ShipCountry` chart. Save.
@@ -262,7 +262,7 @@ with comprehension checks after each part.
 - Worked in the trainer-provided shared space (quota enabled, 2 GB disk / 1 GB in-memory,
   deployed), inside a new Data Builder folder `NW_LAB`. Own-space creation was not used.
 - The space's time data already exists with a 1900–2050 range, so it covers the Northwind
-  order dates (1996–1998) and step 25 is not needed.
+  order dates (1996–1998) and step 24 is not needed.
 - A search for this project's prefixes found no technical-name collisions with the other
   trainee's objects.
 - Space priority and statement limits are not on the space page in the current release:
