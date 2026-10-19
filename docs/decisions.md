@@ -2,6 +2,20 @@
 
 Design decisions and changes to the project plan, newest first.
 
+## 2026-10-19 — Move to an own space `NW_LAB`
+
+- **Decision:** Create space `NW_LAB` and move the unit 01 objects out of the shared
+  training space, replacing the earlier "folders as pseudo-spaces" approach. Objects move
+  by CSN/JSON export and import plus a data reload; the SAC story is re-pointed with
+  *Replace Model*. The old folder and connection in the shared space are deleted after
+  verification.
+- **Why:** The trainer confirmed that space creation is fine on this educational tenant.
+  A real space exercises space-level features (time data, connections, database users,
+  cross-space sharing in P4) instead of simulating them. *Copy Spaces* wasn't used
+  because it copies a whole space, including other users' objects.
+- **Consequence:** Object definitions become version-controlled CSN files in
+  `datasphere/csn/`.
+
 ## 2026-10-19 — Trust DigiCert Global Root G2 for the Northwind OData service
 
 - **Decision:** Upload the root CA **DigiCert Global Root G2** (valid to 2038) as a
