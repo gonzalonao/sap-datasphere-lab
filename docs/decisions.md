@@ -2,6 +2,20 @@
 
 Design decisions and changes to the project plan, newest first.
 
+## 2026-10-19 — Trust DigiCert Global Root G2 for the Northwind OData service
+
+- **Decision:** Upload the root CA **DigiCert Global Root G2** (valid to 2038) as a
+  *TLS Server* certificate, not the `*.odata.org` server certificate or Microsoft's
+  issuing CA.
+- **Why:** The server certificate expires 2027-01-21 and the remote tables would stop
+  working at every renewal. Microsoft rotates between several issuing CAs, so pinning one
+  of them is fragile too. The root anchors the whole chain and is already trusted by
+  every mainstream OS and browser. The certificate's fingerprint is checked against the
+  Windows root store before upload.
+- **Trade-off:** Trusting a root lets the tenant validate any HTTPS server whose chain
+  ends at it. That's acceptable on an educational tenant. In a client tenant the
+  certificate policy is the platform team's call, and a narrower anchor may be preferred.
+
 ## 2026-10-16 — REVENUE keeps truncation to 2 decimals
 
 - **Decision:** `REVENUE` stays `Decimal(15,2)` without explicit `ROUND`; the reference
