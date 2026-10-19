@@ -187,27 +187,28 @@ with comprehension checks after each part.
 
 #### D. Remote source: connection and remote table
 
-18. **Create the connection.** In `NW_LAB` → *Connections → Create → Generic OData*. URL
-    `https://services.odata.org/V4/Northwind/Northwind.svc/`, version **V4**,
-    authentication *No Authentication*, no Cloud Connector. Technical name `CN_NW_ODATA`.
-    Save and **Validate**. ⚠ verify: tenants can block outbound calls to public hosts; if it
-    fails, try the V2 URL `https://services.odata.org/V2/Northwind/Northwind.svc/` and
-    record the error either way.
-19. **Read the connection's feature list** (remote tables, data flows, replication flows)
-    and note which are supported for Generic OData.
-20. **Import the remote table.** *Data Builder → Import → Remote Tables* (⚠ verify: or
-    *Sources* tab in the editor) → `CN_NW_ODATA` → entity `Orders` → rename to
-    `RT_NW_ORDERS` → import and deploy. Data access stays **Remote**. Preview: 830 rows.
-21. **Compare with the local table.** The remote table has more columns (`ShipName`,
-    `ShipAddress`, …) and `OrderDate` as a **timestamp**, the local one as a date.
-22. **Replace the source.** Open `FACT_NW_SALES`, drag `RT_NW_ORDERS` onto the
-    `LT_NW_ORDERS` node and choose **Replace** (⚠ verify: drop menu offers Join / Union /
-    Replace). Check the column mapping (same names → automatic), save, deploy. `ORDER_DATE`
+18. **Create the connection.** *Connections → Add Connection → Create Connection →
+    Generic OData*: URL `https://services.odata.org/V4/Northwind/Northwind.svc/`,
+    version **V4**, no Cloud Connector, authentication **No Authentication** (the default
+    is OAuth 2.0). Technical name `CN_NW_ODATA`. *Validate Connection*: the message lists
+    the available features.
+    *Prerequisite:* remote tables over Generic OData need the service's TLS server
+    certificate uploaded to the tenant by an administrator (*System → Configuration →
+    Security*). Without it the connection can be created but doesn't validate.
+19. **Import the remote table.** *Data Builder → Import → Import Remote Tables* →
+    `CN_NW_ODATA` → `Orders` → technical name `RT_NW_ORDERS` → *Import and Deploy*. Data
+    access stays **Remote** (federated). Preview: 830 rows.
+20. **Compare with the local table.** The remote table has more columns (`ShipName`,
+    `ShipAddress`, …) and `OrderDate` as a timestamp; the local one has it as a date.
+21. **Replace the source.** In `FACT_NW_SALES`, drag `RT_NW_ORDERS` over the
+    `LT_NW_ORDERS` node and choose **Replace**. The *Replace Source* dialog maps columns by
+    name; unmapped new columns are excluded automatically. Save, deploy. `ORDER_DATE`
     keeps working thanks to `TO_DATE`.
-23. **Re-test.** Refresh the story: totals must equal the ones from step 16. Compare
-    response time; check *Lineage* of the view to see the remote source.
-24. **Look at, don't change, data access.** In `RT_NW_ORDERS` look at the *Data Access* /
-    replication options (⚠ verify: snapshot only for Generic OData). This is P1 material.
+22. **Re-test.** Analytic model preview and story must still show 51,317 /
+    1,265,792.64. *Impact and Lineage* now reaches the connection.
+23. **Look at, don't change, data access.** *Monitoring → Data Integration → Remote
+    Tables*: data access *Remote*, and the replication options this connection type
+    offers. Replication is P1 material.
 
 #### E. Time dimension and associations
 
