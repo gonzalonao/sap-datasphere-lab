@@ -2,6 +2,22 @@
 
 Design decisions and changes to the project plan, newest first.
 
+## 2026-10-20 — Star schema by association: customer dimension as a view, generated time
+
+- **Decision:** Customer attributes reach the model through an association from
+  `FACT_NW_SALES` to a dimension view `DIM_NW_CUSTOMER` on `LT_NW_CUSTOMERS`, not through
+  a join in the fact. Time uses the space's generated *Time Dimension - Day*, mapped from
+  `ORDER_DATE` (Date). `ShipCountry` stays in the fact.
+- **Why:** An association keeps the fact narrow and the dimension reusable by later facts;
+  the analytic model joins it only when a query needs it. A view rather than flagging the
+  table itself as a dimension leaves the ingestion layer untouched and gives one place for
+  business names and later logic. SAC supports only the generated time dimensions as
+  time dimensions, so a custom calendar would lose the time features. `ShipCountry`
+  (ship-to, frozen per order) and the customer's country (sold-to, current master data)
+  mean different things even though they coincide in Northwind.
+- **Consequence:** Each new association must be added to `AM_NW_SALES` explicitly,
+  redeployed, and the story saved again.
+
 ## 2026-10-20 — Replication flows: provisional plan (open)
 
 - **Status:** Proposal, to be confirmed when the course reaches replication flows.
@@ -77,7 +93,7 @@ Design decisions and changes to the project plan, newest first.
 ## 2026-10-16 — Work in the trainer-provided space, folders as pseudo-spaces
 
 - **Decision:** No own space for now. All objects are built in the shared training space
-  (`LABORATORIO`) inside a Data Builder folder `NW_LAB`; later layers get their own
+  inside a Data Builder folder `NW_LAB`; later layers get their own
   folders as if each were a space. The space-creation procedure stays documented in unit
   01 as reference.
 - **Why:** In the training tenant only the trainer is meant to create spaces.
