@@ -301,6 +301,15 @@ with comprehension checks after each part.
 
 ### Part D — Remote source
 
+- `RT_NW_ORDERS` (14 columns) imported from `CN_NW_ODATA` and swapped in for
+  `LT_NW_ORDERS` with *Replace Source*. The remote `OrderID` (Integer) is cast to Integer64
+  with `TO_BIGINT` so the join keys match (this removed a type-mismatch warning).
+- **Pure federation failed in practice:** queries hit the 3-minute timeout. The
+  *Remote Queries* monitor showed one full `Orders` request per query (only the needed
+  columns, via `$select`), but the public service stalled part-way under concurrent
+  requests. A **snapshot replication** of `RT_NW_ORDERS` fixed it: previews return in
+  seconds and the totals are unchanged (51,317 / 1,265,792.64).
+
 - `CN_NW_ODATA` (Generic OData V4, no authentication) validates after adding the
   *DigiCert Global Root G2* TLS server certificate to the tenant: remote tables and data
   flows available, replication flows not supported for this connection type.
