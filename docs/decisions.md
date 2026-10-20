@@ -2,6 +2,19 @@
 
 Design decisions and changes to the project plan, newest first.
 
+## 2026-10-20 — Replication flows: provisional plan (open)
+
+- **Status:** Proposal, to be confirmed when the course reaches replication flows.
+- **P1 (ingestion):** Northwind in a free Azure SQL Database as the source of replication
+  flows `RF_NW_<ENTITY>` (load type *Initial and Delta*) into `NW_LAB`, so federation,
+  snapshot replication and delta replication can be compared on the same data. The
+  Generic OData connection can't be used: replication flows aren't supported for it.
+- **P7 (integration):** a replication flow to Azure Data Lake Gen2 for Azure Databricks,
+  depending on the tenant's premium outbound integration capacity.
+- **Source:** SAP's table of supported source and target connections for replication
+  flows (Azure SQL Database: source with delta; ADLS Gen2: source initial-only, target
+  with delta; OneLake: source only).
+
 ## 2026-10-19 — Replicate `RT_NW_ORDERS` (snapshot) instead of pure federation
 
 - **Decision:** Switch `RT_NW_ORDERS` from remote access to a **snapshot replication**
