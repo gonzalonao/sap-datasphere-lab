@@ -37,12 +37,12 @@ loads and remote connections can be exercised on the same data.
 | Phase | Theme | Units | Status |
 | ----- | ----- | ----- | ------ |
 | P0 | Tenant & governance setup | 01 | in progress |
-| P1 | Ingestion | 01 (intro) | todo |
-| P2 | Transformation | 01 (intro) | todo |
-| P3 | Semantic layer | 01 (intro) | todo |
+| P1 | Ingestion | 01 (intro) | started |
+| P2 | Transformation | 01 (intro) | started |
+| P3 | Semantic layer | 01 (intro) | started |
 | P4 | Security & sharing | | todo |
 | P5 | Orchestration | | todo |
-| P6 | Consumption (SAC, Power BI) | 01 (intro) | todo |
+| P6 | Consumption (SAC, Power BI) | 01 (intro) | started |
 | P7 | Microsoft / BDC integration | | todo |
 
 The phase plan is provisional. It adapts to the course order, and every change is logged in
@@ -52,7 +52,7 @@ The phase plan is provisional. It adapts to the course order, and every change i
 
 | Unit | Topic | Phase | Status |
 | ---- | ----- | ----- | ------ |
-| [01](units/01-space-model-remote/README.md) | Space, first model and report, remote source | P0 (slice of P1–P3, P6) | in progress |
+| [01](units/01-space-model-remote/README.md) | Space, first model and report, remote source | P0 (slice of P1–P3, P6) | done |
 
 ## How to follow along
 
