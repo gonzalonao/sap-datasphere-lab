@@ -76,9 +76,40 @@ The README progress table and this map must stay in sync.
    `docs/architecture.md` and `docs/decisions.md`.
 5. When a phase closes, write its summary in `docs/phases/PN-slug.md`.
 
-You can't see the tenant, so the UI steps come from your knowledge. Flag steps you're unsure
-of (menu names, availability on trial tenants, version changes) with **⚠ verify**. I'll
-correct them.
+You can't see the tenant. **Before writing or presenting UI steps, check the current SAP
+documentation**: the SAP Help Portal guides are published as markdown in
+[SAP-docs/sap-datasphere](https://github.com/SAP-docs/sap-datasphere) (`docs/`; list the
+tree with `gh api repos/SAP-docs/sap-datasphere/git/trees/main?recursive=1` and read files
+from `raw.githubusercontent.com`). The Help Portal itself renders client-side, so use the
+GitHub source. Take menu paths and labels from the docs, record the doc file in the guide
+step, and mark only what the docs don't settle with **⚠ verify**. When my report
+contradicts the docs, my tenant wins: fix the guide and note the deviation.
+
+## Build journal and learning method
+
+Same method as the Fabric projects:
+
+- **Private build journal** in `docs/private/` (separate local git repo, gitignored by
+  this repo): click-level guides `units/NN-slug.md`, the tracker `progress.md`, and
+  `learning-log.md`. At session start, read `progress.md` and the guide it points at.
+  The public unit README keeps concepts, exercise, condensed steps and results.
+- **Instructions to me are always click-level**: which app in the side navigation, where
+  on the screen a button sits, what to type, and how to verify the result. This applies
+  to ad-hoc guidance in chat too. Uncertain UI details get **⚠ verify**.
+- **Interactive pace:** present one part at a time in chat, wait for my report, then
+  continue. Don't dump a whole unit at once.
+- **Teach, then test.** Each part opens with a lesson in chat: what the concepts are,
+  why they matter, and analogies to the Microsoft/Databricks stack I know. Only then the
+  quiz, then the click-level steps. Every quiz question must map to a lesson point taught
+  in chat; material that only appears in the guide doesn't count. Post-build checks get
+  their own short lesson first (what was built and what it implies).
+- **📸 Screenshot list:** `docs/private/screenshots.md` holds every evidence shot still to
+  take (file, step, what it shows, what to scrub). Add a row at each 📸 marker and keep it
+  current; I take them in batches.
+- **🎓 Learning checkpoints** before (concepts) and after (what was built) each part:
+  quiz with `AskUserQuestion`, following the rules at the top of
+  `docs/private/learning-log.md` (plausible distractors, shuffled answer positions, log
+  misses with corrections, re-test open misconceptions).
 
 ## Documentation standards
 
