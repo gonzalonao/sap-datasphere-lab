@@ -36,7 +36,7 @@ loads and remote connections can be exercised on the same data.
 
 | Phase | Theme | Units | Status |
 | ----- | ----- | ----- | ------ |
-| P0 | Tenant & governance setup | 01 | in progress |
+| P0 | Tenant & governance setup | 01 | done ([summary](docs/phases/P0-tenant-governance.md)) |
 | P1 | Ingestion | 01 (intro) | started |
 | P2 | Transformation | 01 (intro) | started |
 | P3 | Semantic layer | 01 (intro) | started |
