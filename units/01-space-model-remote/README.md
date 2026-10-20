@@ -2,10 +2,11 @@
 
 **Phase:** P0 — Tenant & governance setup (also a first thin slice through P1 ingestion, P2
 transformation, P3 semantic layer and P6 consumption) · **Builds on:** — · **Status:**
-in progress
+done (2026-10-20)
 
-> **⚠ verify** marks steps written from general product knowledge that may differ in your
-> tenant's version or licence. Report any deviation and I'll correct the text.
+> The steps were checked against the SAP Datasphere documentation and then corrected
+> wherever the tenant (Q3 2026 release) behaved differently. Those deviations are listed
+> under *Gotchas*.
 
 ## Course objective
 
@@ -21,13 +22,13 @@ words. The parts below follow the course order.
 | **Space** | The unit of isolation in Datasphere: own objects, own storage quota, own members and connections. Objects are invisible to other spaces unless shared. | Everything in this project lives in a space; governance (P0, P4) starts here. |
 | **Global vs. scoped roles** | Global roles (e.g. *DW Administrator*) grant tenant-wide privileges such as creating spaces; scoped roles grant privileges only inside the spaces they are scoped to. | Decides whether you can create your own space or must work in one prepared for you. |
 | **Local table** | Table whose data is stored in Datasphere (here filled by a CSV import). | Persisted data: fast, independent of the source, but a copy that ages. |
-| **Remote table** | A table definition pointing at a source object through a connection. Data access is *remote* (federated, read on demand) or *replicated* (copied into Datasphere). | The core federation-vs-replication trade-off of this project. Here we only use federation. |
+| **Remote table** | A table definition pointing at a source object through a connection. Data access is *remote* (federated, read on demand) or *replicated* (copied into Datasphere). | The core federation-vs-replication trade-off of this project. Here federation came first; the public source then forced a snapshot replication. |
 | **Connection** | Per-space definition of how to reach a source system (type, URL, authentication). | One connection serves many remote tables and flows. |
 | **Graphical view & view editor** | Canvas of nodes: sources → operators (join, union, projection, calculated columns, filter, aggregation) → output node, whose properties hold the semantic usage, measures/attributes, associations and *expose for consumption*. | The main modelling tool for P2/P3. |
 | **Semantic usage** | Declares the role of a view: *Relational Dataset*, *Fact*, *Dimension*, *Text*, *Hierarchy*. A *Fact* needs at least one measure; a *Dimension* needs a key. | Decides what the view can be used for: only a Fact can feed an analytic model, only a Dimension (or Text/Hierarchy) can be an association target. |
-| **Analytic model** | The consumption-ready semantic layer on top of one Fact: chosen measures, dimensions pulled in through the Fact's associations, variables. | **SAC stories consume analytic models**, not raw views (⚠ verify: older tenants may still offer the deprecated *Analytical Dataset* semantic usage). |
-| **Association** | A key-based relationship from a view to a Dimension/Text/Hierarchy. Not a join: nothing is joined in the view; the analytic model and consumers resolve it only when its attributes are requested. | Keeps the fact narrow and reuses dimensions; the basis of the star schema. |
-| **Time dimension** | Generated per space: a time table plus day/week/month/quarter/year dimension views (`SAP.TIME.*`). | Consistent time analysis and a Year → Quarter → Month → Day drill without hand-built date tables. |
+| **Analytic model** | The consumption-ready semantic layer on top of one Fact: chosen measures, dimensions pulled in through the Fact's associations, variables. | **SAC stories consume analytic models**, not raw views. |
+| **Association** | A key-based relationship from a view to a Dimension/Text/Hierarchy. Not a join: nothing is joined in the view; the analytic model joins on demand, only for queries that request the dimension's attributes. Every key column of the target must be mapped. | Keeps the fact narrow and reuses dimensions; the basis of the star schema. Close to a Power BI model relationship. |
+| **Time dimension** | Generated per space: a time table, four dimension views (day, month, quarter, year) and three translation tables (`SAP.TIME.*`). The day view carries the hierarchies Year–Quarter–Month–Day, Year–Month–Day and Year–Week–Day. | Consistent time analysis without hand-built date tables. SAC supports **only these generated dimensions** as time dimensions. |
 | **Expose for consumption** | Switch on a view that makes it consumable by external tools (Power BI, ODBC/OData clients). | Not needed for SAC via an analytic model, but needed for Power BI later (P6). |
 
 ### Federation vs. replication, in one paragraph
@@ -36,7 +37,9 @@ A remote table in *remote* mode sends every query to the source: always fresh, n
 used, but speed and availability depend on the source and the network, and not every
 operation can be pushed down. *Replicated* mode copies the data and serves queries locally.
 This unit swaps a local table for a remote one in an existing model to show that the model
-doesn't care which one is underneath. The decision of which mode to use per table is
+doesn't care which one is underneath. In practice, pure federation against the public
+Northwind service hit query timeouts, so the remote table was switched to a snapshot
+replication: the same trade-off, decided by evidence. Which mode to use per table is
 revisited in P1.
 
 ## Exercise
@@ -50,8 +53,8 @@ Build **Northwind Sales** as a first star-schema slice, in the course order:
   country.
 - **D. Remote source** — an OData connection to the public Northwind service; replace
   `LT_NW_ORDERS` by the remote table `RT_NW_ORDERS`; story totals unchanged.
-- **E. Time dimension and associations** — generate the time dimension, add a customer
-  dimension, associate both to the fact and use them in the story.
+- **E. Time dimension and associations** — use the generated time dimension, add a
+  customer dimension, associate both to the fact and use them in the story.
 
 Objects created (see [`docs/naming.md`](../../docs/naming.md)):
 
@@ -71,7 +74,7 @@ Objects created (see [`docs/naming.md`](../../docs/naming.md)):
 ```mermaid
 flowchart LR
     CSV[CSV files] --> LT[LT_NW_ORDERS<br/>LT_NW_ORDER_DETAILS<br/>LT_NW_CUSTOMERS]
-    ODATA[Northwind OData V4] -->|CN_NW_ODATA| RT[RT_NW_ORDERS]
+    ODATA[Northwind OData V4] -->|CN_NW_ODATA<br/>snapshot replication| RT[RT_NW_ORDERS]
     LT --> F[FACT_NW_SALES]
     RT -.replaces LT_NW_ORDERS.-> F
     LT --> D[DIM_NW_CUSTOMER]
@@ -84,10 +87,10 @@ flowchart LR
 ### Prerequisites
 
 - Access to the tenant. Creating a space needs the tenant-wide *create space* privilege,
-  normally only in the global role **DW Administrator** (⚠ verify: a *DW Space
-  Administrator* manages spaces it is scoped to but usually cannot create new ones). **If
-  you can't create a space**, either ask the trainer to create `NW_LAB` and add you, or work
-  in the trainer's `Lab` space; skip steps 3–5 and report it so the decision is logged.
+  which comes with the global role **DW Administrator**. Working *inside* a space also
+  needs a scoped role for it (for example a space-administrator scoped role): a
+  DW Administrator alone can't see the space's time data. If you can't create a space,
+  ask an administrator to create `NW_LAB` and add you.
 - The three CSV files. Generate them locally from the public service (no manual download):
 
   ```powershell
@@ -96,8 +99,8 @@ flowchart LR
 
   This writes `customers.csv` (91 rows), `orders.csv` (830) and `order_details.csv` (2,155)
   into `data\raw\`. Dates are exported as `YYYY-MM-DD`.
-- SAC with a live connection to this Datasphere tenant, created by a SAC admin
-  (⚠ verify: ask the trainer whether it exists and what it is called).
+- SAC with a live connection to this Datasphere tenant, created by a SAC admin, and the
+  *DW Consumer* role in Datasphere for story consumption.
 
 ### Steps
 
@@ -106,27 +109,30 @@ with comprehension checks after each part.
 
 #### A. Space
 
-> **As executed:** the training tenant reserves space creation for the trainer, so this
-> unit runs in the trainer-provided shared space inside a folder `NW_LAB` (see
-> `docs/decisions.md`). Steps 3–5 are kept as the procedure for an own space.
+> **As executed:** the unit started in a trainer-provided shared space, using a folder as
+> a pseudo-space. Once admin rights were confirmed, everything moved to the own space
+> `NW_LAB` by CSN/JSON export and import (see *Results*, Part M, and
+> `docs/decisions.md`).
 
 1. **Check your access.** Open *Space Management* and see whether *Create* is offered. Check
-   your roles in your user profile (⚠ verify: or *Security → Users*). Note both in
+   your roles (*Security → Users*, or ask an administrator). Note both in
    **Results**: they decide the rest of part A.
 2. **Inspect the trainer's `Lab` space.** Look at its members (and their scoped roles),
    storage assignment and connections. This is the reference for your own space.
 3. **Create the space.** *Space Management → Create*: space name `Northwind Lab`, space ID
-   `NW_LAB` (max 20 characters, upper case; add a suffix if taken). Storage type
-   *SAP HANA Database (Disk and In-Memory)* (⚠ verify: the alternative is a file space on
-   the object store, used with BDC later).
-4. **Assign storage.** Keep the space quota small, e.g. 2 GB disk and 1 GB in-memory
-   (⚠ verify: defaults and minimums depend on tenant size). *Why:* quotas come out of one
-   tenant-wide pool; over-allocating in a shared training tenant blocks other trainees.
-5. **Add members and deploy.** Add yourself with a scoped role that allows modelling in
-   this space (⚠ verify: e.g. *DW Modeler* scoped to `NW_LAB`). *Deploy* the space.
-6. **Tour the space settings** you'll use later, without changing them: *Members*, *Time
-   Data*, *Connections* (or *Connections* in the left menu), *Data Access Controls*,
-   *Auditing*, *Database Access* (database users, used for Power BI in P6).
+   `NW_LAB` (max 20 characters, upper case). The ID is fixed from the moment you click
+   *Create*. Storage type *SAP HANA Database (Disk and In-Memory)*.
+4. **Assign storage.** Keep the space quota small: 2 GB disk and 1 GB in-memory. *Why:*
+   quotas are reserved from one tenant-wide pool, used or not; over-allocating in a shared
+   training tenant blocks other trainees.
+5. **Add members and deploy.** Add `NW_LAB` to the scopes of the scoped roles you need
+   (*Security → Roles*) and assign yourself. Adding a space to a role's scopes assigns
+   **every user of that role** to it; review the space's *Users* afterwards. *Deploy* the
+   space, then generate its time data (*Time Data → Create Time Tables and Dimensions*,
+   default range 1900–2050).
+6. **Tour the space settings** you'll use later, without changing them: *Users*, *Time
+   Data*, *Auditing*, *Database Access* (database users, used for Power BI in P6), and
+   *Apps → Connections*. Workload settings are tenant-level (*System → Configuration*).
 
 #### B. First model: CSV → local tables → graphical view
 
@@ -187,82 +193,99 @@ with comprehension checks after each part.
 
 #### D. Remote source: connection and remote table
 
-18. **Create the connection.** *Connections → Add Connection → Create Connection →
+18. **Create the connection.** *Apps → Connections → Add Connection → Create Connection →
     Generic OData*: URL `https://services.odata.org/V4/Northwind/Northwind.svc/`,
     version **V4**, no Cloud Connector, authentication **No Authentication** (the default
     is OAuth 2.0). Technical name `CN_NW_ODATA`. *Validate Connection*: the message lists
     the available features.
     *Prerequisite:* remote tables over Generic OData need the service's TLS server
     certificate uploaded to the tenant by an administrator (*System → Configuration →
-    Security*). Without it the connection can be created but doesn't validate.
+    Security → Certificates*, purpose *TLS Server*). For this service that is the chain's
+    root, *DigiCert Global Root G2*. Without it the connection can be created, but
+    validation reports remote tables as unavailable.
 19. **Import the remote table.** *Data Builder → Import → Import Remote Tables* →
     `CN_NW_ODATA` → `Orders` → technical name `RT_NW_ORDERS` → *Import and Deploy*. Data
-    access stays **Remote** (federated). Preview: 830 rows.
+    access starts as **Remote** (federated). Preview: 830 rows.
 20. **Compare with the local table.** The remote table has more columns (`ShipName`,
     `ShipAddress`, …) and `OrderDate` as a timestamp; the local one has it as a date.
 21. **Replace the source.** In `FACT_NW_SALES`, drag `RT_NW_ORDERS` over the
     `LT_NW_ORDERS` node and choose **Replace**. The *Replace Source* dialog maps columns by
-    name; unmapped new columns are excluded automatically. Save, deploy. `ORDER_DATE`
-    keeps working thanks to `TO_DATE`.
+    name; unmapped new columns are excluded in an automatic projection. The remote
+    `OrderID` is an Integer, the local one Integer64: add a *Calculated Columns* node
+    after that projection with `OrderID = TO_BIGINT("OrderID")` (Integer64) so the join
+    keys match. Save, deploy. `ORDER_DATE` keeps working thanks to `TO_DATE`.
 22. **Re-test.** Analytic model preview and story must still show 51,317 /
     1,265,792.64. *Impact and Lineage* now reaches the connection.
-23. **Look at, don't change, data access.** *Monitoring → Data Integration → Remote
-    Tables*: data access *Remote*, and the replication options this connection type
-    offers. Replication is P1 material.
+23. **Replicate when federation doesn't hold.** If previews or the story time out
+    (3-minute limit), check *Monitoring → Data Integration → Remote Queries* to see what
+    the source receives. Here the public service stalled under concurrent requests, so:
+    *Monitoring → Data Integration → Remote Tables* → `RT_NW_ORDERS` → *Data Replication →
+    Start Data Replication*. Data access becomes *Replicated (Snapshot)*; totals stay
+    51,317 / 1,265,792.64 and *Remote Queries* stays quiet.
 
 #### E. Time dimension and associations
 
-24. **Generate the time dimension.** *Space Management → `NW_LAB` → Time Data → Create
-    Time Tables and Dimensions*. Years **1996 to 1999** (orders run 1996-07 to 1998-05).
-    Create.
-25. **Find the generated objects** in the Data Builder: the table
-    `SAP.TIME.M_TIME_DIMENSION` and views `SAP.TIME.VIEW_DIMENSION_DAY/WEEK/MONTH/QUARTER/YEAR`
-    (⚠ verify names). Preview the day view: key `DATE_SQL`, attributes for year, quarter,
-    month, and a Year → Quarter → Month → Day hierarchy.
-26. **Create the customer dimension.** *New Graphical View* → `LT_NW_CUSTOMERS` → output
-    semantic usage **Dimension**, key `CustomerID`, business names for attributes.
-    Technical name `DIM_NW_CUSTOMER`. Deploy.
-27. **Add the associations** in `FACT_NW_SALES` → output node → *Associations*:
-    `CustomerID` → `DIM_NW_CUSTOMER.CustomerID`, and `ORDER_DATE` →
-    `SAP.TIME.VIEW_DIMENSION_DAY.DATE_SQL`. Deploy. The fact view's own columns don't
-    change: nothing was joined.
-28. **Extend the analytic model.** Open `AM_NW_SALES`: the two associated dimensions now
-    appear as available dimensions. Add them, selecting `CompanyName`, `City`, `Country`
-    and the time attributes. Deploy.
-29. **Use them in the story.** Add a time-series chart of `REVENUE` by the order-date
-    dimension, drilling Year → Quarter → Month (⚠ verify: select the hierarchy in the
-    chart builder). Add a bar chart of `REVENUE` by customer `Country` and compare it with
-    the `ShipCountry` chart. Save.
+24. **Time data.** Already generated with the space (step 5, 1900–2050). In the Data
+    Builder, search `Time`: eight read-only objects, `SAP.TIME.M_TIME_DIMENSION` (time
+    table), `SAP.TIME.VIEW_DIMENSION_DAY`, `…_MONTH`, `…_QUARTER`, `…_YEAR` (dimension
+    views) and `SAP.TIME.M_TIME_DIMENSION_TDAY`, `…_TMONTH`, `…_TQUARTER` (translation
+    tables). The day view's key is the date; its hierarchies are built on the `CAL*`
+    attributes (`CALQUARTER`, `CALMONTH`, `CALWEEK`).
+25. **Create the customer dimension.** *New Graphical View* → `LT_NW_CUSTOMERS` → output
+    node: semantic usage **Dimension**, dimension type *Standard*. The key `CustomerID`
+    carries over from the table (a dimension needs at least one key). *Edit Columns*:
+    business names *Company*, *Customer City*, *Customer Country*. Technical name
+    `DIM_NW_CUSTOMER`. Deploy: 91 rows.
+26. **Add the associations.** `FACT_NW_SALES` → output node → *Associations* → **+ →
+    Association** → `DIM_NW_CUSTOMER` (mapping `CustomerID` → `CustomerID`), then
+    *Time Dimension - Day* (mapping **`ORDER_DATE`** → the day key; both are dates, unlike
+    the remote `OrderDate` timestamp). Deploy. The fact view's own columns and its 2,155
+    rows don't change: nothing was joined.
+27. **Extend the analytic model.** Open `AM_NW_SALES` → click the fact source card on the
+    canvas. Attributes that carry an association show a **cube icon**; click it on
+    `CustomerID` and *Order Date* to add the dimensions. The new dimension nodes are named
+    after the fact attribute (their role). On the customer node select *Company*,
+    *Customer City*, *Customer Country*; on the date node select year, month, quarter
+    **and the hierarchy level attributes** `CALQUARTER`, `CALMONTH`, `CALWEEK` (otherwise
+    the save reports *Leveled Hierarchy Attribute … is missing*). Save, deploy. Preview by
+    year: 1996 208,083.95 · 1997 617,084.97 · 1998 440,623.72.
+28. **Use them in the story.** Reopen `Northwind Sales Overview` and save it once (required
+    after its analytic model is redeployed). Add a **Time Series** chart of `REVENUE` by
+    *Order Date* and switch its level to Quarter (*Chart Details → Hierarchy*). Add a bar
+    chart of `REVENUE` by *Customer Country* (top 10) next to the `ShipCountry` chart.
+    Save.
 
 ### Acceptance criteria
 
-- [ ] Space `NW_LAB` exists, deployed, with storage assigned and me as member, **or**
-      (as executed) folder `NW_LAB` exists in the shared space, with no name collisions
-      and the deviation documented.
-- [ ] `LT_NW_CUSTOMERS` (91), `LT_NW_ORDERS` (830) and `LT_NW_ORDER_DETAILS` (2,155) are
+- [x] Space `NW_LAB` exists, deployed, with storage assigned and me as member (after the
+      documented start in a shared space).
+- [x] `LT_NW_CUSTOMERS` (91), `LT_NW_ORDERS` (830) and `LT_NW_ORDER_DETAILS` (2,155) are
       deployed with key columns, `PostalCode` as string and date/decimal types.
-- [ ] `FACT_NW_SALES` (Fact, measures `REVENUE` and `Quantity`) and `AM_NW_SALES` are
+- [x] `FACT_NW_SALES` (Fact, measures `REVENUE` and `Quantity`) and `AM_NW_SALES` are
       deployed and previewable.
-- [ ] SAC story `Northwind Sales Overview` shows revenue by ship country and the totals
+- [x] SAC story `Northwind Sales Overview` shows revenue by ship country and the totals
       are recorded.
-- [ ] Connection `CN_NW_ODATA` validates (or the failure and the fallback are documented).
-- [ ] `RT_NW_ORDERS` returns 830 rows in remote mode and replaces `LT_NW_ORDERS` in
-      `FACT_NW_SALES`; story totals are identical before and after.
-- [ ] Time dimension generated for 1996–1999; `FACT_NW_SALES` associates to it and to
-      `DIM_NW_CUSTOMER`; both are in `AM_NW_SALES`.
-- [ ] The story drills revenue Year → Quarter → Month and shows revenue by customer
-      country.
-- [ ] I can explain in my own words: join vs. association, local vs. remote table, why SAC
-      reads an analytic model (in **Results**).
+- [x] Connection `CN_NW_ODATA` validates (or the failure and the fallback are documented).
+- [x] `RT_NW_ORDERS` returns 830 rows and replaces `LT_NW_ORDERS` in `FACT_NW_SALES`;
+      story totals are identical before and after (with snapshot replication, see
+      *Results*).
+- [x] Time dimension generated (1900–2050, covers the 1996–1998 orders);
+      `FACT_NW_SALES` associates to it and to `DIM_NW_CUSTOMER`; both are in
+      `AM_NW_SALES`.
+- [x] The story shows revenue over time at Year / Quarter / Month level and revenue by
+      customer country.
+- [x] I can explain: join vs. association, local vs. remote table, why SAC reads an
+      analytic model (see *Takeaways*).
 
 ## Results
 
 ### Part A — Space
 
-- Worked in the trainer-provided shared space (quota enabled, 2 GB disk / 1 GB in-memory,
-  deployed), inside a new Data Builder folder `NW_LAB`. Own-space creation was not used.
-- The space's time data already exists with a 1900–2050 range, so it covers the Northwind
-  order dates (1996–1998) and step 24 is not needed.
+- Parts A–C were first built in the trainer-provided shared space (quota enabled, 2 GB
+  disk / 1 GB in-memory, deployed), inside a Data Builder folder `NW_LAB`. They moved to
+  the own space in Part M.
+- The shared space's time data used the default 1900–2050 range, which covers the
+  Northwind order dates (1996–1998); the own space uses the same range.
 - A search for this project's prefixes found no technical-name collisions with the other
   trainee's objects.
 - Space priority and statement limits are not on the space page in the current release:
@@ -314,6 +337,40 @@ with comprehension checks after each part.
   *DigiCert Global Root G2* TLS server certificate to the tenant: remote tables and data
   flows available, replication flows not supported for this connection type.
 
+### Part E — Time dimension and associations
+
+- The space's generated time data (eight `SAP.TIME.*` objects) was used as is.
+  `DIM_NW_CUSTOMER` (91 rows, key `CustomerID`) was built as a view on
+  `LT_NW_CUSTOMERS`.
+- `FACT_NW_SALES` got two associations, *Sales to Customer* (`CustomerID`) and *Sales to
+  Time Dimension - Day* (`ORDER_DATE`), with no mapping or type warnings. Its columns and
+  2,155 rows are unchanged.
+- `AM_NW_SALES` now includes the dimensions *Customer* and *Order Date*. Its preview
+  matches an independent calculation from the CSV files exactly: all 21 customer
+  countries, and revenue by year (1996 208,083.95 · 1997 617,084.97 · 1998 440,623.72).
+- The SAC story shows a time series of revenue by quarter (peak 298,491.45 in Q1 1998)
+  and revenue by customer country. In Northwind every order ships to its customer's
+  country (0 of 830 differ), so the customer-country and ship-country charts are
+  identical.
+
+### Takeaways
+
+- **Join vs. association.** A join runs inside the view and changes its rows and columns.
+  An association only defines the relationship; the analytic model joins on demand, for
+  queries that ask for the dimension's attributes. The ship-country chart never touches
+  the customer dimension.
+- **Same numbers, different meaning.** `ShipCountry` is recorded on each order (ship-to,
+  frozen). *Customer Country* comes from master data (sold-to, current). If a customer
+  moved, only the customer-country chart would move its history: an "as is" view, unless
+  the dimension is made time-dependent.
+- **Local vs. remote table.** A remote table in remote mode queries the source every time.
+  That is fresh, but only as reliable as the source: here it timed out, and a snapshot
+  replication fixed it. The view on top didn't change.
+- **Why SAC reads an analytic model.** It is a deliberate consumption contract: which
+  measures, which dimensions, which hierarchies. New associations in the fact don't reach
+  SAC until the analytic model includes them, is redeployed, and the story is saved
+  again.
+
 ## Gotchas
 
 - The space card title in *Space Management* is not a link: open a space with the card's
@@ -336,10 +393,25 @@ with comprehension checks after each part.
   each widget.
 - Reducing scale **truncates** (163.625 → 163.62); use `ROUND(…, 2)` when cent rounding is
   wanted.
+- After *Replace Source*, a join can warn about a data-type mismatch on its key (remote
+  Integer vs. local Integer64). Cast once, right after the source.
+- Pure federation against a public OData service can time out (3-minute limit). Read
+  *Remote Queries* before blaming the model; snapshot replication is the fix here.
+- The time dimension needs a column that holds **dates**. Map `ORDER_DATE` (Date), not the
+  remote `OrderDate` (Timestamp).
+- In the analytic model there is no separate list of associated dimensions: the **cube
+  icon** on an attribute of the fact source adds its dimension. The new node is named
+  after the attribute.
+- Adding the time dimension without its `CAL*` attributes fails validation (*Leveled
+  Hierarchy Attribute "CALMONTH" … is missing*). Select the hierarchy level attributes, and
+  don't use *Save Anyway*.
+- Only the generated time dimensions work as SAC time dimensions; a self-built calendar
+  view is treated as an ordinary dimension.
 
 ## Link to next unit
 
-Leaves in place: a working space, one connection, a minimal star schema, a time dimension,
-an analytic model and a first story. Later units deepen each slice: P1 ingestion modes
+Leaves in place: an own space, one validated connection, a snapshot-replicated remote
+table, a minimal star schema (one fact, a customer dimension, the time dimension), an
+analytic model and a saved SAC story. Later units deepen each slice: P1 ingestion modes
 (replication vs. federation, data flows), P2 transformation and quality, P3 text and
 hierarchies and the full analytic model.
