@@ -1,12 +1,15 @@
-# P0 — Tenant & governance setup
+# Phase A — Foundation
 
-**Status:** done (2026-10-20) · **Units:** [01](../../units/01-space-model-remote/README.md)
+**Status:** ✅ done (2026-10-20) · **Built as:** course unit 01 —
+[detailed record](../../units/01-space-model-remote/README.md) · **Inventory:**
+[all phases](README.md)
 
 ## Goal
 
-Give the project a governed place to live in the tenant: an own space with a sized quota,
-the right roles, a validated connection to the source, and the shared services the later
-phases depend on (time data, trusted certificates).
+Give the project a governed place to live in the tenant, then run once through the whole
+chain on a small scale: an own space with a sized quota and the right roles, a validated
+connection, CSV and remote data, a fact view, a customer and a time dimension joined by
+association, an analytic model and a live SAC story.
 
 ## What was built
 
@@ -18,11 +21,10 @@ phases depend on (time data, trusted certificates).
 | Connection | `CN_NW_ODATA`, Generic OData V4 to the public Northwind service, no authentication; validated (remote tables and data flows available, replication flows not supported) |
 | Trust | *DigiCert Global Root G2* uploaded as a tenant-wide *TLS Server* certificate (in `datasphere/certs/`) |
 | Definitions as code | Sanitized CSN/JSON exports in `datasphere/csn/`; they re-import as they are |
+| Model | Local tables from CSV (`LT_NW_*`), remote table `RT_NW_ORDERS` with snapshot replication, fact view `FACT_NW_SALES`, dimension view `DIM_NW_CUSTOMER`, associations to the customer and day dimensions |
+| Consumption | Analytic model `AM_NW_SALES` and the SAC story *Northwind Sales Overview* (top 10 countries, totals, quarterly time series), reconciled exactly against the CSV files |
 
-Unit 01 also ran a first thin slice through the later phases: CSV ingestion and a remote
-table with snapshot replication (P1), a graphical fact view (P2), a customer dimension,
-associations and the time dimension in an analytic model (P3), and a live SAC story (P6).
-Those phases are marked *started* in the README, not done.
+Phases B–F go deeper into each of these areas.
 
 ```mermaid
 flowchart LR
@@ -52,7 +54,7 @@ All in [`docs/decisions.md`](../decisions.md):
   DigiCert root; the Northwind chain ends at *Global Root G2*, which had to be added.
 - **Naming convention** `<TYPE>_<DOMAIN>_<ENTITY>` ([`docs/naming.md`](../naming.md)).
 - **Snapshot replication** of the remote orders table when federation timed out
-  (strictly P1, decided during the P0 unit).
+  (an ingestion topic, decided during Phase A).
 
 ## Lessons
 
@@ -69,9 +71,9 @@ All in [`docs/decisions.md`](../decisions.md):
 
 ## Deferred
 
-- **Data access controls and cross-space sharing** → P4. They need a second, real space
-  (for example a separate ingestion space shared into a modelling space).
+- **Data access controls and cross-space sharing** → Phase D. Sharing needs a second, real
+  space (an ingestion space shared into a modelling space).
 - **Workload management** (space priority, statement limits) is tenant-level under
   *System → Configuration*. It was looked at, not changed.
-- **Database users** for Power BI → P6.
-- **Replication flows** → P1/P7 (provisional plan in the decision log).
+- **Database users and the Open SQL schema** → Phase B; Power BI on top of them → Phase F.
+- **Replication flows** → Phase B (Azure SQL source with delta).
