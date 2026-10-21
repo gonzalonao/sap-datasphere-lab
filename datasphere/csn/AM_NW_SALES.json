@@ -1,0 +1,641 @@
+{
+  "definitions": {
+    "AM_NW_SALES": {
+      "kind": "entity",
+      "@EndUserText.label": "Sales Analysis",
+      "elements": {
+        "CustomerID": {
+          "@EndUserText.label": "CustomerID"
+        },
+        "ORDER_DATE": {
+          "@EndUserText.label": "Order Date"
+        },
+        "ShipCountry": {
+          "@EndUserText.label": "ShipCountry"
+        },
+        "Quantity": {
+          "@EndUserText.label": "Quantity",
+          "@AnalyticsDetails.measureType": {
+            "#": "BASE"
+          }
+        },
+        "REVENUE": {
+          "@EndUserText.label": "Revenue",
+          "@AnalyticsDetails.measureType": {
+            "#": "BASE"
+          }
+        }
+      },
+      "@ObjectModel.modelingPattern": {
+        "#": "ANALYTICAL_CUBE"
+      },
+      "@ObjectModel.supportedCapabilities": [
+        {
+          "#": "ANALYTICAL_PROVIDER"
+        },
+        {
+          "#": "_DWC_AM_EDITABLE_DIMENSION_NAMES"
+        }
+      ],
+      "@DataWarehouse.editorType": {
+        "#": "DWCQueryModelEditor"
+      },
+      "@DataWarehouse.hanaCatalog.viewType": {
+        "#": "CALCULATION_VIEW"
+      },
+      "query": {
+        "SELECT": {
+          "from": {
+            "ref": [
+              "FACT_NW_SALES"
+            ],
+            "as": "FACT_NW_SALES"
+          },
+          "columns": [
+            {
+              "ref": [
+                "FACT_NW_SALES",
+                "CustomerID"
+              ],
+              "as": "CustomerID"
+            },
+            {
+              "ref": [
+                "FACT_NW_SALES",
+                "ORDER_DATE"
+              ],
+              "as": "ORDER_DATE"
+            },
+            {
+              "ref": [
+                "FACT_NW_SALES",
+                "ShipCountry"
+              ],
+              "as": "ShipCountry"
+            },
+            {
+              "ref": [
+                "FACT_NW_SALES",
+                "Quantity"
+              ],
+              "as": "Quantity"
+            },
+            {
+              "ref": [
+                "FACT_NW_SALES",
+                "REVENUE"
+              ],
+              "as": "REVENUE"
+            }
+          ],
+          "mixin": {}
+        }
+      },
+      "_meta": {
+        "dependencies": {
+          "folderAssignment": "Folder_RSYEEFPI"
+        }
+      }
+    },
+    "LT_NW_ORDERS": {
+      "kind": "entity",
+      "@ObjectModel.modelingPattern": {
+        "#": "DATA_STRUCTURE"
+      },
+      "@ObjectModel.supportedCapabilities": [
+        {
+          "#": "DATA_STRUCTURE"
+        }
+      ],
+      "@DataWarehouse.dataSource.schema": "<SOURCE_SPACE>#<INTERNAL_SCHEMA>",
+      "@DataWarehouse.dataSource.entity": "<INTERNAL_DATASET_ID>",
+      "@EndUserText.label": "Northwind Orders (file)",
+      "elements": {
+        "OrderID": {
+          "type": "cds.Integer64",
+          "key": true,
+          "@EndUserText.label": "OrderID"
+        },
+        "CustomerID": {
+          "type": "cds.String",
+          "length": 5000,
+          "@EndUserText.label": "CustomerID"
+        },
+        "EmployeeID": {
+          "type": "cds.Integer64",
+          "@EndUserText.label": "EmployeeID"
+        },
+        "OrderDate": {
+          "type": "cds.Date",
+          "@EndUserText.label": "OrderDate"
+        },
+        "RequiredDate": {
+          "type": "cds.Date",
+          "@EndUserText.label": "RequiredDate"
+        },
+        "ShippedDate": {
+          "type": "cds.Date",
+          "@EndUserText.label": "ShippedDate"
+        },
+        "Freight": {
+          "type": "cds.Decimal",
+          "precision": 38,
+          "scale": 19,
+          "@EndUserText.label": "Freight"
+        },
+        "ShipCity": {
+          "type": "cds.String",
+          "length": 5000,
+          "@EndUserText.label": "ShipCity"
+        },
+        "ShipCountry": {
+          "type": "cds.String",
+          "length": 5000,
+          "@EndUserText.label": "ShipCountry"
+        }
+      },
+      "_meta": {
+        "dependencies": {
+          "folderAssignment": "Folder_RSYEEFPI"
+        }
+      }
+    },
+    "LT_NW_ORDER_DETAILS": {
+      "kind": "entity",
+      "@ObjectModel.modelingPattern": {
+        "#": "DATA_STRUCTURE"
+      },
+      "@ObjectModel.supportedCapabilities": [
+        {
+          "#": "DATA_STRUCTURE"
+        }
+      ],
+      "@DataWarehouse.dataSource.schema": "<SOURCE_SPACE>#<INTERNAL_SCHEMA>",
+      "@DataWarehouse.dataSource.entity": "<INTERNAL_DATASET_ID>",
+      "@EndUserText.label": "Northwind Order Details (file)",
+      "elements": {
+        "OrderID": {
+          "type": "cds.Integer64",
+          "key": true,
+          "@EndUserText.label": "OrderID"
+        },
+        "ProductID": {
+          "type": "cds.Integer64",
+          "key": true,
+          "@EndUserText.label": "ProductID"
+        },
+        "UnitPrice": {
+          "type": "cds.Decimal",
+          "precision": 38,
+          "scale": 19,
+          "@EndUserText.label": "UnitPrice"
+        },
+        "Quantity": {
+          "type": "cds.Integer64",
+          "@EndUserText.label": "Quantity"
+        },
+        "Discount": {
+          "type": "cds.Decimal",
+          "precision": 38,
+          "scale": 19,
+          "@EndUserText.label": "Discount"
+        }
+      },
+      "_meta": {
+        "dependencies": {
+          "folderAssignment": "Folder_RSYEEFPI"
+        }
+      }
+    },
+    "FACT_NW_SALES": {
+      "kind": "entity",
+      "elements": {
+        "ProductID": {
+          "@EndUserText.label": "ProductID",
+          "type": "cds.Integer64",
+          "key": true,
+          "notNull": true
+        },
+        "UnitPrice": {
+          "@EndUserText.label": "UnitPrice",
+          "precision": 38,
+          "scale": 19,
+          "type": "cds.Decimal"
+        },
+        "Quantity": {
+          "@EndUserText.label": "Quantity",
+          "type": "cds.Integer64",
+          "@AnalyticsDetails.measureType": {
+            "#": "BASE"
+          },
+          "@Aggregation.default": {
+            "#": "SUM"
+          }
+        },
+        "Discount": {
+          "@EndUserText.label": "Discount",
+          "precision": 38,
+          "scale": 19,
+          "type": "cds.Decimal"
+        },
+        "CustomerID": {
+          "@EndUserText.label": "CustomerID",
+          "type": "cds.String",
+          "length": 5000
+        },
+        "OrderDate": {
+          "@EndUserText.label": "OrderDate",
+          "type": "cds.Date"
+        },
+        "REVENUE": {
+          "@EndUserText.label": "Revenue",
+          "precision": 15,
+          "scale": 2,
+          "type": "cds.Decimal",
+          "@AnalyticsDetails.measureType": {
+            "#": "BASE"
+          },
+          "@Aggregation.default": {
+            "#": "SUM"
+          }
+        },
+        "ORDER_DATE": {
+          "@EndUserText.label": "Order Date",
+          "type": "cds.Date"
+        },
+        "OrderID": {
+          "@EndUserText.label": "OrderID",
+          "type": "cds.Integer64",
+          "key": true,
+          "notNull": true
+        },
+        "ShipCountry": {
+          "@EndUserText.label": "ShipCountry",
+          "type": "cds.String",
+          "length": 5000
+        }
+      },
+      "query": {
+        "SELECT": {
+          "from": {
+            "SELECT": {
+              "from": {
+                "SELECT": {
+                  "from": {
+                    "join": "inner",
+                    "cardinality": {
+                      "max": 1
+                    },
+                    "args": [
+                      {
+                        "ref": [
+                          "LT_NW_ORDER_DETAILS"
+                        ],
+                        "as": "LT_NW_ORDER_DETAILS"
+                      },
+                      {
+                        "ref": [
+                          "LT_NW_ORDERS"
+                        ],
+                        "as": "LT_NW_ORDERS"
+                      }
+                    ],
+                    "on": [
+                      {
+                        "ref": [
+                          "LT_NW_ORDER_DETAILS",
+                          "OrderID"
+                        ]
+                      },
+                      "=",
+                      {
+                        "ref": [
+                          "LT_NW_ORDERS",
+                          "OrderID"
+                        ]
+                      }
+                    ]
+                  },
+                  "columns": [
+                    {
+                      "ref": [
+                        "LT_NW_ORDER_DETAILS",
+                        "OrderID"
+                      ],
+                      "key": true
+                    },
+                    {
+                      "ref": [
+                        "LT_NW_ORDER_DETAILS",
+                        "ProductID"
+                      ],
+                      "key": true
+                    },
+                    {
+                      "ref": [
+                        "LT_NW_ORDERS",
+                        "CustomerID"
+                      ]
+                    },
+                    {
+                      "ref": [
+                        "LT_NW_ORDER_DETAILS",
+                        "UnitPrice"
+                      ]
+                    },
+                    {
+                      "ref": [
+                        "LT_NW_ORDER_DETAILS",
+                        "Quantity"
+                      ]
+                    },
+                    {
+                      "ref": [
+                        "LT_NW_ORDERS",
+                        "OrderDate"
+                      ]
+                    },
+                    {
+                      "ref": [
+                        "LT_NW_ORDER_DETAILS",
+                        "Discount"
+                      ]
+                    },
+                    {
+                      "ref": [
+                        "LT_NW_ORDERS",
+                        "ShipCountry"
+                      ]
+                    }
+                  ]
+                },
+                "as": "Join 1"
+              },
+              "columns": [
+                {
+                  "ref": [
+                    "Join 1",
+                    "OrderID"
+                  ],
+                  "key": true
+                },
+                {
+                  "ref": [
+                    "Join 1",
+                    "ProductID"
+                  ],
+                  "key": true
+                },
+                {
+                  "ref": [
+                    "Join 1",
+                    "CustomerID"
+                  ]
+                },
+                {
+                  "ref": [
+                    "Join 1",
+                    "UnitPrice"
+                  ]
+                },
+                {
+                  "ref": [
+                    "Join 1",
+                    "Quantity"
+                  ]
+                },
+                {
+                  "ref": [
+                    "Join 1",
+                    "OrderDate"
+                  ]
+                },
+                {
+                  "ref": [
+                    "Join 1",
+                    "Discount"
+                  ]
+                },
+                {
+                  "ref": [
+                    "Join 1",
+                    "ShipCountry"
+                  ]
+                },
+                {
+                  "func": "TO_DATE",
+                  "args": [
+                    {
+                      "ref": [
+                        "Join 1",
+                        "OrderDate"
+                      ]
+                    }
+                  ],
+                  "as": "ORDER_DATE"
+                },
+                {
+                  "xpr": [
+                    {
+                      "ref": [
+                        "Join 1",
+                        "UnitPrice"
+                      ]
+                    },
+                    "*",
+                    {
+                      "ref": [
+                        "Join 1",
+                        "Quantity"
+                      ]
+                    },
+                    "*",
+                    {
+                      "xpr": [
+                        {
+                          "val": 1
+                        },
+                        "-",
+                        {
+                          "ref": [
+                            "Join 1",
+                            "Discount"
+                          ]
+                        }
+                      ]
+                    }
+                  ],
+                  "as": "REVENUE"
+                }
+              ]
+            },
+            "as": "Calculated Columns 1"
+          },
+          "columns": [
+            {
+              "ref": [
+                "ProductID"
+              ],
+              "key": true
+            },
+            {
+              "ref": [
+                "UnitPrice"
+              ]
+            },
+            {
+              "ref": [
+                "Quantity"
+              ]
+            },
+            {
+              "ref": [
+                "Discount"
+              ]
+            },
+            {
+              "ref": [
+                "CustomerID"
+              ]
+            },
+            {
+              "ref": [
+                "OrderDate"
+              ]
+            },
+            {
+              "ref": [
+                "REVENUE"
+              ]
+            },
+            {
+              "ref": [
+                "ORDER_DATE"
+              ]
+            },
+            {
+              "ref": [
+                "OrderID"
+              ],
+              "key": true
+            },
+            {
+              "ref": [
+                "ShipCountry"
+              ]
+            }
+          ]
+        }
+      },
+      "@ObjectModel.supportedCapabilities": [
+        {
+          "#": "DATA_STRUCTURE"
+        }
+      ],
+      "@EndUserText.label": "Sales",
+      "@ObjectModel.modelingPattern": {
+        "#": "ANALYTICAL_FACT"
+      },
+      "@DataWarehouse.consumption.external": false,
+      "_meta": {
+        "dependencies": {
+          "folderAssignment": "Folder_RSYEEFPI"
+        }
+      }
+    }
+  },
+  "version": {
+    "csn": "1.0"
+  },
+  "meta": {
+    "creator": "CDS Compiler v1.19.2"
+  },
+  "businessLayerDefinitions": {
+    "AM_NW_SALES": {
+      "identifier": {
+        "key": "AM_NW_SALES"
+      },
+      "text": "Sales Analysis",
+      "sourceModel": {
+        "factSources": {
+          "FACT_NW_SALES": {
+            "text": "Sales",
+            "dataEntity": {
+              "key": "FACT_NW_SALES"
+            }
+          }
+        },
+        "dimensionSources": {}
+      },
+      "exposedAssociations": {},
+      "attributes": {
+        "CustomerID": {
+          "attributeType": "AnalyticModelAttributeType.FactSourceAttribute",
+          "attributeMapping": {
+            "FACT_NW_SALES": {
+              "key": "CustomerID"
+            }
+          },
+          "text": "CustomerID",
+          "duplicated": false
+        },
+        "ORDER_DATE": {
+          "attributeType": "AnalyticModelAttributeType.FactSourceAttribute",
+          "attributeMapping": {
+            "FACT_NW_SALES": {
+              "key": "ORDER_DATE"
+            }
+          },
+          "text": "Order Date",
+          "duplicated": false
+        },
+        "ShipCountry": {
+          "attributeType": "AnalyticModelAttributeType.FactSourceAttribute",
+          "attributeMapping": {
+            "FACT_NW_SALES": {
+              "key": "ShipCountry"
+            }
+          },
+          "text": "ShipCountry",
+          "duplicated": false
+        }
+      },
+      "measures": {
+        "Quantity": {
+          "measureType": "AnalyticModelMeasureType.FactSourceMeasure",
+          "measureMapping": {
+            "FACT_NW_SALES": {
+              "key": "Quantity"
+            }
+          },
+          "text": "Quantity",
+          "isAuxiliary": false
+        },
+        "REVENUE": {
+          "measureType": "AnalyticModelMeasureType.FactSourceMeasure",
+          "measureMapping": {
+            "FACT_NW_SALES": {
+              "key": "REVENUE"
+            }
+          },
+          "text": "Revenue",
+          "isAuxiliary": false
+        }
+      },
+      "crossCalculations": {},
+      "version": "1.7.4",
+      "supportedCapabilities": {},
+      "variables": {}
+    }
+  },
+  "editorSettings": {
+    "FACT_NW_SALES": {
+      "editor": {
+        "lastModifier": "GRAPHICALVIEWBUILDER",
+        "default": "GRAPHICALVIEWBUILDER"
+      },
+      "uiModel": "{\"contents\":{\"bad6f234-c025-495c-8924-316edf9daf22\":{\"classDefinition\":\"sap.cdw.querybuilder.Model\",\"name\":\"FACT_NW_SALES\",\"label\":\"Sales\",\"modificationDate\":1792155267533,\"deploymentDate\":1792150966877,\"#objectStatus\":\"2\",\"output\":\"cf1b6a7d-0751-4ad1-b6e9-b48a785401f9\",\"nodes\":{\"cf1b6a7d-0751-4ad1-b6e9-b48a785401f9\":{\"name\":\"FACT_NW_SALES\"},\"c6c34157-e3e1-41e1-917d-29c55f0ae553\":{\"name\":\"LT_NW_ORDER_DETAILS\"},\"82064af4-25d3-4b93-b6c2-85fa6fc0115c\":{\"name\":\"LT_NW_ORDERS\"},\"df3dd93f-f155-4d3c-872e-06d98c003d87\":{\"name\":\"Join 1\"},\"acefa0c8-b9b9-44ed-916b-c464567a952a\":{\"name\":\"Projection 1\"},\"0bfa9dc1-670c-4b98-b562-453db3e8b2f1\":{\"name\":\"Calculated Columns 1\"}},\"diagrams\":{\"6002992b-42ce-4cb8-96ec-e3c422cdbf1c\":{}}},\"cf1b6a7d-0751-4ad1-b6e9-b48a785401f9\":{\"classDefinition\":\"sap.cdw.querybuilder.Output\",\"name\":\"FACT_NW_SALES\",\"type\":\"graphicView\",\"isDeltaOutboundOn\":false,\"isDeletionVector\":false,\"isPinToMemoryEnabled\":false,\"dataCategory\":\"SQLFACT\",\"isAllowConsumption\":false,\"modificationDate\":1792155267533,\"deploymentDate\":1792150966877,\"#objectStatus\":\"2\",\"elements\":{\"ee406ee9-1b08-43de-ac7e-179f783cbb7a\":{\"name\":\"ProductID\"},\"6432d885-fe64-40fb-81b3-b0d4f50578df\":{\"name\":\"UnitPrice\"},\"76530ce3-51ac-4ef5-bb6b-dd7bcece8c17\":{\"name\":\"Quantity\"},\"d27441f1-d769-40be-b2a9-f6973c373a18\":{\"name\":\"Discount\"},\"bacdddb3-ac8f-481d-a505-ac8514df3c48\":{\"name\":\"CustomerID\"},\"1a7e73d6-0492-4726-80e7-c1fd5e7350f9\":{\"name\":\"OrderDate\"},\"5f5606db-1d4e-4033-bbae-67f87b83b246\":{\"name\":\"ShipCountry\"},\"c285d9b5-2bbe-4de7-83f3-cd5d7c92555b\":{\"name\":\"OrderID\"},\"dfde5957-268c-4439-9cf5-c427dcd0782e\":{\"name\":\"Calculated_1\"},\"3786f1df-8eca-4a1b-9d0e-8c3b700fd970\":{\"name\":\"Calculated_1\"}}},\"c6c34157-e3e1-41e1-917d-29c55f0ae553\":{\"classDefinition\":\"sap.cdw.querybuilder.Entity\",\"name\":\"LT_NW_ORDER_DETAILS\",\"label\":\"Northwind Order Details (file)\",\"type\":9,\"isDeltaOutboundOn\":false,\"isDeletionVector\":false,\"isPinToMemoryEnabled\":false,\"isAllowConsumption\":false,\"isHiddenInUi\":false,\"modificationDate\":1792146136903,\"deploymentDate\":1792146150385,\"#objectStatus\":\"1\",\"elements\":{\"ec827eb7-5c01-4df8-a8a5-cf1888d39105\":{\"name\":\"OrderID\"},\"4dfcdee7-1263-4633-96be-eff4e78f0e94\":{\"name\":\"ProductID\"},\"a8f309f3-092b-4569-89bb-a81b8f2753b8\":{\"name\":\"UnitPrice\"},\"32135153-a691-463a-8086-1510c5a196d8\":{\"name\":\"Quantity\"},\"de03dd8c-25ea-48de-a329-ea78e1534d46\":{\"name\":\"Discount\"}},\"successorNode\":\"df3dd93f-f155-4d3c-872e-06d98c003d87\"},\"82064af4-25d3-4b93-b6c2-85fa6fc0115c\":{\"classDefinition\":\"sap.cdw.querybuilder.Entity\",\"name\":\"LT_NW_ORDERS\",\"label\":\"Northwind Orders (file)\",\"type\":9,\"isDeltaOutboundOn\":false,\"isDeletionVector\":false,\"isPinToMemoryEnabled\":false,\"isAllowConsumption\":false,\"isHiddenInUi\":false,\"modificationDate\":1792145752271,\"deploymentDate\":1792145767856,\"#objectStatus\":\"1\",\"elements\":{\"1b4cb0a9-01b4-4e57-8515-e4ea34d47651\":{\"name\":\"OrderID\"},\"f0205096-4f6f-4f91-9804-e7073aa05b07\":{\"name\":\"CustomerID\"},\"96b6cb02-c35d-450f-b1d6-4f4c3333dec6\":{\"name\":\"EmployeeID\"},\"a6ed3dc0-bc3c-42b6-8193-883921f46f22\":{\"name\":\"OrderDate\"},\"ee81ee42-3ea1-42c1-8d90-a90142b8c4fd\":{\"name\":\"RequiredDate\"},\"de6cbaa1-6a2b-43ec-9071-dd75332aaae2\":{\"name\":\"ShippedDate\"},\"a6e83dae-9b02-444d-843e-a44d0bbd618e\":{\"name\":\"Freight\"},\"ce1afcd3-597f-4002-b8be-817ac0c97b4c\":{\"name\":\"ShipCity\"},\"2852c9ee-c2e2-455e-9ec3-aed5bb506dcf\":{\"name\":\"ShipCountry\"}},\"successorNode\":\"df3dd93f-f155-4d3c-872e-06d98c003d87\"},\"df3dd93f-f155-4d3c-872e-06d98c003d87\":{\"classDefinition\":\"sap.cdw.querybuilder.Join\",\"leftCardinality\":\"*\",\"rightCardinality\":\"0,1\",\"name\":\"Join 1\",\"mappings\":{\"88fd19df-b3f6-4a5a-b2cb-ba4f78d08a8d\":{}},\"leftInput\":\"c6c34157-e3e1-41e1-917d-29c55f0ae553\",\"rightInput\":\"82064af4-25d3-4b93-b6c2-85fa6fc0115c\",\"elements\":{\"fb9e4aed-e981-4774-b74a-1d7b73a1d875\":{\"name\":\"OrderID\"},\"963b8eaf-85de-4b29-829b-07c93466565e\":{\"name\":\"ProductID\"},\"b5ebfc3d-aa76-47db-8f94-d550b9053989\":{\"name\":\"UnitPrice\"},\"82229f38-75eb-47d5-ab97-038fdc5727d4\":{\"name\":\"Quantity\"},\"5f98ff8b-7684-4459-aad2-4e9d95ed8dd9\":{\"name\":\"Discount\"},\"86506c97-07bd-444d-b585-ed20e7aabd2a\":{\"name\":\"OrderID\"},\"9c125bb0-1d11-46d6-83a0-2996098bcd44\":{\"name\":\"CustomerID\"},\"7c587a89-12d0-4406-8e24-01c8128bc1c9\":{\"name\":\"EmployeeID\"},\"9dd554d2-750f-4439-be08-a46e1ef61a48\":{\"name\":\"OrderDate\"},\"d83322e4-e510-4da7-a5de-ee29cdc8556f\":{\"name\":\"RequiredDate\"},\"13f2fdca-46db-4af7-af7a-c0a4e98b2529\":{\"name\":\"ShippedDate\"},\"e21003e3-1461-48f2-851f-3877c6a454fe\":{\"name\":\"Freight\"},\"1b642555-89d7-4dd8-85bc-fe879b642fa5\":{\"name\":\"ShipCity\"},\"51c24d31-9f1d-4592-8720-d15cdd7e15db\":{\"name\":\"ShipCountry\"}},\"successorNode\":\"acefa0c8-b9b9-44ed-916b-c464567a952a\"},\"acefa0c8-b9b9-44ed-916b-c464567a952a\":{\"classDefinition\":\"sap.cdw.querybuilder.RenameElements\",\"_isProjectionNode\":false,\"name\":\"Projection 1\",\"elements\":{\"7afee90b-5a65-422c-bbd9-b6fe2029e7f1\":{\"name\":\"OrderID\"},\"6cbe719d-fd40-4780-b31c-eb0db9dd4e4a\":{\"name\":\"ProductID\"},\"25b00040-09e1-4cdc-bbd7-a4b91ae986ff\":{\"name\":\"UnitPrice\"},\"f8888176-537c-4ec8-a3e7-6d39a12c804b\":{\"name\":\"Quantity\"},\"3b06a354-ae6a-48f7-b386-7e4d3bb67b16\":{\"name\":\"Discount\"},\"c5f61afa-2724-4de0-86ff-1bf88d06bd97\":{\"name\":\"OrderID\"},\"ae89f709-22d9-4afe-ad7f-886ed7d0554c\":{\"name\":\"CustomerID\"},\"c8308a80-9a9f-4c51-adee-045db5af26b8\":{\"name\":\"EmployeeID\"},\"05fcc235-2750-4005-9351-3306022e35e3\":{\"name\":\"OrderDate\"},\"afa8c390-468b-46da-8f7f-322e48b6fc5f\":{\"name\":\"RequiredDate\"},\"f378999a-f09a-4343-9b8a-c591ed777b60\":{\"name\":\"ShippedDate\"},\"ff8f22ff-dca7-4b54-bcc2-4bb52318bae9\":{\"name\":\"Freight\"},\"642320fc-5818-4f44-acbc-352885001c61\":{\"name\":\"ShipCity\"},\"0a9663c1-4a2d-44b4-a7d3-d87288c6fb83\":{\"name\":\"ShipCountry\"}},\"successorNode\":\"0bfa9dc1-670c-4b98-b562-453db3e8b2f1\"},\"0bfa9dc1-670c-4b98-b562-453db3e8b2f1\":{\"classDefinition\":\"sap.cdw.querybuilder.CalculatedElements\",\"name\":\"Calculated Columns 1\",\"elements\":{\"4f87b59e-eb81-4d91-b13a-92604f73716c\":{\"name\":\"OrderID\"},\"e2e7b3de-7e9d-45ec-a0e6-040ff1878316\":{\"name\":\"ProductID\"},\"85c00f35-11a4-430a-bb37-8cb3d4b8ac3a\":{\"name\":\"UnitPrice\"},\"2fff7dc5-0572-447f-b205-76e526507b77\":{\"name\":\"Quantity\"},\"78954983-8c6c-4e27-aa29-6715c5206b8c\":{\"name\":\"Discount\"},\"a97d3e75-f43f-4ce0-a35a-cd38e38fc226\":{\"name\":\"CustomerID\"},\"6027e250-2faf-41f6-b583-47d1e51f15a7\":{\"name\":\"OrderDate\"},\"48267ce6-4e7f-4409-8d61-f4d9645eb6eb\":{\"name\":\"ShipCountry\"},\"42c64cfd-24e9-4f67-b020-f9eb018523a5\":{\"name\":\"Calculated_1\"},\"a7389d3f-711d-48df-a4b3-0921b03a068f\":{\"name\":\"Calculated_1\"}},\"successorNode\":\"cf1b6a7d-0751-4ad1-b6e9-b48a785401f9\"},\"6002992b-42ce-4cb8-96ec-e3c422cdbf1c\":{\"classDefinition\":\"sap.cdw.querybuilder.ui.Diagram\",\"symbols\":{\"9d0b9c18-e4c2-44dd-93ea-0d0e92c0f6d7\":{},\"fd9a46a2-e96f-4952-9f50-240a929a0644\":{\"name\":\"Entity Symbol 1\"},\"7ea0c15f-14a5-4e52-81eb-f040db2f3c5a\":{},\"9d807c57-bae7-48c4-b49e-88b73501fb51\":{},\"1448f42e-2bb9-46b3-97d4-e91de68d1351\":{\"name\":\"Entity Symbol 2\"},\"7cef7db3-40a6-47e6-af86-282d5ee7bed8\":{},\"71bdb9aa-b0e8-42dc-a957-2df174289a09\":{},\"187d5c2d-8972-4e79-9969-5e6df79a4f15\":{},\"934bcb1d-5609-495b-b63e-9eff1b2aa44f\":{},\"6a5ab4fd-2b3c-4050-8180-e415fc795d52\":{},\"e967479f-5411-4f9f-a272-c8209cea2869\":{}}},\"ee406ee9-1b08-43de-ac7e-179f783cbb7a\":{\"classDefinition\":\"sap.cdw.querybuilder.Element\",\"name\":\"ProductID\",\"label\":\"ProductID\",\"newName\":\"ProductID\",\"indexOrder\":1,\"isCalculated\":true,\"isKey\":true,\"dataType\":\"cds.Integer64\",\"length\":0,\"precision\":0,\"scale\":0,\"isMeasureBeforeAI\":false,\"isMeasureAI\":false,\"isNotNullBeforeAI\":false,\"isKeyBeforeAI\":false,\"isKeyAI\":false,\"isNotNull\":true},\"6432d885-fe64-40fb-81b3-b0d4f50578df\":{\"classDefinition\":\"sap.cdw.querybuilder.Element\",\"name\":\"UnitPrice\",\"label\":\"UnitPrice\",\"newName\":\"UnitPrice\",\"indexOrder\":2,\"isCalculated\":true,\"dataType\":\"cds.Decimal\",\"length\":0,\"precision\":38,\"scale\":19,\"isMeasureBeforeAI\":false,\"isMeasureAI\":false,\"isNotNullBeforeAI\":false,\"isKeyBeforeAI\":false,\"isKeyAI\":false},\"76530ce3-51ac-4ef5-bb6b-dd7bcece8c17\":{\"classDefinition\":\"sap.cdw.querybuilder.Element\",\"name\":\"Quantity\",\"label\":\"Quantity\",\"newName\":\"Quantity\",\"indexOrder\":3,\"isCalculated\":true,\"defaultAggregation\":\"SUM\",\"dataType\":\"cds.Integer64\",\"length\":0,\"precision\":0,\"scale\":0,\"isMeasureBeforeAI\":false,\"isMeasureAI\":false,\"isNotNullBeforeAI\":false,\"isKeyBeforeAI\":false,\"isKeyAI\":false,\"isMeasure\":true},\"d27441f1-d769-40be-b2a9-f6973c373a18\":{\"classDefinition\":\"sap.cdw.querybuilder.Element\",\"name\":\"Discount\",\"label\":\"Discount\",\"newName\":\"Discount\",\"indexOrder\":4,\"isCalculated\":true,\"dataType\":\"cds.Decimal\",\"length\":0,\"precision\":38,\"scale\":19,\"isMeasureBeforeAI\":false,\"isMeasureAI\":false,\"isNotNullBeforeAI\":false,\"isKeyBeforeAI\":false,\"isKeyAI\":false},\"bacdddb3-ac8f-481d-a505-ac8514df3c48\":{\"classDefinition\":\"sap.cdw.querybuilder.Element\",\"name\":\"CustomerID\",\"label\":\"CustomerID\",\"newName\":\"CustomerID\",\"indexOrder\":6,\"isCalculated\":true,\"length\":5000,\"precision\":0,\"scale\":0,\"isMeasureBeforeAI\":false,\"isMeasureAI\":false,\"isNotNullBeforeAI\":false,\"isKeyBeforeAI\":false,\"isKeyAI\":false},\"1a7e73d6-0492-4726-80e7-c1fd5e7350f9\":{\"classDefinition\":\"sap.cdw.querybuilder.Element\",\"name\":\"OrderDate\",\"label\":\"OrderDate\",\"newName\":\"OrderDate\",\"indexOrder\":8,\"isCalculated\":true,\"dataType\":\"cds.Date\",\"length\":0,\"precision\":0,\"scale\":0,\"isMeasureBeforeAI\":false,\"isMeasureAI\":false,\"isNotNullBeforeAI\":false,\"isKeyBeforeAI\":false,\"isKeyAI\":false},\"5f5606db-1d4e-4033-bbae-67f87b83b246\":{\"classDefinition\":\"sap.cdw.querybuilder.Element\",\"name\":\"ShipCountry\",\"label\":\"ShipCountry\",\"newName\":\"ShipCountry\",\"indexOrder\":13,\"isCalculated\":true,\"length\":5000,\"precision\":0,\"scale\":0,\"isMeasureBeforeAI\":false,\"isMeasureAI\":false,\"isNotNullBeforeAI\":false,\"isKeyBeforeAI\":false,\"isKeyAI\":false},\"c285d9b5-2bbe-4de7-83f3-cd5d7c92555b\":{\"classDefinition\":\"sap.cdw.querybuilder.Element\",\"name\":\"OrderID\",\"label\":\"OrderID\",\"newName\":\"OrderID\",\"indexOrder\":12,\"isCalculated\":true,\"isKey\":true,\"dataType\":\"cds.Integer64\",\"length\":0,\"precision\":0,\"scale\":0,\"isMeasureBeforeAI\":false,\"isMeasureAI\":false,\"isNotNullBeforeAI\":false,\"isKeyBeforeAI\":false,\"isKeyAI\":false,\"isNotNull\":true},\"dfde5957-268c-4439-9cf5-c427dcd0782e\":{\"classDefinition\":\"sap.cdw.querybuilder.Element\",\"name\":\"Calculated_1\",\"label\":\"Revenue\",\"newName\":\"REVENUE\",\"indexOrder\":8,\"expression\":\"\",\"isCalculated\":true,\"defaultAggregation\":\"SUM\",\"dataType\":\"cds.Decimal\",\"length\":0,\"precision\":15,\"scale\":2,\"precisionsTable\":\"SAP.CURRENCY.VIEW.TCURX\",\"configurationTable\":\"SAP.CURRENCY.VIEW.TCURV\",\"prefactorsTable\":\"SAP.CURRENCY.VIEW.TCURF\",\"ratesTable\":\"SAP.CURRENCY.VIEW.TCURR\",\"notationsTable\":\"SAP.CURRENCY.VIEW.TCURN\",\"conversionCodesTable\":\"SAP.CURRENCY.VIEW.TCURC\",\"isMeasureBeforeAI\":false,\"isMeasureAI\":false,\"isNotNullBeforeAI\":false,\"isKeyBeforeAI\":false,\"isKeyAI\":false,\"isMeasure\":true},\"3786f1df-8eca-4a1b-9d0e-8c3b700fd970\":{\"classDefinition\":\"sap.cdw.querybuilder.Element\",\"name\":\"Calculated_1\",\"label\":\"Order Date\",\"newName\":\"ORDER_DATE\",\"indexOrder\":9,\"expression\":\"\",\"isCalculated\":true,\"dataType\":\"cds.Date\",\"length\":0,\"precision\":0,\"scale\":0,\"precisionsTable\":\"SAP.CURRENCY.VIEW.TCURX\",\"configurationTable\":\"SAP.CURRENCY.VIEW.TCURV\",\"prefactorsTable\":\"SAP.CURRENCY.VIEW.TCURF\",\"ratesTable\":\"SAP.CURRENCY.VIEW.TCURR\",\"notationsTable\":\"SAP.CURRENCY.VIEW.TCURN\",\"conversionCodesTable\":\"SAP.CURRENCY.VIEW.TCURC\",\"isMeasureBeforeAI\":false,\"isMeasureAI\":false,\"isNotNullBeforeAI\":false,\"isKeyBeforeAI\":false,\"isKeyAI\":false},\"ec827eb7-5c01-4df8-a8a5-cf1888d39105\":{\"classDefinition\":\"sap.cdw.querybuilder.Element\",\"name\":\"OrderID\",\"label\":\"OrderID\",\"newName\":\"OrderID\",\"indexOrder\":0,\"isKey\":true,\"dataType\":\"cds.Integer64\",\"length\":0,\"precision\":0,\"scale\":0,\"isMeasureBeforeAI\":false,\"isMeasureAI\":false,\"isNotNullBeforeAI\":false,\"isKeyBeforeAI\":false,\"isKeyAI\":false,\"isNotNull\":true,\"successorElement\":\"fb9e4aed-e981-4774-b74a-1d7b73a1d875\"},\"4dfcdee7-1263-4633-96be-eff4e78f0e94\":{\"classDefinition\":\"sap.cdw.querybuilder.Element\",\"name\":\"ProductID\",\"label\":\"ProductID\",\"newName\":\"ProductID\",\"indexOrder\":1,\"isKey\":true,\"dataType\":\"cds.Integer64\",\"length\":0,\"precision\":0,\"scale\":0,\"isMeasureBeforeAI\":false,\"isMeasureAI\":false,\"isNotNullBeforeAI\":false,\"isKeyBeforeAI\":false,\"isKeyAI\":false,\"isNotNull\":true,\"successorElement\":\"963b8eaf-85de-4b29-829b-07c93466565e\"},\"a8f309f3-092b-4569-89bb-a81b8f2753b8\":{\"classDefinition\":\"sap.cdw.querybuilder.Element\",\"name\":\"UnitPrice\",\"label\":\"UnitPrice\",\"newName\":\"UnitPrice\",\"indexOrder\":2,\"dataType\":\"cds.Decimal\",\"length\":0,\"precision\":38,\"scale\":19,\"isMeasureBeforeAI\":false,\"isMeasureAI\":false,\"isNotNullBeforeAI\":false,\"isKeyBeforeAI\":false,\"isKeyAI\":false,\"successorElement\":\"b5ebfc3d-aa76-47db-8f94-d550b9053989\"},\"32135153-a691-463a-8086-1510c5a196d8\":{\"classDefinition\":\"sap.cdw.querybuilder.Element\",\"name\":\"Quantity\",\"label\":\"Quantity\",\"newName\":\"Quantity\",\"indexOrder\":3,\"dataType\":\"cds.Integer64\",\"length\":0,\"precision\":0,\"scale\":0,\"isMeasureBeforeAI\":false,\"isMeasureAI\":false,\"isNotNullBeforeAI\":false,\"isKeyBeforeAI\":false,\"isKeyAI\":false,\"successorElement\":\"82229f38-75eb-47d5-ab97-038fdc5727d4\"},\"de03dd8c-25ea-48de-a329-ea78e1534d46\":{\"classDefinition\":\"sap.cdw.querybuilder.Element\",\"name\":\"Discount\",\"label\":\"Discount\",\"newName\":\"Discount\",\"indexOrder\":4,\"dataType\":\"cds.Decimal\",\"length\":0,\"precision\":38,\"scale\":19,\"isMeasureBeforeAI\":false,\"isMeasureAI\":false,\"isNotNullBeforeAI\":false,\"isKeyBeforeAI\":false,\"isKeyAI\":false,\"successorElement\":\"5f98ff8b-7684-4459-aad2-4e9d95ed8dd9\"},\"1b4cb0a9-01b4-4e57-8515-e4ea34d47651\":{\"classDefinition\":\"sap.cdw.querybuilder.Element\",\"name\":\"OrderID\",\"label\":\"OrderID\",\"newName\":\"OrderID\",\"indexOrder\":0,\"isKey\":true,\"dataType\":\"cds.Integer64\",\"length\":0,\"precision\":0,\"scale\":0,\"isMeasureBeforeAI\":false,\"isMeasureAI\":false,\"isNotNullBeforeAI\":false,\"isKeyBeforeAI\":false,\"isKeyAI\":false,\"isNotNull\":true,\"successorElement\":\"86506c97-07bd-444d-b585-ed20e7aabd2a\"},\"f0205096-4f6f-4f91-9804-e7073aa05b07\":{\"classDefinition\":\"sap.cdw.querybuilder.Element\",\"name\":\"CustomerID\",\"label\":\"CustomerID\",\"newName\":\"CustomerID\",\"indexOrder\":1,\"length\":5000,\"precision\":0,\"scale\":0,\"isMeasureBeforeAI\":false,\"isMeasureAI\":false,\"isNotNullBeforeAI\":false,\"isKeyBeforeAI\":false,\"isKeyAI\":false,\"successorElement\":\"9c125bb0-1d11-46d6-83a0-2996098bcd44\"},\"96b6cb02-c35d-450f-b1d6-4f4c3333dec6\":{\"classDefinition\":\"sap.cdw.querybuilder.Element\",\"name\":\"EmployeeID\",\"label\":\"EmployeeID\",\"newName\":\"EmployeeID\",\"indexOrder\":2,\"dataType\":\"cds.Integer64\",\"length\":0,\"precision\":0,\"scale\":0,\"isMeasureBeforeAI\":false,\"isMeasureAI\":false,\"isNotNullBeforeAI\":false,\"isKeyBeforeAI\":false,\"isKeyAI\":false,\"successorElement\":\"7c587a89-12d0-4406-8e24-01c8128bc1c9\"},\"a6ed3dc0-bc3c-42b6-8193-883921f46f22\":{\"classDefinition\":\"sap.cdw.querybuilder.Element\",\"name\":\"OrderDate\",\"label\":\"OrderDate\",\"newName\":\"OrderDate\",\"indexOrder\":3,\"dataType\":\"cds.Date\",\"length\":0,\"precision\":0,\"scale\":0,\"isMeasureBeforeAI\":false,\"isMeasureAI\":false,\"isNotNullBeforeAI\":false,\"isKeyBeforeAI\":false,\"isKeyAI\":false,\"successorElement\":\"9dd554d2-750f-4439-be08-a46e1ef61a48\"},\"ee81ee42-3ea1-42c1-8d90-a90142b8c4fd\":{\"classDefinition\":\"sap.cdw.querybuilder.Element\",\"name\":\"RequiredDate\",\"label\":\"RequiredDate\",\"newName\":\"RequiredDate\",\"indexOrder\":4,\"dataType\":\"cds.Date\",\"length\":0,\"precision\":0,\"scale\":0,\"isMeasureBeforeAI\":false,\"isMeasureAI\":false,\"isNotNullBeforeAI\":false,\"isKeyBeforeAI\":false,\"isKeyAI\":false,\"successorElement\":\"d83322e4-e510-4da7-a5de-ee29cdc8556f\"},\"de6cbaa1-6a2b-43ec-9071-dd75332aaae2\":{\"classDefinition\":\"sap.cdw.querybuilder.Element\",\"name\":\"ShippedDate\",\"label\":\"ShippedDate\",\"newName\":\"ShippedDate\",\"indexOrder\":5,\"dataType\":\"cds.Date\",\"length\":0,\"precision\":0,\"scale\":0,\"isMeasureBeforeAI\":false,\"isMeasureAI\":false,\"isNotNullBeforeAI\":false,\"isKeyBeforeAI\":false,\"isKeyAI\":false,\"successorElement\":\"13f2fdca-46db-4af7-af7a-c0a4e98b2529\"},\"a6e83dae-9b02-444d-843e-a44d0bbd618e\":{\"classDefinition\":\"sap.cdw.querybuilder.Element\",\"name\":\"Freight\",\"label\":\"Freight\",\"newName\":\"Freight\",\"indexOrder\":6,\"dataType\":\"cds.Decimal\",\"length\":0,\"precision\":38,\"scale\":19,\"isMeasureBeforeAI\":false,\"isMeasureAI\":false,\"isNotNullBeforeAI\":false,\"isKeyBeforeAI\":false,\"isKeyAI\":false,\"successorElement\":\"e21003e3-1461-48f2-851f-3877c6a454fe\"},\"ce1afcd3-597f-4002-b8be-817ac0c97b4c\":{\"classDefinition\":\"sap.cdw.querybuilder.Element\",\"name\":\"ShipCity\",\"label\":\"ShipCity\",\"newName\":\"ShipCity\",\"indexOrder\":7,\"length\":5000,\"precision\":0,\"scale\":0,\"isMeasureBeforeAI\":false,\"isMeasureAI\":false,\"isNotNullBeforeAI\":false,\"isKeyBeforeAI\":false,\"isKeyAI\":false,\"successorElement\":\"1b642555-89d7-4dd8-85bc-fe879b642fa5\"},\"2852c9ee-c2e2-455e-9ec3-aed5bb506dcf\":{\"classDefinition\":\"sap.cdw.querybuilder.Element\",\"name\":\"ShipCountry\",\"label\":\"ShipCountry\",\"newName\":\"ShipCountry\",\"indexOrder\":8,\"length\":5000,\"precision\":0,\"scale\":0,\"isMeasureBeforeAI\":false,\"isMeasureAI\":false,\"isNotNullBeforeAI\":false,\"isKeyBeforeAI\":false,\"isKeyAI\":false,\"successorElement\":\"51c24d31-9f1d-4592-8720-d15cdd7e15db\"},\"88fd19df-b3f6-4a5a-b2cb-ba4f78d08a8d\":{\"classDefinition\":\"sap.cdw.commonmodel.ElementMapping\",\"source\":\"ec827eb7-5c01-4df8-a8a5-cf1888d39105\",\"target\":\"1b4cb0a9-01b4-4e57-8515-e4ea34d47651\"},\"fb9e4aed-e981-4774-b74a-1d7b73a1d875\":{\"classDefinition\":\"sap.cdw.querybuilder.Element\",\"name\":\"OrderID\",\"label\":\"OrderID\",\"newName\":\"OrderID\",\"indexOrder\":0,\"isKey\":true,\"dataType\":\"cds.Integer64\",\"length\":0,\"precision\":0,\"scale\":0,\"isMeasureBeforeAI\":false,\"isMeasureAI\":false,\"isNotNullBeforeAI\":false,\"isKeyBeforeAI\":false,\"isKeyAI\":false,\"isNotNull\":true,\"successorElement\":\"7afee90b-5a65-422c-bbd9-b6fe2029e7f1\"},\"963b8eaf-85de-4b29-829b-07c93466565e\":{\"classDefinition\":\"sap.cdw.querybuilder.Element\",\"name\":\"ProductID\",\"label\":\"ProductID\",\"newName\":\"ProductID\",\"indexOrder\":2,\"isKey\":true,\"dataType\":\"cds.Integer64\",\"length\":0,\"precision\":0,\"scale\":0,\"isMeasureBeforeAI\":false,\"isMeasureAI\":false,\"isNotNullBeforeAI\":false,\"isKeyBeforeAI\":false,\"isKeyAI\":false,\"isNotNull\":true,\"successorElement\":\"6cbe719d-fd40-4780-b31c-eb0db9dd4e4a\"},\"b5ebfc3d-aa76-47db-8f94-d550b9053989\":{\"classDefinition\":\"sap.cdw.querybuilder.Element\",\"name\":\"UnitPrice\",\"label\":\"UnitPrice\",\"newName\":\"UnitPrice\",\"indexOrder\":4,\"dataType\":\"cds.Decimal\",\"length\":0,\"precision\":38,\"scale\":19,\"isMeasureBeforeAI\":false,\"isMeasureAI\":false,\"isNotNullBeforeAI\":false,\"isKeyBeforeAI\":false,\"isKeyAI\":false,\"successorElement\":\"25b00040-09e1-4cdc-bbd7-a4b91ae986ff\"},\"82229f38-75eb-47d5-ab97-038fdc5727d4\":{\"classDefinition\":\"sap.cdw.querybuilder.Element\",\"name\":\"Quantity\",\"label\":\"Quantity\",\"newName\":\"Quantity\",\"indexOrder\":6,\"dataType\":\"cds.Integer64\",\"length\":0,\"precision\":0,\"scale\":0,\"isMeasureBeforeAI\":false,\"isMeasureAI\":false,\"isNotNullBeforeAI\":false,\"isKeyBeforeAI\":false,\"isKeyAI\":false,\"successorElement\":\"f8888176-537c-4ec8-a3e7-6d39a12c804b\"},\"5f98ff8b-7684-4459-aad2-4e9d95ed8dd9\":{\"classDefinition\":\"sap.cdw.querybuilder.Element\",\"name\":\"Discount\",\"label\":\"Discount\",\"newName\":\"Discount\",\"indexOrder\":8,\"dataType\":\"cds.Decimal\",\"length\":0,\"precision\":38,\"scale\":19,\"isMeasureBeforeAI\":false,\"isMeasureAI\":false,\"isNotNullBeforeAI\":false,\"isKeyBeforeAI\":false,\"isKeyAI\":false,\"successorElement\":\"3b06a354-ae6a-48f7-b386-7e4d3bb67b16\"},\"86506c97-07bd-444d-b585-ed20e7aabd2a\":{\"classDefinition\":\"sap.cdw.querybuilder.Element\",\"name\":\"OrderID\",\"label\":\"OrderID\",\"newName\":\"OrderID\",\"indexOrder\":1,\"isKey\":true,\"dataType\":\"cds.Integer64\",\"length\":0,\"precision\":0,\"scale\":0,\"isMeasureBeforeAI\":false,\"isMeasureAI\":false,\"isNotNullBeforeAI\":false,\"isKeyBeforeAI\":false,\"isKeyAI\":false,\"isNotNull\":true,\"successorElement\":\"c5f61afa-2724-4de0-86ff-1bf88d06bd97\"},\"9c125bb0-1d11-46d6-83a0-2996098bcd44\":{\"classDefinition\":\"sap.cdw.querybuilder.Element\",\"name\":\"CustomerID\",\"label\":\"CustomerID\",\"newName\":\"CustomerID\",\"indexOrder\":3,\"length\":5000,\"precision\":0,\"scale\":0,\"isMeasureBeforeAI\":false,\"isMeasureAI\":false,\"isNotNullBeforeAI\":false,\"isKeyBeforeAI\":false,\"isKeyAI\":false,\"successorElement\":\"ae89f709-22d9-4afe-ad7f-886ed7d0554c\"},\"7c587a89-12d0-4406-8e24-01c8128bc1c9\":{\"classDefinition\":\"sap.cdw.querybuilder.Element\",\"name\":\"EmployeeID\",\"label\":\"EmployeeID\",\"newName\":\"EmployeeID\",\"indexOrder\":5,\"dataType\":\"cds.Integer64\",\"length\":0,\"precision\":0,\"scale\":0,\"isMeasureBeforeAI\":false,\"isMeasureAI\":false,\"isNotNullBeforeAI\":false,\"isKeyBeforeAI\":false,\"isKeyAI\":false,\"successorElement\":\"c8308a80-9a9f-4c51-adee-045db5af26b8\"},\"9dd554d2-750f-4439-be08-a46e1ef61a48\":{\"classDefinition\":\"sap.cdw.querybuilder.Element\",\"name\":\"OrderDate\",\"label\":\"OrderDate\",\"newName\":\"OrderDate\",\"indexOrder\":7,\"dataType\":\"cds.Date\",\"length\":0,\"precision\":0,\"scale\":0,\"isMeasureBeforeAI\":false,\"isMeasureAI\":false,\"isNotNullBeforeAI\":false,\"isKeyBeforeAI\":false,\"isKeyAI\":false,\"successorElement\":\"05fcc235-2750-4005-9351-3306022e35e3\"},\"d83322e4-e510-4da7-a5de-ee29cdc8556f\":{\"classDefinition\":\"sap.cdw.querybuilder.Element\",\"name\":\"RequiredDate\",\"label\":\"RequiredDate\",\"newName\":\"RequiredDate\",\"indexOrder\":9,\"dataType\":\"cds.Date\",\"length\":0,\"precision\":0,\"scale\":0,\"isMeasureBeforeAI\":false,\"isMeasureAI\":false,\"isNotNullBeforeAI\":false,\"isKeyBeforeAI\":false,\"isKeyAI\":false,\"successorElement\":\"afa8c390-468b-46da-8f7f-322e48b6fc5f\"},\"13f2fdca-46db-4af7-af7a-c0a4e98b2529\":{\"classDefinition\":\"sap.cdw.querybuilder.Element\",\"name\":\"ShippedDate\",\"label\":\"ShippedDate\",\"newName\":\"ShippedDate\",\"indexOrder\":10,\"dataType\":\"cds.Date\",\"length\":0,\"precision\":0,\"scale\":0,\"isMeasureBeforeAI\":false,\"isMeasureAI\":false,\"isNotNullBeforeAI\":false,\"isKeyBeforeAI\":false,\"isKeyAI\":false,\"successorElement\":\"f378999a-f09a-4343-9b8a-c591ed777b60\"},\"e21003e3-1461-48f2-851f-3877c6a454fe\":{\"classDefinition\":\"sap.cdw.querybuilder.Element\",\"name\":\"Freight\",\"label\":\"Freight\",\"newName\":\"Freight\",\"indexOrder\":11,\"dataType\":\"cds.Decimal\",\"length\":0,\"precision\":38,\"scale\":19,\"isMeasureBeforeAI\":false,\"isMeasureAI\":false,\"isNotNullBeforeAI\":false,\"isKeyBeforeAI\":false,\"isKeyAI\":false,\"successorElement\":\"ff8f22ff-dca7-4b54-bcc2-4bb52318bae9\"},\"1b642555-89d7-4dd8-85bc-fe879b642fa5\":{\"classDefinition\":\"sap.cdw.querybuilder.Element\",\"name\":\"ShipCity\",\"label\":\"ShipCity\",\"newName\":\"ShipCity\",\"indexOrder\":12,\"length\":5000,\"precision\":0,\"scale\":0,\"isMeasureBeforeAI\":false,\"isMeasureAI\":false,\"isNotNullBeforeAI\":false,\"isKeyBeforeAI\":false,\"isKeyAI\":false,\"successorElement\":\"642320fc-5818-4f44-acbc-352885001c61\"},\"51c24d31-9f1d-4592-8720-d15cdd7e15db\":{\"classDefinition\":\"sap.cdw.querybuilder.Element\",\"name\":\"ShipCountry\",\"label\":\"ShipCountry\",\"newName\":\"ShipCountry\",\"indexOrder\":13,\"length\":5000,\"precision\":0,\"scale\":0,\"isMeasureBeforeAI\":false,\"isMeasureAI\":false,\"isNotNullBeforeAI\":false,\"isKeyBeforeAI\":false,\"isKeyAI\":false,\"successorElement\":\"0a9663c1-4a2d-44b4-a7d3-d87288c6fb83\"},\"7afee90b-5a65-422c-bbd9-b6fe2029e7f1\":{\"classDefinition\":\"sap.cdw.querybuilder.Element\",\"name\":\"OrderID\",\"label\":\"OrderID\",\"newName\":\"OrderID\",\"indexOrder\":0,\"isKey\":true,\"dataType\":\"cds.Integer64\",\"length\":0,\"precision\":0,\"scale\":0,\"isMeasureBeforeAI\":false,\"isMeasureAI\":false,\"isNotNullBeforeAI\":false,\"isKeyBeforeAI\":false,\"isKeyAI\":false,\"isNotNull\":true,\"successorElement\":\"4f87b59e-eb81-4d91-b13a-92604f73716c\"},\"6cbe719d-fd40-4780-b31c-eb0db9dd4e4a\":{\"classDefinition\":\"sap.cdw.querybuilder.Element\",\"name\":\"ProductID\",\"label\":\"ProductID\",\"newName\":\"ProductID\",\"indexOrder\":2,\"isKey\":true,\"dataType\":\"cds.Integer64\",\"length\":0,\"precision\":0,\"scale\":0,\"isMeasureBeforeAI\":false,\"isMeasureAI\":false,\"isNotNullBeforeAI\":false,\"isKeyBeforeAI\":false,\"isKeyAI\":false,\"isNotNull\":true,\"successorElement\":\"e2e7b3de-7e9d-45ec-a0e6-040ff1878316\"},\"25b00040-09e1-4cdc-bbd7-a4b91ae986ff\":{\"classDefinition\":\"sap.cdw.querybuilder.Element\",\"name\":\"UnitPrice\",\"label\":\"UnitPrice\",\"newName\":\"UnitPrice\",\"indexOrder\":4,\"dataType\":\"cds.Decimal\",\"length\":0,\"precision\":38,\"scale\":19,\"isMeasureBeforeAI\":false,\"isMeasureAI\":false,\"isNotNullBeforeAI\":false,\"isKeyBeforeAI\":false,\"isKeyAI\":false,\"successorElement\":\"85c00f35-11a4-430a-bb37-8cb3d4b8ac3a\"},\"f8888176-537c-4ec8-a3e7-6d39a12c804b\":{\"classDefinition\":\"sap.cdw.querybuilder.Element\",\"name\":\"Quantity\",\"label\":\"Quantity\",\"newName\":\"Quantity\",\"indexOrder\":6,\"dataType\":\"cds.Integer64\",\"length\":0,\"precision\":0,\"scale\":0,\"isMeasureBeforeAI\":false,\"isMeasureAI\":false,\"isNotNullBeforeAI\":false,\"isKeyBeforeAI\":false,\"isKeyAI\":false,\"successorElement\":\"2fff7dc5-0572-447f-b205-76e526507b77\"},\"3b06a354-ae6a-48f7-b386-7e4d3bb67b16\":{\"classDefinition\":\"sap.cdw.querybuilder.Element\",\"name\":\"Discount\",\"label\":\"Discount\",\"newName\":\"Discount\",\"indexOrder\":8,\"dataType\":\"cds.Decimal\",\"length\":0,\"precision\":38,\"scale\":19,\"isMeasureBeforeAI\":false,\"isMeasureAI\":false,\"isNotNullBeforeAI\":false,\"isKeyBeforeAI\":false,\"isKeyAI\":false,\"successorElement\":\"78954983-8c6c-4e27-aa29-6715c5206b8c\"},\"c5f61afa-2724-4de0-86ff-1bf88d06bd97\":{\"classDefinition\":\"sap.cdw.querybuilder.Element\",\"name\":\"OrderID\",\"label\":\"OrderID\",\"newName\":\"OrderID\",\"isRemoved\":true,\"indexOrder\":1,\"isKey\":true,\"dataType\":\"cds.Integer64\",\"length\":0,\"precision\":0,\"scale\":0,\"isMeasureBeforeAI\":false,\"isMeasureAI\":false,\"isNotNullBeforeAI\":false,\"isKeyBeforeAI\":false,\"isKeyAI\":false,\"isNotNull\":true},\"ae89f709-22d9-4afe-ad7f-886ed7d0554c\":{\"classDefinition\":\"sap.cdw.querybuilder.Element\",\"name\":\"CustomerID\",\"label\":\"CustomerID\",\"newName\":\"CustomerID\",\"indexOrder\":3,\"length\":5000,\"precision\":0,\"scale\":0,\"isMeasureBeforeAI\":false,\"isMeasureAI\":false,\"isNotNullBeforeAI\":false,\"isKeyBeforeAI\":false,\"isKeyAI\":false,\"successorElement\":\"a97d3e75-f43f-4ce0-a35a-cd38e38fc226\"},\"c8308a80-9a9f-4c51-adee-045db5af26b8\":{\"classDefinition\":\"sap.cdw.querybuilder.Element\",\"name\":\"EmployeeID\",\"label\":\"EmployeeID\",\"newName\":\"EmployeeID\",\"isRemoved\":true,\"indexOrder\":5,\"dataType\":\"cds.Integer64\",\"length\":0,\"precision\":0,\"scale\":0,\"isMeasureBeforeAI\":false,\"isMeasureAI\":false,\"isNotNullBeforeAI\":false,\"isKeyBeforeAI\":false,\"isKeyAI\":false},\"05fcc235-2750-4005-9351-3306022e35e3\":{\"classDefinition\":\"sap.cdw.querybuilder.Element\",\"name\":\"OrderDate\",\"label\":\"OrderDate\",\"newName\":\"OrderDate\",\"indexOrder\":7,\"dataType\":\"cds.Date\",\"length\":0,\"precision\":0,\"scale\":0,\"isMeasureBeforeAI\":false,\"isMeasureAI\":false,\"isNotNullBeforeAI\":false,\"isKeyBeforeAI\":false,\"isKeyAI\":false,\"successorElement\":\"6027e250-2faf-41f6-b583-47d1e51f15a7\"},\"afa8c390-468b-46da-8f7f-322e48b6fc5f\":{\"classDefinition\":\"sap.cdw.querybuilder.Element\",\"name\":\"RequiredDate\",\"label\":\"RequiredDate\",\"newName\":\"RequiredDate\",\"isRemoved\":true,\"indexOrder\":9,\"dataType\":\"cds.Date\",\"length\":0,\"precision\":0,\"scale\":0,\"isMeasureBeforeAI\":false,\"isMeasureAI\":false,\"isNotNullBeforeAI\":false,\"isKeyBeforeAI\":false,\"isKeyAI\":false},\"f378999a-f09a-4343-9b8a-c591ed777b60\":{\"classDefinition\":\"sap.cdw.querybuilder.Element\",\"name\":\"ShippedDate\",\"label\":\"ShippedDate\",\"newName\":\"ShippedDate\",\"isRemoved\":true,\"indexOrder\":10,\"dataType\":\"cds.Date\",\"length\":0,\"precision\":0,\"scale\":0,\"isMeasureBeforeAI\":false,\"isMeasureAI\":false,\"isNotNullBeforeAI\":false,\"isKeyBeforeAI\":false,\"isKeyAI\":false},\"ff8f22ff-dca7-4b54-bcc2-4bb52318bae9\":{\"classDefinition\":\"sap.cdw.querybuilder.Element\",\"name\":\"Freight\",\"label\":\"Freight\",\"newName\":\"Freight\",\"isRemoved\":true,\"indexOrder\":11,\"dataType\":\"cds.Decimal\",\"length\":0,\"precision\":38,\"scale\":19,\"isMeasureBeforeAI\":false,\"isMeasureAI\":false,\"isNotNullBeforeAI\":false,\"isKeyBeforeAI\":false,\"isKeyAI\":false},\"642320fc-5818-4f44-acbc-352885001c61\":{\"classDefinition\":\"sap.cdw.querybuilder.Element\",\"name\":\"ShipCity\",\"label\":\"ShipCity\",\"newName\":\"ShipCity\",\"isRemoved\":true,\"indexOrder\":12,\"length\":5000,\"precision\":0,\"scale\":0,\"isMeasureBeforeAI\":false,\"isMeasureAI\":false,\"isNotNullBeforeAI\":false,\"isKeyBeforeAI\":false,\"isKeyAI\":false},\"0a9663c1-4a2d-44b4-a7d3-d87288c6fb83\":{\"classDefinition\":\"sap.cdw.querybuilder.Element\",\"name\":\"ShipCountry\",\"label\":\"ShipCountry\",\"newName\":\"ShipCountry\",\"indexOrder\":13,\"length\":5000,\"precision\":0,\"scale\":0,\"isMeasureBeforeAI\":false,\"isMeasureAI\":false,\"isNotNullBeforeAI\":false,\"isKeyBeforeAI\":false,\"isKeyAI\":false,\"successorElement\":\"48267ce6-4e7f-4409-8d61-f4d9645eb6eb\"},\"4f87b59e-eb81-4d91-b13a-92604f73716c\":{\"classDefinition\":\"sap.cdw.querybuilder.Element\",\"name\":\"OrderID\",\"label\":\"OrderID\",\"newName\":\"OrderID\",\"indexOrder\":0,\"expression\":\"OrderID\",\"isCalculated\":true,\"isKey\":true,\"dataType\":\"cds.Integer64\",\"length\":0,\"precision\":0,\"scale\":0,\"isMeasureBeforeAI\":false,\"isMeasureAI\":false,\"isNotNullBeforeAI\":false,\"isKeyBeforeAI\":false,\"isKeyAI\":false,\"isNotNull\":true,\"successorElement\":\"c285d9b5-2bbe-4de7-83f3-cd5d7c92555b\"},\"e2e7b3de-7e9d-45ec-a0e6-040ff1878316\":{\"classDefinition\":\"sap.cdw.querybuilder.Element\",\"name\":\"ProductID\",\"label\":\"ProductID\",\"newName\":\"ProductID\",\"indexOrder\":1,\"expression\":\"ProductID\",\"isCalculated\":true,\"isKey\":true,\"dataType\":\"cds.Integer64\",\"length\":0,\"precision\":0,\"scale\":0,\"isMeasureBeforeAI\":false,\"isMeasureAI\":false,\"isNotNullBeforeAI\":false,\"isKeyBeforeAI\":false,\"isKeyAI\":false,\"isNotNull\":true,\"successorElement\":\"ee406ee9-1b08-43de-ac7e-179f783cbb7a\"},\"85c00f35-11a4-430a-bb37-8cb3d4b8ac3a\":{\"classDefinition\":\"sap.cdw.querybuilder.Element\",\"name\":\"UnitPrice\",\"label\":\"UnitPrice\",\"newName\":\"UnitPrice\",\"indexOrder\":2,\"expression\":\"UnitPrice\",\"isCalculated\":true,\"dataType\":\"cds.Decimal\",\"length\":0,\"precision\":38,\"scale\":19,\"isMeasureBeforeAI\":false,\"isMeasureAI\":false,\"isNotNullBeforeAI\":false,\"isKeyBeforeAI\":false,\"isKeyAI\":false,\"successorElement\":\"6432d885-fe64-40fb-81b3-b0d4f50578df\"},\"2fff7dc5-0572-447f-b205-76e526507b77\":{\"classDefinition\":\"sap.cdw.querybuilder.Element\",\"name\":\"Quantity\",\"label\":\"Quantity\",\"newName\":\"Quantity\",\"indexOrder\":3,\"expression\":\"Quantity\",\"isCalculated\":true,\"dataType\":\"cds.Integer64\",\"length\":0,\"precision\":0,\"scale\":0,\"isMeasureBeforeAI\":false,\"isMeasureAI\":false,\"isNotNullBeforeAI\":false,\"isKeyBeforeAI\":false,\"isKeyAI\":false,\"successorElement\":\"76530ce3-51ac-4ef5-bb6b-dd7bcece8c17\"},\"78954983-8c6c-4e27-aa29-6715c5206b8c\":{\"classDefinition\":\"sap.cdw.querybuilder.Element\",\"name\":\"Discount\",\"label\":\"Discount\",\"newName\":\"Discount\",\"indexOrder\":4,\"expression\":\"Discount\",\"isCalculated\":true,\"dataType\":\"cds.Decimal\",\"length\":0,\"precision\":38,\"scale\":19,\"isMeasureBeforeAI\":false,\"isMeasureAI\":false,\"isNotNullBeforeAI\":false,\"isKeyBeforeAI\":false,\"isKeyAI\":false,\"successorElement\":\"d27441f1-d769-40be-b2a9-f6973c373a18\"},\"a97d3e75-f43f-4ce0-a35a-cd38e38fc226\":{\"classDefinition\":\"sap.cdw.querybuilder.Element\",\"name\":\"CustomerID\",\"label\":\"CustomerID\",\"newName\":\"CustomerID\",\"indexOrder\":1,\"expression\":\"CustomerID\",\"isCalculated\":true,\"length\":5000,\"precision\":0,\"scale\":0,\"isMeasureBeforeAI\":false,\"isMeasureAI\":false,\"isNotNullBeforeAI\":false,\"isKeyBeforeAI\":false,\"isKeyAI\":false,\"successorElement\":\"bacdddb3-ac8f-481d-a505-ac8514df3c48\"},\"6027e250-2faf-41f6-b583-47d1e51f15a7\":{\"classDefinition\":\"sap.cdw.querybuilder.Element\",\"name\":\"OrderDate\",\"label\":\"OrderDate\",\"newName\":\"OrderDate\",\"indexOrder\":3,\"expression\":\"OrderDate\",\"isCalculated\":true,\"dataType\":\"cds.Date\",\"length\":0,\"precision\":0,\"scale\":0,\"isMeasureBeforeAI\":false,\"isMeasureAI\":false,\"isNotNullBeforeAI\":false,\"isKeyBeforeAI\":false,\"isKeyAI\":false,\"successorElement\":\"1a7e73d6-0492-4726-80e7-c1fd5e7350f9\"},\"48267ce6-4e7f-4409-8d61-f4d9645eb6eb\":{\"classDefinition\":\"sap.cdw.querybuilder.Element\",\"name\":\"ShipCountry\",\"label\":\"ShipCountry\",\"newName\":\"ShipCountry\",\"indexOrder\":8,\"expression\":\"ShipCountry\",\"isCalculated\":true,\"length\":5000,\"precision\":0,\"scale\":0,\"isMeasureBeforeAI\":false,\"isMeasureAI\":false,\"isNotNullBeforeAI\":false,\"isKeyBeforeAI\":false,\"isKeyAI\":false,\"successorElement\":\"5f5606db-1d4e-4033-bbae-67f87b83b246\"},\"42c64cfd-24e9-4f67-b020-f9eb018523a5\":{\"classDefinition\":\"sap.cdw.querybuilder.Element\",\"name\":\"Calculated_1\",\"label\":\"Revenue\",\"newName\":\"REVENUE\",\"indexOrder\":9,\"expression\":\"\\\"UnitPrice\\\" * \\\"Quantity\\\" * (1 - \\\"Discount\\\")\",\"isCalculated\":true,\"dataType\":\"cds.Decimal\",\"length\":0,\"precision\":15,\"scale\":2,\"precisionsTable\":\"SAP.CURRENCY.VIEW.TCURX\",\"configurationTable\":\"SAP.CURRENCY.VIEW.TCURV\",\"prefactorsTable\":\"SAP.CURRENCY.VIEW.TCURF\",\"ratesTable\":\"SAP.CURRENCY.VIEW.TCURR\",\"notationsTable\":\"SAP.CURRENCY.VIEW.TCURN\",\"conversionCodesTable\":\"SAP.CURRENCY.VIEW.TCURC\",\"isMeasureBeforeAI\":false,\"isMeasureAI\":false,\"isNotNullBeforeAI\":false,\"isKeyBeforeAI\":false,\"isKeyAI\":false,\"successorElement\":\"dfde5957-268c-4439-9cf5-c427dcd0782e\"},\"a7389d3f-711d-48df-a4b3-0921b03a068f\":{\"classDefinition\":\"sap.cdw.querybuilder.Element\",\"name\":\"Calculated_1\",\"label\":\"Order Date\",\"newName\":\"ORDER_DATE\",\"indexOrder\":8,\"expression\":\"TO_DATE(\\\"OrderDate\\\")\",\"isCalculated\":true,\"dataType\":\"cds.Date\",\"length\":0,\"precision\":0,\"scale\":0,\"precisionsTable\":\"SAP.CURRENCY.VIEW.TCURX\",\"configurationTable\":\"SAP.CURRENCY.VIEW.TCURV\",\"prefactorsTable\":\"SAP.CURRENCY.VIEW.TCURF\",\"ratesTable\":\"SAP.CURRENCY.VIEW.TCURR\",\"notationsTable\":\"SAP.CURRENCY.VIEW.TCURN\",\"conversionCodesTable\":\"SAP.CURRENCY.VIEW.TCURC\",\"isMeasureBeforeAI\":false,\"isMeasureAI\":false,\"isNotNullBeforeAI\":false,\"isKeyBeforeAI\":false,\"isKeyAI\":false,\"successorElement\":\"3786f1df-8eca-4a1b-9d0e-8c3b700fd970\"},\"9d0b9c18-e4c2-44dd-93ea-0d0e92c0f6d7\":{\"classDefinition\":\"sap.cdw.querybuilder.ui.OutputSymbol\",\"x\":213.9999988079071,\"y\":-41.08617067758516,\"width\":140,\"height\":40,\"object\":\"cf1b6a7d-0751-4ad1-b6e9-b48a785401f9\"},\"fd9a46a2-e96f-4952-9f50-240a929a0644\":{\"classDefinition\":\"sap.cdw.querybuilder.ui.EntitySymbol\",\"name\":\"Entity Symbol 1\",\"x\":-329.9999988079071,\"y\":25,\"width\":160,\"displayName\":\"Entity Symbol 1\",\"object\":\"c6c34157-e3e1-41e1-917d-29c55f0ae553\"},\"7ea0c15f-14a5-4e52-81eb-f040db2f3c5a\":{\"classDefinition\":\"sap.cdw.querybuilder.ui.JoinSymbol\",\"font\":\"bold 11px \\\"72\\\",\\\"72full\\\",Arial,Helvetica,sans-serif\",\"x\":-100,\"y\":-29.290088357492493,\"object\":\"df3dd93f-f155-4d3c-872e-06d98c003d87\"},\"9d807c57-bae7-48c4-b49e-88b73501fb51\":{\"classDefinition\":\"sap.cdw.querybuilder.ui.AssociationSymbol\",\"points\":\"-169.9999988079071,45 -134.99999940395355,45 -134.99999940395355,-7.9567550241591505 -100,-7.9567550241591505\",\"contentOffsetX\":5,\"contentOffsetY\":5,\"sourceSymbol\":\"fd9a46a2-e96f-4952-9f50-240a929a0644\",\"targetSymbol\":\"7ea0c15f-14a5-4e52-81eb-f040db2f3c5a\",\"object\":\"df3dd93f-f155-4d3c-872e-06d98c003d87\"},\"1448f42e-2bb9-46b3-97d4-e91de68d1351\":{\"classDefinition\":\"sap.cdw.querybuilder.ui.EntitySymbol\",\"name\":\"Entity Symbol 2\",\"x\":-329.9999988079071,\"y\":-65,\"width\":160,\"displayName\":\"Entity Symbol 2\",\"object\":\"82064af4-25d3-4b93-b6c2-85fa6fc0115c\"},\"7cef7db3-40a6-47e6-af86-282d5ee7bed8\":{\"classDefinition\":\"sap.cdw.querybuilder.ui.AssociationSymbol\",\"isLeftInput\":false,\"points\":\"-169.9999988079071,-45 -134.99999940395355,-45 -134.99999940395355,-18.623421690825822 -100,-18.623421690825822\",\"contentOffsetX\":5,\"contentOffsetY\":5,\"sourceSymbol\":\"1448f42e-2bb9-46b3-97d4-e91de68d1351\",\"targetSymbol\":\"7ea0c15f-14a5-4e52-81eb-f040db2f3c5a\",\"object\":\"df3dd93f-f155-4d3c-872e-06d98c003d87\"},\"71bdb9aa-b0e8-42dc-a957-2df174289a09\":{\"classDefinition\":\"sap.cdw.querybuilder.ui.RenameSymbol\",\"font\":\"bold 11px \\\"72\\\",\\\"72full\\\",Arial,Helvetica,sans-serif\",\"x\":-2,\"y\":-29.290088357492493,\"object\":\"acefa0c8-b9b9-44ed-916b-c464567a952a\"},\"187d5c2d-8972-4e79-9969-5e6df79a4f15\":{\"classDefinition\":\"sap.cdw.querybuilder.ui.CalculatedSymbol\",\"font\":\"bold 11px \\\"72\\\",\\\"72full\\\",Arial,Helvetica,sans-serif\",\"x\":115.9999988079071,\"y\":-37.08617067758516,\"object\":\"0bfa9dc1-670c-4b98-b562-453db3e8b2f1\"},\"934bcb1d-5609-495b-b63e-9eff1b2aa44f\":{\"classDefinition\":\"sap.cdw.querybuilder.ui.AssociationSymbol\",\"points\":\"46,-13.290088357492493 80.99999940395355,-13.290088357492493 80.99999940395355,-21.08617067758516 115.9999988079071,-21.08617067758516\",\"contentOffsetX\":5,\"contentOffsetY\":5,\"sourceSymbol\":\"71bdb9aa-b0e8-42dc-a957-2df174289a09\",\"targetSymbol\":\"187d5c2d-8972-4e79-9969-5e6df79a4f15\"},\"6a5ab4fd-2b3c-4050-8180-e415fc795d52\":{\"classDefinition\":\"sap.cdw.querybuilder.ui.AssociationSymbol\",\"points\":\"163.9999988079071,-21.08617067758516 213.9999988079071,-21.08617067758516\",\"contentOffsetX\":5,\"contentOffsetY\":5,\"sourceSymbol\":\"187d5c2d-8972-4e79-9969-5e6df79a4f15\",\"targetSymbol\":\"9d0b9c18-e4c2-44dd-93ea-0d0e92c0f6d7\"},\"e967479f-5411-4f9f-a272-c8209cea2869\":{\"classDefinition\":\"sap.cdw.querybuilder.ui.AssociationSymbol\",\"points\":\"-52,-13.290088357492493 -2,-13.290088357492493\",\"contentOffsetX\":5,\"contentOffsetY\":5,\"sourceSymbol\":\"7ea0c15f-14a5-4e52-81eb-f040db2f3c5a\",\"targetSymbol\":\"71bdb9aa-b0e8-42dc-a957-2df174289a09\"}}}"
+    }
+  },
+  "$version": "1.0"
+}
