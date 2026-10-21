@@ -2,6 +2,34 @@
 
 Design decisions and changes to the project plan, newest first.
 
+## 2026-10-21 — BW Bridge topics replaced by their BDC equivalents
+
+- **Decision:** The planned SAP BW Bridge topics (value propositions, conversion, layer
+  shift) become SAP Business Data Cloud topics with the same priority: BW modernization
+  with BDC (BW private cloud edition, Data Product Generator) and BDC data products,
+  formations and zero-copy / Delta Sharing to Databricks. BW Bridge remains as one
+  option within them.
+- **Why:** SAP's BDC FAQ (2025) states that BW Bridge is still supported in BDC, but that
+  the strategic path for BW customers is SAP BW private cloud edition inside BDC, with
+  BW data exposed as data products. For a Microsoft/Databricks consultancy where BDC is
+  arriving, that path matters more than the bridge.
+- **Consequence:** Phase H covers it briefly; hands-on work depends on the tenant being
+  part of a BDC formation.
+
+## 2026-10-21 — Topic priorities replace the course-unit plan
+
+- **Decision:** The project is no longer planned unit by unit. It follows a priority
+  rating of the course's topics (5 = in depth, 4 = properly, 3 = briefly, 2 = optional,
+  1 = deprecated). The rating gives nine phases, A–I. Unit 01 becomes Phase A.
+- **Why:** The course's unit order mixes depths and repeats topics. A priority list puts
+  the effort where it matters for the job: integration, modelling, security and
+  consumption in depth; governance, lifecycle and BDC briefly. Same build-journal workflow
+  as the author's Fabric project: a guide per phase, a tracker, evidence per phase.
+- **Consequence:** The old P0–P7 map, the per-unit READMEs (after unit 01) and the unit
+  template are retired. The replication-flow plan of 2026-10-20 moves into Phase B. An
+  Azure SQL Database with Microsoft's Northwind script is added as the delta-capable
+  source.
+
 ## 2026-10-20 — Star schema by association: customer dimension as a view, generated time
 
 - **Decision:** Customer attributes reach the model through an association from
@@ -18,9 +46,10 @@ Design decisions and changes to the project plan, newest first.
 - **Consequence:** Each new association must be added to `AM_NW_SALES` explicitly,
   redeployed, and the story saved again.
 
-## 2026-10-20 — Replication flows: provisional plan (open)
+## 2026-10-20 — Replication flows: provisional plan
 
-- **Status:** Proposal, to be confirmed when the course reaches replication flows.
+- **Status:** Superseded on 2026-10-21: adopted into Phase B (Azure SQL source); the ADLS
+  outbound part stays a Phase H option.
 - **P1 (ingestion):** Northwind in a free Azure SQL Database as the source of replication
   flows `RF_NW_<ENTITY>` (load type *Initial and Delta*) into `NW_LAB`, so federation,
   snapshot replication and delta replication can be compared on the same data. The
