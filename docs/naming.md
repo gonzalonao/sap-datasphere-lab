@@ -34,7 +34,7 @@ types appear (rows marked *planned* are reserved, not yet used).
 | Analytic model | `AM_<DOMAIN>_<ENTITY>` | `AM_NW_SALES` | Minimal in Phase A, extended in Phase D. |
 | Replication flow | `RF_<DOMAIN>_<ENTITY>` | `RF_NW_ORDERS` | *Planned (Phase B).* |
 | Data flow | `DF_<DOMAIN>_<ENTITY>` | `DF_NW_CUSTOMER` | *Planned (Phase B).* |
-| Transformation flow | `TF_<DOMAIN>_<ENTITY>` | `TF_NW_SALES` | *Optional: not in the current plan.* |
+| Transformation flow | `TF_<DOMAIN>_<ENTITY>` | `TF_NW_SALES` | *Planned (Phase B).* Delta-aware transform after a replication flow. |
 | Task chain | `TC_<DOMAIN>_<PURPOSE>` | `TC_NW_DAILY_LOAD` | *Planned (Phase E).* |
 | Data access control | `DAC_<DOMAIN>_<CRITERION>` | `DAC_NW_COUNTRY` | *Planned (Phase D).* |
 

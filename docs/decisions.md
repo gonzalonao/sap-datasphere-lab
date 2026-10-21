@@ -2,6 +2,24 @@
 
 Design decisions and changes to the project plan, newest first.
 
+## 2026-10-21 — Transformation flows added to the plan
+
+- **Decision:** Transformation flows join Phase B at top priority, as a sub-phase right
+  after replication flows: replication flow → local table with delta capture →
+  transformation flow (initial and delta) → target table. The task chain in Phase E runs
+  them in that order. Data flows stay, framed as the tool for what transformation flows
+  can't do here (Python scripting in a HANA-storage space, one-off ETL straight from a
+  source).
+- **Why:** The course's topic list didn't include them, so the first rating-based plan
+  missed them. SAP's documentation now names replication flows plus transformation flows
+  as the preferred way to load and write local tables, instead of data flows. A replication
+  flow only extracts and loads. The incremental transformation step belongs to the
+  transformation flow, much like an incremental dbt model or a Databricks `MERGE` job
+  after ingestion.
+- **Consequence:** `TF_` objects move from *optional* to *planned* in the naming
+  convention. Phase B's decision table compares replication flow + transformation flow
+  against a data flow.
+
 ## 2026-10-21 — BW Bridge topics replaced by their BDC equivalents
 
 - **Decision:** The planned SAP BW Bridge topics (value propositions, conversion, layer

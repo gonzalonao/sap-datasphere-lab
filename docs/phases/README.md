@@ -27,7 +27,8 @@ the generated time dimension joined by association.
 
 **B — Ingestion & integration.** The connector landscape and connection features; remote
 tables accessed remotely vs. replicated (snapshot, real-time), measured; scheduled
-replication; replication flows with delta from an Azure SQL Database; data flows with
+replication; replication flows with delta from an Azure SQL Database, carried into a
+target table by a transformation flow; data flows with
 standard operators and the Python script operator; the space's Open SQL schema and
 database user; an external dataset from the Data Marketplace.
 
@@ -40,8 +41,8 @@ Lookup to match external data.
 measures and variables; row-level data access controls proven with two identities;
 an ingestion space shared into the modelling space.
 
-**E — Orchestration & operations.** A scheduled task chain over replication, data flow
-and persistence; the Data Integration Monitor and System Monitor; a troubleshooting
+**E — Orchestration & operations.** A scheduled task chain over replication flow,
+transformation flow, data flow and persistence; the Data Integration Monitor and System Monitor; a troubleshooting
 runbook from this build's real incidents.
 
 **F — Consumption.** The full SAC story (hierarchies, variables, restricted measures) and
