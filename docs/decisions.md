@@ -2,6 +2,28 @@
 
 Design decisions and changes to the project plan, newest first.
 
+## 2026-10-21 — Plan gaps closed: outbound to Databricks, SAP source, object store, cost
+
+- **Decision:** Four topics the course list doesn't cover are added to the plan:
+  - **Outbound replication to the Microsoft/Databricks stack** (high priority, Phase B): a
+    replication flow writes Parquet to Azure Data Lake Storage Gen2 and Azure Databricks
+    reads it, reconciled to the reference totals.
+  - **An S/4HANA-style source** (brief, Phase B): can a Generic OData connection reach
+    SAP's public sandbox APIs? If yes, one remote table; if no, the reason is documented.
+  - **Object store and file spaces** (brief, Phase H): the cheaper storage tier that
+    Business Data Cloud builds on.
+  - **Capacity units and cost** (optional, Phase E): what replication, outbound
+    integration, memory and storage cost.
+- **Why:** The project targets a Microsoft/Databricks consulting context. "Datasphere
+  data in Databricks" is the most likely real-world request, and its classic route
+  (premium outbound integration) was only a footnote. SAP sources and cost are what
+  clients ask about first.
+- **Consequence:** Writing to a non-SAP target needs capacity units assigned to premium
+  outbound integration, a tenant-level setting that costs capacity. It is checked before
+  anything is changed. If the tenant can't, the setup and cost model are documented
+  instead. The BDC route (zero-copy Delta Sharing) stays in Phase H as the strategic
+  alternative.
+
 ## 2026-10-21 — Transformation flows added to the plan
 
 - **Decision:** Transformation flows join Phase B at top priority, as a sub-phase right
@@ -67,7 +89,7 @@ Design decisions and changes to the project plan, newest first.
 ## 2026-10-20 — Replication flows: provisional plan
 
 - **Status:** Superseded on 2026-10-21: adopted into Phase B (Azure SQL source); the ADLS
-  outbound part stays a Phase H option.
+  outbound part became its own Phase B step later the same day (see *Plan gaps closed*).
 - **P1 (ingestion):** Northwind in a free Azure SQL Database as the source of replication
   flows `RF_NW_<ENTITY>` (load type *Initial and Delta*) into `NW_LAB`, so federation,
   snapshot replication and delta replication can be compared on the same data. The

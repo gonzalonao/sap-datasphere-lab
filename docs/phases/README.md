@@ -28,7 +28,8 @@ the generated time dimension joined by association.
 **B — Ingestion & integration.** The connector landscape and connection features; remote
 tables accessed remotely vs. replicated (snapshot, real-time), measured; scheduled
 replication; replication flows with delta from an Azure SQL Database, carried into a
-target table by a transformation flow; data flows with
+target table by a transformation flow, and written out to Azure Data Lake Storage Gen2
+for Azure Databricks; a reachability check on an S/4HANA-style sandbox API; data flows with
 standard operators and the Python script operator; the space's Open SQL schema and
 database user; an external dataset from the Data Marketplace.
 
@@ -53,7 +54,8 @@ tags and lineage; transport between spaces or tenants; the Datasphere CLI; busin
 content.
 
 **H — BDC & advanced (brief).** SAP Business Data Cloud data products and zero-copy
-sharing to Databricks; BW modernization with BDC; HANA's built-in machine learning.
+sharing to Databricks; BW modernization with BDC; HANA's built-in machine learning; the
+object store and file spaces.
 
 **I — Evidence & documentation.** Build log, data dictionary, evidence catalogues, demo
 recording and release.
