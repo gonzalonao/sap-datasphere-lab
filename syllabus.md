@@ -1,6 +1,8 @@
 # Syllabus
 
-Course objectives per unit, in my own words. Add one section per unit before starting it.
+Course objectives per unit, in my own words. Since 2026-10-21 the project is planned from a
+priority rating of the course's topics instead of unit by unit (see `docs/decisions.md`);
+this file keeps the objectives that started it.
 
 ## Unit 01 — Space, first model and report, remote source
 

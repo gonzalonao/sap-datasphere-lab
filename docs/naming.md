@@ -26,17 +26,17 @@ types appear (rows marked *planned* are reserved, not yet used).
 | Connection | `CN_<SOURCE>_<PROTOCOL>` | `CN_NW_ODATA` | One connection per source system and protocol. |
 | Local table | `LT_<DOMAIN>_<ENTITY>` | `LT_NW_ORDERS` | Loaded from file upload. |
 | Remote table | `RT_<DOMAIN>_<ENTITY>` | `RT_NW_ORDERS` | Federated or replicated; the data-access mode is set in the object, not the name. |
-| Relational view | `V_<DOMAIN>_<ENTITY>` | `V_NW_ORDER_ENRICHED` | Intermediate / cleansing view. *Planned (P2).* |
+| Relational view | `V_<DOMAIN>_<ENTITY>` | `V_NW_ORDER_ENRICHED` | Intermediate / cleansing view. *Planned (Phase C).* |
 | Dimension view | `DIM_<DOMAIN>_<ENTITY>` | `DIM_NW_CUSTOMER` | Semantic usage *Dimension*. |
-| Text view | `TXT_<DOMAIN>_<ENTITY>` | `TXT_NW_CATEGORY` | Semantic usage *Text*. *Planned (P3).* |
-| Hierarchy view | `HIER_<DOMAIN>_<ENTITY>` | `HIER_NW_EMPLOYEE` | *Planned (P3).* |
+| Text view | `TXT_<DOMAIN>_<ENTITY>` | `TXT_NW_CATEGORY` | Semantic usage *Text*. *Planned (Phase C).* |
+| Hierarchy view | `HIER_<DOMAIN>_<ENTITY>` | `HIER_NW_EMPLOYEE` | *Planned (Phase C).* |
 | Fact view | `FACT_<DOMAIN>_<ENTITY>` | `FACT_NW_SALES` | Semantic usage *Fact*. |
-| Analytic model | `AM_<DOMAIN>_<ENTITY>` | `AM_NW_SALES` | Minimal in unit 01, extended in P3. |
-| Replication flow | `RF_<DOMAIN>_<ENTITY>` | `RF_NW_ORDERS` | *Planned (P1).* |
-| Data flow | `DF_<DOMAIN>_<ENTITY>` | `DF_NW_CUSTOMER` | *Planned (P1).* |
-| Transformation flow | `TF_<DOMAIN>_<ENTITY>` | `TF_NW_SALES` | *Planned (P2).* |
-| Task chain | `TC_<DOMAIN>_<PURPOSE>` | `TC_NW_DAILY_LOAD` | *Planned (P5).* |
-| Data access control | `DAC_<DOMAIN>_<CRITERION>` | `DAC_NW_COUNTRY` | *Planned (P4).* |
+| Analytic model | `AM_<DOMAIN>_<ENTITY>` | `AM_NW_SALES` | Minimal in Phase A, extended in Phase D. |
+| Replication flow | `RF_<DOMAIN>_<ENTITY>` | `RF_NW_ORDERS` | *Planned (Phase B).* |
+| Data flow | `DF_<DOMAIN>_<ENTITY>` | `DF_NW_CUSTOMER` | *Planned (Phase B).* |
+| Transformation flow | `TF_<DOMAIN>_<ENTITY>` | `TF_NW_SALES` | *Optional: not in the current plan.* |
+| Task chain | `TC_<DOMAIN>_<PURPOSE>` | `TC_NW_DAILY_LOAD` | *Planned (Phase E).* |
+| Data access control | `DAC_<DOMAIN>_<CRITERION>` | `DAC_NW_COUNTRY` | *Planned (Phase D).* |
 
 ## Shared spaces
 

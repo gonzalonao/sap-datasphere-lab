@@ -34,40 +34,41 @@ loads and remote connections can be exercised on the same data.
 
 ## Phases
 
-| Phase | Theme | Units | Status |
-| ----- | ----- | ----- | ------ |
-| P0 | Tenant & governance setup | 01 | done ([summary](docs/phases/P0-tenant-governance.md)) |
-| P1 | Ingestion | 01 (intro) | started |
-| P2 | Transformation | 01 (intro) | started |
-| P3 | Semantic layer | 01 (intro) | started |
-| P4 | Security & sharing | | todo |
-| P5 | Orchestration | | todo |
-| P6 | Consumption (SAC, Power BI) | 01 (intro) | started |
-| P7 | Microsoft / BDC integration | | todo |
+| Phase | Theme | Status |
+| ----- | ----- | ------ |
+| [A](docs/phases/phase-a-foundation.md) | Foundation: space, first model, SAC story, remote table, time dimension, associations | ✅ done |
+| B | Ingestion & integration: remote tables, replication, schedules, replication flows, data flows, Open SQL schema, Data Marketplace | next |
+| C | Modelling: SQL views, joins and unions, dimensions, text entities, hierarchies, view persistence, Intelligent Lookup | todo |
+| D | Semantic layer & security: analytic model measures and variables, data access controls, cross-space sharing | todo |
+| E | Orchestration & operations: task chains, monitoring, troubleshooting | todo |
+| F | Consumption: SAP Analytics Cloud and Power BI | todo |
+| G | Governance & lifecycle (brief): roles, catalog, transport, CLI, business content | todo |
+| H | BDC & advanced (brief): data products, BW modernization, machine learning | todo |
+| I | Evidence & documentation | todo |
 
-The phase plan is provisional. It adapts to the course order, and every change is logged in
-`docs/decisions.md`.
-
-## Units
-
-| Unit | Topic | Phase | Status |
-| ---- | ----- | ----- | ------ |
-| [01](units/01-space-model-remote/README.md) | Space, first model and report, remote source | P0 (slice of P1–P3, P6) | done |
+The plan is prioritised by topic: the core integration, modelling, security and
+consumption features are built in depth; governance, lifecycle and BDC topics are covered
+briefly. The inventory with evidence is in [`docs/phases/`](docs/phases/README.md), and
+every plan change is logged in [`docs/decisions.md`](docs/decisions.md).
 
 ## How to follow along
 
 1. Get access to an SAP Datasphere tenant (trial or training tenant).
 2. Run `python scripts\export_northwind.py` to generate the sample CSV files.
-3. Read `syllabus.md` for the unit objectives.
-4. Open the unit folder under `units\` and work through its exercise and acceptance criteria.
+3. Follow the phases in order: [`docs/phases/`](docs/phases/README.md) lists what each one
+   builds. Phase A's detailed, reproducible record is
+   [`units/01-space-model-remote`](units/01-space-model-remote/README.md).
 
 ## Layout
 
-- `syllabus.md` — the course objectives, one entry per unit.
-- `units\NN-slug\README.md` — objective, concepts, exercise, steps, acceptance criteria,
-  results and gotchas (see `units\_template\`).
-- `units\NN-slug\assets\` — screenshots (scrubbed of tenant URLs and user names).
-- `docs\` — architecture, decision log, naming convention and per-phase summaries.
+- `docs\phases\` — the phase inventory and a summary per completed phase.
+- `docs\evidence\phase-x\` — screenshots per phase, each folder catalogued in its README
+  (scrubbed of tenant URLs and user names).
+- `docs\` — architecture, decision log, naming convention.
+- `units\01-space-model-remote\` — Phase A's detailed record (built as course unit 01).
+- `syllabus.md` — the course objectives of the units that started the project.
+- `datasphere\` — object definitions exported from the tenant (CSN/JSON) and trusted
+  certificates.
 - `data\` — source and licence notes for the datasets; raw files are generated locally.
 - `scripts\` — helper scripts, e.g. `export_northwind.py` that builds the CSV files.
 

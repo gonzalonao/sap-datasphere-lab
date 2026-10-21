@@ -1,8 +1,7 @@
 # Unit 01 — Space, first model and report, remote source
 
-**Phase:** P0 — Tenant & governance setup (also a first thin slice through P1 ingestion, P2
-transformation, P3 semantic layer and P6 consumption) · **Builds on:** — · **Status:**
-done (2026-10-20)
+**Phase:** A — Foundation ([summary](../../docs/phases/phase-a-foundation.md)) · **Builds
+on:** — · **Status:** done (2026-10-20)
 
 > The steps were checked against the SAP Datasphere documentation and then corrected
 > wherever the tenant (Q3 2026 release) behaved differently. Those deviations are listed
@@ -19,17 +18,17 @@ words. The parts below follow the course order.
 
 | Concept | What to understand | Why it matters here |
 | ------- | ------------------ | ------------------- |
-| **Space** | The unit of isolation in Datasphere: own objects, own storage quota, own members and connections. Objects are invisible to other spaces unless shared. | Everything in this project lives in a space; governance (P0, P4) starts here. |
+| **Space** | The unit of isolation in Datasphere: own objects, own storage quota, own members and connections. Objects are invisible to other spaces unless shared. | Everything in this project lives in a space; governance (Phases A, D) starts here. |
 | **Global vs. scoped roles** | Global roles (e.g. *DW Administrator*) grant tenant-wide privileges such as creating spaces; scoped roles grant privileges only inside the spaces they are scoped to. | Decides whether you can create your own space or must work in one prepared for you. |
 | **Local table** | Table whose data is stored in Datasphere (here filled by a CSV import). | Persisted data: fast, independent of the source, but a copy that ages. |
 | **Remote table** | A table definition pointing at a source object through a connection. Data access is *remote* (federated, read on demand) or *replicated* (copied into Datasphere). | The core federation-vs-replication trade-off of this project. Here federation came first; the public source then forced a snapshot replication. |
 | **Connection** | Per-space definition of how to reach a source system (type, URL, authentication). | One connection serves many remote tables and flows. |
-| **Graphical view & view editor** | Canvas of nodes: sources → operators (join, union, projection, calculated columns, filter, aggregation) → output node, whose properties hold the semantic usage, measures/attributes, associations and *expose for consumption*. | The main modelling tool for P2/P3. |
+| **Graphical view & view editor** | Canvas of nodes: sources → operators (join, union, projection, calculated columns, filter, aggregation) → output node, whose properties hold the semantic usage, measures/attributes, associations and *expose for consumption*. | The main modelling tool (Phase C). |
 | **Semantic usage** | Declares the role of a view: *Relational Dataset*, *Fact*, *Dimension*, *Text*, *Hierarchy*. A *Fact* needs at least one measure; a *Dimension* needs a key. | Decides what the view can be used for: only a Fact can feed an analytic model, only a Dimension (or Text/Hierarchy) can be an association target. |
 | **Analytic model** | The consumption-ready semantic layer on top of one Fact: chosen measures, dimensions pulled in through the Fact's associations, variables. | **SAC stories consume analytic models**, not raw views. |
 | **Association** | A key-based relationship from a view to a Dimension/Text/Hierarchy. Not a join: nothing is joined in the view; the analytic model joins on demand, only for queries that request the dimension's attributes. Every key column of the target must be mapped. | Keeps the fact narrow and reuses dimensions; the basis of the star schema. Close to a Power BI model relationship. |
 | **Time dimension** | Generated per space: a time table, four dimension views (day, month, quarter, year) and three translation tables (`SAP.TIME.*`). The day view carries the hierarchies Year–Quarter–Month–Day, Year–Month–Day and Year–Week–Day. | Consistent time analysis without hand-built date tables. SAC supports **only these generated dimensions** as time dimensions. |
-| **Expose for consumption** | Switch on a view that makes it consumable by external tools (Power BI, ODBC/OData clients). | Not needed for SAC via an analytic model, but needed for Power BI later (P6). |
+| **Expose for consumption** | Switch on a view that makes it consumable by external tools (Power BI, ODBC/OData clients). | Not needed for SAC via an analytic model, but needed for Power BI later (Phase F). |
 
 ### Federation vs. replication, in one paragraph
 
@@ -40,7 +39,7 @@ This unit swaps a local table for a remote one in an existing model to show that
 doesn't care which one is underneath. In practice, pure federation against the public
 Northwind service hit query timeouts, so the remote table was switched to a snapshot
 replication: the same trade-off, decided by evidence. Which mode to use per table is
-revisited in P1.
+revisited in Phase B.
 
 ## Exercise
 
@@ -131,7 +130,7 @@ with comprehension checks after each part.
    space, then generate its time data (*Time Data → Create Time Tables and Dimensions*,
    default range 1900–2050).
 6. **Tour the space settings** you'll use later, without changing them: *Users*, *Time
-   Data*, *Auditing*, *Database Access* (database users, used for Power BI in P6), and
+   Data*, *Auditing*, *Database Access* (database users, used for Power BI in Phase F), and
    *Apps → Connections*. Workload settings are tenant-level (*System → Configuration*).
 
 #### B. First model: CSV → local tables → graphical view
@@ -408,10 +407,9 @@ with comprehension checks after each part.
 - Only the generated time dimensions work as SAC time dimensions; a self-built calendar
   view is treated as an ordinary dimension.
 
-## Link to next unit
+## Next
 
 Leaves in place: an own space, one validated connection, a snapshot-replicated remote
 table, a minimal star schema (one fact, a customer dimension, the time dimension), an
-analytic model and a saved SAC story. Later units deepen each slice: P1 ingestion modes
-(replication vs. federation, data flows), P2 transformation and quality, P3 text and
-hierarchies and the full analytic model.
+analytic model and a saved SAC story. Phases B–F deepen each slice (see
+[`docs/phases/`](../../docs/phases/README.md)).

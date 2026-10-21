@@ -2,13 +2,14 @@
 
 Living view of the solution; updated as each unit adds objects.
 
-## Target (provisional)
+## Target
 
 ```mermaid
 flowchart LR
     subgraph Sources
         F[Northwind flat files]
         O[Northwind OData service]
+        AZ[Azure SQL Database<br/>Northwind, delta source]
         S[SAP sandbox APIs<br/>optional]
     end
     subgraph Datasphere
@@ -18,10 +19,11 @@ flowchart LR
     subgraph Consumption
         SAC[SAP Analytics Cloud]
         PBI[Power BI]
-        DBX[Azure Databricks<br/>outbound / BDC]
+        DBX[Azure Databricks<br/>BDC data products, optional]
     end
     F --> I
     O --> I
+    AZ -->|replication flow| I
     S -.-> I
     I -->|shared| M
     M --> SAC
