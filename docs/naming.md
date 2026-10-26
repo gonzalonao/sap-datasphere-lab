@@ -23,7 +23,7 @@ types appear (rows marked *planned* are reserved, not yet used).
 | ------ | ------ | ------- | ----- |
 | Space | `NW_<PURPOSE>` | `NW_LAB` | Space IDs are tenant-unique. If taken in a shared training tenant, append a short suffix (e.g. `NW_LAB_07`) and log it in `decisions.md`. |
 | Folder | `NW_<PURPOSE>` | `NW_LAB` | Data Builder folder standing in for a space while working in a shared space. Same pattern as space IDs so a later move to a real space keeps the name. |
-| Connection | `CN_<SOURCE>_<PROTOCOL>` | `CN_NW_ODATA` | One connection per source system and protocol. |
+| Connection | `CN_<SOURCE>_<PROTOCOL>` | `CN_NW_ODATA`, `CN_NW_AZSQL`, `CN_NW_S4SBX` | One connection per source system and protocol. `S4SBX` = the SAP S/4HANA Cloud sandbox API. |
 | Local table | `LT_<DOMAIN>_<ENTITY>` | `LT_NW_ORDERS` | Loaded from file upload. |
 | Remote table | `RT_<DOMAIN>_<ENTITY>` | `RT_NW_ORDERS` | Federated or replicated; the data-access mode is set in the object, not the name. |
 | Relational view | `V_<DOMAIN>_<ENTITY>` | `V_NW_ORDER_ENRICHED` | Intermediate / cleansing view. *Planned (Phase C).* |

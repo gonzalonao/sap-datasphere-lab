@@ -26,3 +26,41 @@ python scripts\export_northwind.py
 
 Notes: contact names, phone numbers and street addresses are deliberately left out of the
 export. Date-time columns are cut to `YYYY-MM-DD`.
+
+## Northwind on Azure SQL Database (Phase B)
+
+The same Northwind data, loaded into an Azure SQL Database. It's the delta-capable source
+for replication flows (the OData service can't be a replication-flow source).
+
+| Item | Value |
+| ---- | ----- |
+| Source | Microsoft's sample script `instnwnd (Azure SQL Database).sql` in [microsoft/sql-server-samples](https://github.com/microsoft/sql-server-samples/tree/master/samples/databases/northwind-pubs) |
+| Licence | MIT (Microsoft SQL Server Sample Code). The script isn't copied into this repo; download it from the source |
+| Content | 13 tables under `dbo`: the 8 core Northwind tables plus Region, Territories, EmployeeTerritories, CustomerDemographics, CustomerCustomerDemo; views and procedures |
+| Target | Azure SQL Database, free offer (General Purpose serverless, auto-pause when the monthly free limit is reached), database `northwind` |
+| Used in | Phase B: `CN_NW_AZSQL` → replication flows (with delta), data flows |
+
+### Loading it
+
+1. Create the free database (Azure portal → aka.ms/azuresqlhub → *Start free*). Open the
+   server firewall to your client IP and to Datasphere's *Replication/Data Flow NAT IP
+   (egress)*, which is shown under *Profile → About → More* in Datasphere.
+2. Connect as the server admin to database `northwind` with a client that understands `GO`
+   (VS Code with the MSSQL extension, or SSMS), and run the downloaded script.
+3. Create the Datasphere user: [`sql/azure-sql/01_dsp_rep_user.sql`](../sql/azure-sql/01_dsp_rep_user.sql).
+4. Check the load: [`sql/azure-sql/02_verify_northwind.sql`](../sql/azure-sql/02_verify_northwind.sql).
+
+| Table | Rows | Reconciles with |
+| ----- | ---- | --------------- |
+| `Orders` | 830 | `orders.csv` |
+| `Order Details` | 2,155 | `order_details.csv` |
+| `Customers` | 91 | `customers.csv` |
+| `Products` / `Employees` / `Suppliers` | 77 / 9 / 29 | not in the CSV export |
+
+Totals over `Order Details`: Quantity **51,317**, revenue **1,265,792.64**
+(`UnitPrice × Quantity × (1 − Discount)`, each line truncated to 2 decimals), identical to
+the Phase A reference. Verified at the source on 2026-10-26.
+
+Notes: `Employees`, `Categories`, `Suppliers` and `CustomerDemographics` contain `image` /
+`ntext` columns, which replication flows don't support. The serverless database pauses when
+idle, and the first connection after a pause fails while it resumes.

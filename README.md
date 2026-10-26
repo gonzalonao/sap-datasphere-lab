@@ -70,6 +70,7 @@ every plan change is logged in [`docs/decisions.md`](docs/decisions.md).
 - `datasphere\` — object definitions exported from the tenant (CSN/JSON) and trusted
   certificates.
 - `data\` — source and licence notes for the datasets; raw files are generated locally.
+- `sql\azure-sql\` — setup and verification scripts for the Azure SQL source (Phase B).
 - `scripts\` — helper scripts, e.g. `export_northwind.py` that builds the CSV files.
 
 ## Author
