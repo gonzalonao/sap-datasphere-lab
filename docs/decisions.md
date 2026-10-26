@@ -2,6 +2,23 @@
 
 Design decisions and changes to the project plan, newest first.
 
+## 2026-10-26 — Real-time replication through a Data Provisioning Agent
+
+- **Decision:** Remote tables on the Azure SQL source go through an SAP HANA smart data
+  integration (SDI) Data Provisioning Agent installed on the author's laptop, so that
+  real-time replication of remote tables can be built hands-on. The attempt is
+  time-boxed. If the agent can't be registered, the alternative is documented instead.
+  Federated vs. snapshot access is measured either way, on the OData connections.
+- **Why:** On Azure SQL Database, Datasphere offers replication flows and data flows
+  directly, but remote tables only through SDI (the MssqlLogReaderAdapter). Real-time
+  replication is the one access mode that needs the agent, and agents are what most
+  on-premise SAP and database sources use in practice. The agent comes from SAP's public
+  development tools site under the SAP Developer License.
+- **Consequence:** A tenant-level agent registration and an IP allowlist entry for the
+  agent host, both logged. Real-time runs only while the laptop is on, so it's enabled
+  for the test and then switched off, which also protects the database's free compute
+  budget.
+
 ## 2026-10-21 — Plan gaps closed: outbound to Databricks, SAP source, object store, cost
 
 - **Decision:** Four topics the course list doesn't cover are added to the plan:
