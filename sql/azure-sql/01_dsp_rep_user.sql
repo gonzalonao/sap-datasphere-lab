@@ -19,8 +19,16 @@ GRANT SELECT, ALTER ON SCHEMA::dbo TO dsp_rep;      -- read source tables, creat
 GRANT CREATE TABLE, CREATE PROCEDURE TO dsp_rep;    -- delta replication objects
 GO
 
--- Expect: CONNECT, CREATE PROCEDURE, CREATE TABLE, VIEW DATABASE PERFORMANCE STATE
--- (class DATABASE) and ALTER, SELECT on schema dbo (class SCHEMA), all GRANT.
+-- Only for real-time replication of remote tables through an SDI Data Provisioning Agent
+-- (MssqlLogReaderAdapter, trigger-based): it also creates a database-level DDL trigger.
+-- Without this grant, enabling real-time fails with "Cannot create the trigger
+-- '..._DDL_TRIG', because you do not have permission".
+GRANT ALTER ANY DATABASE DDL TRIGGER TO dsp_rep;
+GO
+
+-- Expect: CONNECT, CREATE PROCEDURE, CREATE TABLE, VIEW DATABASE PERFORMANCE STATE,
+-- ALTER ANY DATABASE DDL TRIGGER (class DATABASE) and ALTER, SELECT on schema dbo
+-- (class SCHEMA), all GRANT.
 SELECT p.class_desc, p.permission_name, p.state_desc, s.name AS schema_name
 FROM sys.database_permissions AS p
 LEFT JOIN sys.schemas AS s ON p.class = 3 AND p.major_id = s.schema_id
