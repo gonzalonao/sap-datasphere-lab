@@ -2,6 +2,94 @@
 
 Design decisions and changes to the project plan, newest first.
 
+## 2026-10-27 — Round the `real` discount before computing revenue
+
+- **Decision:** In `TF_NW_SALES`, `REVENUE` = `"UnitPrice" * "Quantity" * (1 - ROUND(TO_DECIMAL("Discount", 10, 6), 2))`,
+  stored as `Decimal(15,2)` (truncated to cents, as in Phase A).
+- **Why:** The Azure source stores `Discount` as `real`. Used directly, HANA computes the whole
+  product in single precision (total 1,265,789.88). `TO_DECIMAL(…, 4, 2)` truncates, and the
+  eight odd discounts (0.01–0.06) are stored just below their value (total 1,265,796.29). An
+  independent recalculation from the CSV reproduced both totals exactly. Converting to six
+  decimals and then rounding gives the exact discount and the reference total 1,265,792.64.
+- **Consequence:** Types are fixed at the first transformation after landing. Phase C views
+  read `LT_NW_AZ_SALES`, not the raw `real` column.
+
+## 2026-10-27 — Outbound replication to ADLS Gen2 documented, not built
+
+- **Decision:** The replication flow to Azure Data Lake Storage Gen2 (`RF_NW_ADLS`) is not
+  built. It stays in the project as a documented design with its cost model. Databricks gets
+  Datasphere data through the space's Open SQL schema over JDBC (Phase B) and, if the tenant
+  allows it, through Business Data Cloud data products with Delta Sharing (Phase H).
+- **Why:** Any non-SAP replication target (ADLS Gen2, S3, GCS, BigQuery, Kafka, SFTP) needs
+  at least one *Premium Outbound Integration* block, allocated by an administrator on the
+  *Tenant Configuration* page. On this training tenant that page isn't available (neither
+  is *Capacities Monitoring*): capacity is managed outside the tenant, so no block can be
+  assigned.
+- **Cost model (from SAP's documentation):** one block gives 20 GB of transfer per month,
+  on top of the data-integration execution hours every replication flow needs. Sizing
+  counts the initial load plus the monthly delta volume. A flow that exceeds the
+  allocation keeps running and is billed for the overage. For this project's data (under
+  1 MB) one block would be plenty.
+- **Consequence:** The B5 → B5b chain (replication flow with delta → transformation flow)
+  is the delta proof; B5c's done criterion is met by this record.
+
+## 2026-10-26 — Real-time replication through a Data Provisioning Agent
+
+- **Decision:** Remote tables on the Azure SQL source go through an SAP HANA smart data
+  integration (SDI) Data Provisioning Agent installed on the author's laptop, so that
+  real-time replication of remote tables can be built hands-on. The attempt is
+  time-boxed. If the agent can't be registered, the alternative is documented instead.
+  Federated vs. snapshot access is measured either way, on the OData connections.
+- **Why:** On Azure SQL Database, Datasphere offers replication flows and data flows
+  directly, but remote tables only through SDI (the MssqlLogReaderAdapter). Real-time
+  replication is the one access mode that needs the agent, and agents are what most
+  on-premise SAP and database sources use in practice. The agent comes from SAP's public
+  development tools site under the SAP Developer License.
+- **Consequence:** A tenant-level agent registration and an IP allowlist entry for the
+  agent host, both logged. Real-time runs only while the laptop is on, so it's enabled
+  for the test and then switched off, which also protects the database's free compute
+  budget.
+
+## 2026-10-21 — Plan gaps closed: outbound to Databricks, SAP source, object store, cost
+
+- **Decision:** Four topics the course list doesn't cover are added to the plan:
+  - **Outbound replication to the Microsoft/Databricks stack** (high priority, Phase B): a
+    replication flow writes Parquet to Azure Data Lake Storage Gen2 and Azure Databricks
+    reads it, reconciled to the reference totals.
+  - **An S/4HANA-style source** (brief, Phase B): can a Generic OData connection reach
+    SAP's public sandbox APIs? If yes, one remote table; if no, the reason is documented.
+  - **Object store and file spaces** (brief, Phase H): the cheaper storage tier that
+    Business Data Cloud builds on.
+  - **Capacity units and cost** (optional, Phase E): what replication, outbound
+    integration, memory and storage cost.
+- **Why:** The project targets a Microsoft/Databricks consulting context. "Datasphere
+  data in Databricks" is the most likely real-world request, and its classic route
+  (premium outbound integration) was only a footnote. SAP sources and cost are what
+  clients ask about first.
+- **Consequence:** Writing to a non-SAP target needs capacity units assigned to premium
+  outbound integration, a tenant-level setting that costs capacity. It is checked before
+  anything is changed. If the tenant can't, the setup and cost model are documented
+  instead. The BDC route (zero-copy Delta Sharing) stays in Phase H as the strategic
+  alternative.
+
+## 2026-10-21 — Transformation flows added to the plan
+
+- **Decision:** Transformation flows join Phase B at top priority, as a sub-phase right
+  after replication flows: replication flow → local table with delta capture →
+  transformation flow (initial and delta) → target table. The task chain in Phase E runs
+  them in that order. Data flows stay, framed as the tool for what transformation flows
+  can't do here (Python scripting in a HANA-storage space, one-off ETL straight from a
+  source).
+- **Why:** The course's topic list didn't include them, so the first rating-based plan
+  missed them. SAP's documentation now names replication flows plus transformation flows
+  as the preferred way to load and write local tables, instead of data flows. A replication
+  flow only extracts and loads. The incremental transformation step belongs to the
+  transformation flow, much like an incremental dbt model or a Databricks `MERGE` job
+  after ingestion.
+- **Consequence:** `TF_` objects move from *optional* to *planned* in the naming
+  convention. Phase B's decision table compares replication flow + transformation flow
+  against a data flow.
+
 ## 2026-10-21 — BW Bridge topics replaced by their BDC equivalents
 
 - **Decision:** The planned SAP BW Bridge topics (value propositions, conversion, layer
@@ -49,7 +137,7 @@ Design decisions and changes to the project plan, newest first.
 ## 2026-10-20 — Replication flows: provisional plan
 
 - **Status:** Superseded on 2026-10-21: adopted into Phase B (Azure SQL source); the ADLS
-  outbound part stays a Phase H option.
+  outbound part became its own Phase B step later the same day (see *Plan gaps closed*).
 - **P1 (ingestion):** Northwind in a free Azure SQL Database as the source of replication
   flows `RF_NW_<ENTITY>` (load type *Initial and Delta*) into `NW_LAB`, so federation,
   snapshot replication and delta replication can be compared on the same data. The

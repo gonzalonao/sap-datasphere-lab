@@ -1,5 +1,6 @@
 .env
 *.env
+.venv/
 .DS_Store
 Thumbs.db
 # raw downloads too large or not redistributable; document the source URL instead
