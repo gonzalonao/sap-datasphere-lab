@@ -2,6 +2,25 @@
 
 Design decisions and changes to the project plan, newest first.
 
+## 2026-10-27 — Outbound replication to ADLS Gen2 documented, not built
+
+- **Decision:** The replication flow to Azure Data Lake Storage Gen2 (`RF_NW_ADLS`) is not
+  built. It stays in the project as a documented design with its cost model. Databricks gets
+  Datasphere data through the space's Open SQL schema over JDBC (Phase B) and, if the tenant
+  allows it, through Business Data Cloud data products with Delta Sharing (Phase H).
+- **Why:** Any non-SAP replication target (ADLS Gen2, S3, GCS, BigQuery, Kafka, SFTP) needs
+  at least one *Premium Outbound Integration* block, allocated by an administrator on the
+  *Tenant Configuration* page. On this training tenant that page isn't available (neither
+  is *Capacities Monitoring*): capacity is managed outside the tenant, so no block can be
+  assigned.
+- **Cost model (from SAP's documentation):** one block gives 20 GB of transfer per month,
+  on top of the data-integration execution hours every replication flow needs. Sizing
+  counts the initial load plus the monthly delta volume. A flow that exceeds the
+  allocation keeps running and is billed for the overage. For this project's data (under
+  1 MB) one block would be plenty.
+- **Consequence:** The B5 → B5b chain (replication flow with delta → transformation flow)
+  is the delta proof; B5c's done criterion is met by this record.
+
 ## 2026-10-26 — Real-time replication through a Data Provisioning Agent
 
 - **Decision:** Remote tables on the Azure SQL source go through an SAP HANA smart data
