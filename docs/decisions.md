@@ -2,6 +2,18 @@
 
 Design decisions and changes to the project plan, newest first.
 
+## 2026-10-27 — Round the `real` discount before computing revenue
+
+- **Decision:** In `TF_NW_SALES`, `REVENUE` = `"UnitPrice" * "Quantity" * (1 - ROUND(TO_DECIMAL("Discount", 10, 6), 2))`,
+  stored as `Decimal(15,2)` (truncated to cents, as in Phase A).
+- **Why:** The Azure source stores `Discount` as `real`. Used directly, HANA computes the whole
+  product in single precision (total 1,265,789.88). `TO_DECIMAL(…, 4, 2)` truncates, and the
+  eight odd discounts (0.01–0.06) are stored just below their value (total 1,265,796.29). An
+  independent recalculation from the CSV reproduced both totals exactly. Converting to six
+  decimals and then rounding gives the exact discount and the reference total 1,265,792.64.
+- **Consequence:** Types are fixed at the first transformation after landing. Phase C views
+  read `LT_NW_AZ_SALES`, not the raw `real` column.
+
 ## 2026-10-27 — Outbound replication to ADLS Gen2 documented, not built
 
 - **Decision:** The replication flow to Azure Data Lake Storage Gen2 (`RF_NW_ADLS`) is not
