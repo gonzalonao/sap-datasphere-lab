@@ -64,3 +64,12 @@ the Phase A reference. Verified at the source on 2026-10-26.
 Notes: `Employees`, `Categories`, `Suppliers` and `CustomerDemographics` contain `image` /
 `ntext` columns, which replication flows don't support. The serverless database pauses when
 idle, and the first connection after a pause fails while it resumes.
+
+## Synthetic sales targets (Phase B, Open SQL schema)
+
+`scripts/load_sales_targets.py` derives one revenue target per ship country and order year
+from the CSV export: actual revenue (each line truncated to 2 decimals) × 1.10, rounded to
+thousands. That gives **62 rows totalling 1,393,000**. The script writes them to the table
+`SALES_TARGETS` in the space's Open SQL schema through a database user (`hdbcli`, connection
+settings from environment variables). The numbers are synthetic and exist only to show an
+external write into the space.
