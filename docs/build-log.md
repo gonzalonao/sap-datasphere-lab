@@ -100,6 +100,7 @@ in inserts its plain name. `V_NW_SALES_VS_TARGET` full-outer-joins actuals per s
 and year to the targets: actual 1,265,792.64 against 1,393,000.00, with no nulls on either
 side. Reviewing the run showed that `hdbcli` autocommits by default, so the delete and the
 insert weren't one transaction; the loader now turns autocommit off and rolls back on error.
+A rerun of the fixed loader against the tenant loaded the same 62 rows.
 
 From about 1,600 free Marketplace products, a country reference set was installed in one step
 as a remote table with 244 rows.
