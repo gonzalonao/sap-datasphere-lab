@@ -23,18 +23,19 @@ types appear (rows marked *planned* are reserved, not yet used).
 | ------ | ------ | ------- | ----- |
 | Space | `NW_<PURPOSE>` | `NW_LAB` | Space IDs are tenant-unique. If taken in a shared training tenant, append a short suffix (e.g. `NW_LAB_07`) and log it in `decisions.md`. |
 | Folder | `NW_<PURPOSE>` | `NW_LAB` | Data Builder folder standing in for a space while working in a shared space. Same pattern as space IDs so a later move to a real space keeps the name. |
-| Connection | `CN_<SOURCE>_<PROTOCOL>` | `CN_NW_ODATA` | One connection per source system and protocol. |
-| Local table | `LT_<DOMAIN>_<ENTITY>` | `LT_NW_ORDERS` | Loaded from file upload. |
+| Connection | `CN_<SOURCE>_<PROTOCOL>` | `CN_NW_ODATA`, `CN_NW_AZSQL`, `CN_NW_S4SBX` | One connection per source system and protocol. `S4SBX` = the SAP S/4HANA Cloud sandbox API. |
+| Local table | `LT_<DOMAIN>_<ENTITY>` | `LT_NW_ORDERS`, `LT_NW_AZ_ORDERS` | Loaded from file upload, or the target of a flow. `AZ` marks tables landed from the Azure SQL source (`LT_NW_AZ_SALES` from `TF_NW_SALES`, `LT_NW_AZ_EMPLOYEES_CLEAN` from `DF_NW_EMPLOYEES`). |
 | Remote table | `RT_<DOMAIN>_<ENTITY>` | `RT_NW_ORDERS` | Federated or replicated; the data-access mode is set in the object, not the name. |
-| Relational view | `V_<DOMAIN>_<ENTITY>` | `V_NW_ORDER_ENRICHED` | Intermediate / cleansing view. *Planned (Phase C).* |
+| Relational view | `V_<DOMAIN>_<ENTITY>` | `V_NW_SALES_VS_TARGET` | Intermediate / cleansing view (Relational Dataset). First used in Phase B. |
 | Dimension view | `DIM_<DOMAIN>_<ENTITY>` | `DIM_NW_CUSTOMER` | Semantic usage *Dimension*. |
 | Text view | `TXT_<DOMAIN>_<ENTITY>` | `TXT_NW_CATEGORY` | Semantic usage *Text*. *Planned (Phase C).* |
 | Hierarchy view | `HIER_<DOMAIN>_<ENTITY>` | `HIER_NW_EMPLOYEE` | *Planned (Phase C).* |
 | Fact view | `FACT_<DOMAIN>_<ENTITY>` | `FACT_NW_SALES` | Semantic usage *Fact*. |
 | Analytic model | `AM_<DOMAIN>_<ENTITY>` | `AM_NW_SALES` | Minimal in Phase A, extended in Phase D. |
-| Replication flow | `RF_<DOMAIN>_<ENTITY>` | `RF_NW_ORDERS` | *Planned (Phase B).* |
-| Data flow | `DF_<DOMAIN>_<ENTITY>` | `DF_NW_CUSTOMER` | *Planned (Phase B).* |
-| Transformation flow | `TF_<DOMAIN>_<ENTITY>` | `TF_NW_SALES` | *Optional: not in the current plan.* |
+| Replication flow | `RF_<DOMAIN>_<SOURCE>` | `RF_NW_AZSQL` | One flow per source connection, many objects. |
+| Data flow | `DF_<DOMAIN>_<ENTITY>` | `DF_NW_EMPLOYEES` | |
+| Transformation flow | `TF_<DOMAIN>_<ENTITY>` | `TF_NW_SALES` | Delta-aware transform after a replication flow. |
+| Database user | `<SPACE>#<PURPOSE>` | `NW_LAB#ETL` | The suffix is chosen; the name is also the Open SQL schema. |
 | Task chain | `TC_<DOMAIN>_<PURPOSE>` | `TC_NW_DAILY_LOAD` | *Planned (Phase E).* |
 | Data access control | `DAC_<DOMAIN>_<CRITERION>` | `DAC_NW_COUNTRY` | *Planned (Phase D).* |
 
