@@ -70,4 +70,9 @@ Written by `DF_NW_EMPLOYEES` in *Truncate* mode. 9 rows, 13 columns: `EmployeeID
 
 | Table | Rows | Meaning |
 | ----- | ---- | ------- |
-| `SALES_TARGETS` | 62 | Synthetic revenue target per ship country and order year: actual × 1.10, rounded to thousands; total 1,393,000. Key `COUNTRY` + `ORDER_YEAR`. Written by [`scripts/load_sales_targets.py`](../scripts/load_sales_targets.py) (*pending*) |
+| `SALES_TARGETS` | 62 | Synthetic revenue target per ship country and order year: actual × 1.10, rounded to thousands; total 1,393,000. Key `COUNTRY` + `ORDER_YEAR`. Written by [`scripts/load_sales_targets.py`](../scripts/load_sales_targets.py) |
+
+Read by the SQL view `V_NW_SALES_VS_TARGET` (Relational Dataset): `COUNTRY`, `ORDER_YEAR`,
+`ACTUAL_REVENUE` (sum of `LT_NW_AZ_SALES.REVENUE` per `ShipCountry` and `YEAR(ORDER_DATE)`),
+`TARGET_REVENUE`, `ATTAINMENT_PCT` (1 decimal). Full outer join on country and year, so a key
+missing on either side shows as a null. Totals: actual 1,265,792.64, target 1,393,000.00.

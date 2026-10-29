@@ -93,5 +93,13 @@ The database user `NW_LAB#ETL` was created. The browser-based database explorer 
 identity provider and rejected the author's credentials under both options, so the external
 write moves to the Python loader on the author's laptop.
 
+From the laptop, the loader created `SALES_TARGETS` and wrote 62 rows (total 1,393,000); a
+second run reloaded the same 62 rows without re-creating the table. In the SQL editor the
+schema `NW_LAB#ETL` appears on the *Sources* tab next to *Connections*, and dragging the table
+in inserts its plain name. `V_NW_SALES_VS_TARGET` full-outer-joins actuals per ship country
+and year to the targets: actual 1,265,792.64 against 1,393,000.00, with no nulls on either
+side. Reviewing the run showed that `hdbcli` autocommits by default, so the delete and the
+insert weren't one transaction; the loader now turns autocommit off and rolls back on error.
+
 From about 1,600 free Marketplace products, a country reference set was installed in one step
 as a remote table with 244 rows.

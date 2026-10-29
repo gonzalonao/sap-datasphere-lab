@@ -26,7 +26,7 @@ types appear (rows marked *planned* are reserved, not yet used).
 | Connection | `CN_<SOURCE>_<PROTOCOL>` | `CN_NW_ODATA`, `CN_NW_AZSQL`, `CN_NW_S4SBX` | One connection per source system and protocol. `S4SBX` = the SAP S/4HANA Cloud sandbox API. |
 | Local table | `LT_<DOMAIN>_<ENTITY>` | `LT_NW_ORDERS`, `LT_NW_AZ_ORDERS` | Loaded from file upload, or the target of a flow. `AZ` marks tables landed from the Azure SQL source (`LT_NW_AZ_SALES` from `TF_NW_SALES`, `LT_NW_AZ_EMPLOYEES_CLEAN` from `DF_NW_EMPLOYEES`). |
 | Remote table | `RT_<DOMAIN>_<ENTITY>` | `RT_NW_ORDERS` | Federated or replicated; the data-access mode is set in the object, not the name. |
-| Relational view | `V_<DOMAIN>_<ENTITY>` | `V_NW_ORDER_ENRICHED` | Intermediate / cleansing view. *Planned (Phase C).* |
+| Relational view | `V_<DOMAIN>_<ENTITY>` | `V_NW_SALES_VS_TARGET` | Intermediate / cleansing view (Relational Dataset). First used in Phase B. |
 | Dimension view | `DIM_<DOMAIN>_<ENTITY>` | `DIM_NW_CUSTOMER` | Semantic usage *Dimension*. |
 | Text view | `TXT_<DOMAIN>_<ENTITY>` | `TXT_NW_CATEGORY` | Semantic usage *Text*. *Planned (Phase C).* |
 | Hierarchy view | `HIER_<DOMAIN>_<ENTITY>` | `HIER_NW_EMPLOYEE` | *Planned (Phase C).* |

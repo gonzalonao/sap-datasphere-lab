@@ -98,6 +98,8 @@ def load(rows: list[tuple[str, int, Decimal]]) -> None:
 
     Raises:
         KeyError: If a required environment variable is missing.
+        hdbcli.dbapi.Error: If a statement fails; the transaction is rolled back
+            first, so the table keeps its previous rows.
     """
     # hdbcli (SAP HANA client) ships without type stubs
     from hdbcli import dbapi  # type: ignore[import-untyped]
@@ -110,6 +112,8 @@ def load(rows: list[tuple[str, int, Decimal]]) -> None:
         password=os.environ["DSP_DB_PASSWORD"],
         encrypt=True,
         sslValidateCertificate=True,
+        # hdbcli autocommits by default; one transaction keeps the old rows on a failure
+        autocommit=False,
     )
     try:
         cursor = connection.cursor()
@@ -127,6 +131,9 @@ def load(rows: list[tuple[str, int, Decimal]]) -> None:
             [(country, year, f"{target:.2f}") for country, year, target in rows],
         )
         connection.commit()
+    except dbapi.Error:
+        connection.rollback()
+        raise
         logger.info("Loaded %d rows into %s.%s", len(rows), schema, TABLE_NAME)
     finally:
         connection.close()
