@@ -33,7 +33,7 @@ flowchart LR
 
 ## Current state
 
-After Phase B (2026-10-27), still in the one space `NW_LAB` (2 GB disk / 1 GB memory). Phase A's
+After Phase B (2026-10-29), still in the one space `NW_LAB` (2 GB disk / 1 GB memory). Phase A's
 star schema is unchanged; Phase B added every ingestion path next to it. Objects and columns:
 [`data-dictionary.md`](data-dictionary.md).
 
@@ -41,7 +41,7 @@ star schema is unchanged; Phase B added every ingestion path next to it. Objects
 | ----- | ------- |
 | Sources | Northwind CSV files; Northwind OData V4 (`CN_NW_ODATA`); Azure SQL Database `northwind` (`CN_NW_AZSQL`, direct for flows, DP Agent for remote tables); SAP S/4HANA Cloud sandbox (`CN_NW_S4SBX`); Data Marketplace |
 | Ingestion | Phase A: `LT_NW_CUSTOMERS`, `LT_NW_ORDER_DETAILS`, `RT_NW_ORDERS` (daily snapshot). Phase B: `LT_NW_AZ_*` (8 tables, delta capture, from `RF_NW_AZSQL`); `RT_NW_AZ_ORDERS`; `RT_S4_BUSINESS_PARTNER`; `Country_Master_Data_by_DCA`; Open SQL schema `NW_LAB#ETL` |
-| Transformation | `TF_NW_SALES` → `LT_NW_AZ_SALES` (order lines with revenue, delta); `DF_NW_EMPLOYEES` → `LT_NW_AZ_EMPLOYEES_CLEAN` (Python cleanup) |
+| Transformation | `TF_NW_SALES` → `LT_NW_AZ_SALES` (order lines with revenue, delta); `DF_NW_EMPLOYEES` → `LT_NW_AZ_EMPLOYEES_CLEAN` (Python cleanup); `V_NW_SALES_VS_TARGET` (actuals vs. Open SQL targets) |
 | Semantic | `FACT_NW_SALES` (Fact); `DIM_NW_CUSTOMER` (Dimension); `SAP.TIME.*` (generated time data) |
 | Consumption | `AM_NW_SALES` (analytic model) → SAC story `Northwind Sales Overview` |
 

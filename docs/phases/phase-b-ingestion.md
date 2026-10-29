@@ -1,6 +1,6 @@
 # Phase B — Ingestion & integration
 
-**Status:** 🔄 nearly done (2026-10-27): B7's external write and its view are still to run ·
+**Status:** 🔄 nearly done (2026-10-29): everything is built; evidence and teardown are left ·
 **Narrative and incidents:** [build log](../build-log.md) · **Inventory:** [all phases](README.md)
 
 ## Goal
@@ -23,7 +23,7 @@ revenue **1,265,792.64**.
 | Replication flow | `RF_NW_AZSQL`: 8 Azure tables → local tables `LT_NW_AZ_*` with delta capture; *Initial and Delta*, delta runs on demand (*At Scheduled Time*); inserts, updates and deletes proven |
 | Transformation flow | `TF_NW_SALES`: order lines (delta source) left-joined to order headers (active records) → `LT_NW_AZ_SALES` at line grain, with `REVENUE` and `ORDER_DATE`; *Initial and Delta* by watermark |
 | Data flow | `DF_NW_EMPLOYEES`: Azure `Employees` read directly → projection → Python script operator (`FULL_NAME`, `PHONE_DIGITS`) → `LT_NW_AZ_EMPLOYEES_CLEAN` (truncate and reload) |
-| Open SQL schema | Database user `NW_LAB#ETL` with read and write access; [`scripts/load_sales_targets.py`](../../scripts/load_sales_targets.py) writes 62 synthetic targets (`SALES_TARGETS`). *The run and the comparison view `V_NW_SALES_VS_TARGET` are pending.* |
+| Open SQL schema | Database user `NW_LAB#ETL` with read and write access; [`scripts/load_sales_targets.py`](../../scripts/load_sales_targets.py) writes 62 synthetic targets (`SALES_TARGETS`) from a laptop over `hdbcli`; the SQL view `V_NW_SALES_VS_TARGET` compares them with the replicated actuals |
 | Data Marketplace | *Global Country Identifier Data* (free, integrated delivery) installed: remote table `Country_Master_Data_by_DCA`, 244 countries with ISO codes and coordinates |
 | Outbound to ADLS Gen2 | Documented, not built: the tenant can't allocate premium outbound capacity ([decision](../decisions.md)) |
 
@@ -44,13 +44,16 @@ flowchart LR
         S4[RT_S4_BUSINESS_PARTNER]
         CTRY[Country_Master_Data_by_DCA]
         OSQL[NW_LAB#ETL<br/>SALES_TARGETS]
+        VST[V_NW_SALES_VS_TARGET]
+        SALES --> VST
+        OSQL --> VST
     end
     SQL -->|triggers + agent| AG --> RT
     SQL -->|trigger-based delta| RF
     SQL --> DF
     SBX --> S4
     MKT --> CTRY
-    PY -.pending.-> OSQL
+    PY -->|hdbcli, port 443| OSQL
 ```
 
 ## Measured: which ingestion path when
@@ -67,7 +70,7 @@ throughput.
 | Replication flow | A job on the data-integration runtime, billed by duration; trigger-based capture at the source | Per run (or continuous with *On Delta Interval*) | Initial load of 8 tables done in ~3 min; each delta run took 1–2 min for a single changed row (fixed job overhead); deletes kept as `D` in the delta table | Bulk and delta loads from SAP and database sources; SAP's default path |
 | Transformation flow | SQL in the space's HANA; reads only delta rows past a watermark | Per run | 2,155 lines in 6 s; a changed line → 1 record processed; a header-only change → 0 records until the watermark is reset | Turning delta-captured tables into modelled tables (bronze → silver) |
 | Data flow | A job on the data-integration runtime; full reload each run (no delta) | Per run | 9 rows took 2 min 40 s, then 1 min 45 s; Python per batch | Python logic in a HANA space, sources a replication flow can't read (Generic OData, files), one-off ETL |
-| Open SQL schema | An external tool writes; Datasphere neither schedules nor monitors the load | Whatever the tool does | *Pending (B7)* | Partner tools, scripts and pipelines pushing data in; BI and Databricks reading exposed views out |
+| Open SQL schema | An external tool writes; Datasphere neither schedules nor monitors the load | Whatever the tool does | 62 rows from a Python `hdbcli` client on an allowlisted IP; reruns idempotent (delete + insert); the schema appears as its own node in the *Source Browser* and views reference the table by name | Partner tools, scripts and pipelines pushing data in; BI and Databricks reading exposed views out |
 | Data Marketplace | Install once (or receive updates for *Full Replication* products) | Provider-defined | 244 countries installed in one step | Reference data you'd otherwise curate yourself |
 
 ## Key decisions
@@ -102,14 +105,16 @@ All in [`docs/decisions.md`](../decisions.md):
 - **Types drift at the boundary.** A `real` column made HANA compute revenue in single
   precision, and HANA's `TO_DECIMAL` truncates where SQL Server's `CAST` rounds. Only an
   engine-independent recalculation from the CSV explained both totals to the cent.
+- **Idempotent isn't atomic.** The loader's delete + insert gave the same result on every
+  rerun, but `hdbcli` autocommits by default, so a failure between the two statements would
+  have left the table empty. One explicit transaction fixes it.
+- **A full outer join is a reconciliation tool.** Actuals and targets came from two
+  independent builds; no nulls on either side and matching totals prove the keys line up.
 - **Job runtimes carry fixed start-up costs.** One-row replication and data flow runs still
   took one to three minutes, so frequency, not volume, drives their cost.
 
 ## Open and deferred
 
-- **B7:** run the loader from the laptop (the tenant's database explorer wasn't available to
-  this user), build `V_NW_SALES_VS_TARGET` (expected: 62 rows, actual 1,265,792.64 vs. target
-  1,393,000).
 - **Phase close:** evidence screenshots into `docs/evidence/phase-b/`, then undo the tenant-wide
   lab changes no longer needed (agent registration, laptop IP).
 - **Country names** in Northwind (`USA`, `UK`) don't match the Marketplace's ISO names →
