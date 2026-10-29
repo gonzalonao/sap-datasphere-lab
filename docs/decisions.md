@@ -2,6 +2,19 @@
 
 Design decisions and changes to the project plan, newest first.
 
+## 2026-10-29 — Phase B close: keep the allowlisted IP, park the DP Agent
+
+- **Decision:** The plan was to undo Phase B's tenant-wide lab changes at the phase close.
+  Instead, the laptop's IP stays in the tenant's *Trusted IPs* until Phase F, and the DP Agent
+  `NWLAB01` stays registered with its Windows service stopped and set to manual start.
+- **Why:** The same allowlist entry serves every inbound SQL client: the Open SQL loader and
+  Power BI over the database user in Phase F. Phase C models on the replicated `LT_NW_AZ_*`
+  tables, which don't need the agent, but removing the registration would cost a full agent
+  setup to bring back the real-time remote table. A stopped service creates no source
+  triggers and no load.
+- **Consequence:** Two lab changes stay open, both listed in the phase summary. Each is
+  revisited when its last use is done.
+
 ## 2026-10-27 — Round the `real` discount before computing revenue
 
 - **Decision:** In `TF_NW_SALES`, `REVENUE` = `"UnitPrice" * "Quantity" * (1 - ROUND(TO_DECIMAL("Discount", 10, 6), 2))`,
