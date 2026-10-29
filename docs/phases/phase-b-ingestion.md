@@ -1,7 +1,8 @@
 # Phase B — Ingestion & integration
 
 **Status:** 🔄 nearly done (2026-10-29): everything is built; evidence and teardown are left ·
-**Narrative and incidents:** [build log](../build-log.md) · **Inventory:** [all phases](README.md)
+**Narrative and incidents:** [build log](../build-log.md) · **Evidence:** [screenshots](../evidence/phase-b/README.md) ·
+**Inventory:** [all phases](README.md)
 
 ## Goal
 
@@ -115,8 +116,8 @@ All in [`docs/decisions.md`](../decisions.md):
 
 ## Open and deferred
 
-- **Phase close:** evidence screenshots into `docs/evidence/phase-b/`, then undo the tenant-wide
-  lab changes no longer needed (agent registration, laptop IP).
+- **Phase close:** undo the tenant-wide lab changes no longer needed (agent registration,
+  laptop IP).
 - **Country names** in Northwind (`USA`, `UK`) don't match the Marketplace's ISO names →
   Intelligent Lookup in Phase C, behind a `DIM_NW_COUNTRY` wrapper view.
 - **Task chain over replication flow → transformation flow → data flow** → Phase E.
