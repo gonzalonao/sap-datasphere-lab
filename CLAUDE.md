@@ -56,7 +56,7 @@ document why and stay on Northwind.
 | Phase | Theme | Main topics |
 | ----- | ----- | ----------- |
 | A | Foundation ✅ | Space, CSV, graphical view, analytic model, SAC story, remote table, time dimension, associations (built as course unit 01) |
-| B | Ingestion & integration | Connections, remote tables (remote / snapshot / real-time), schedules, replication flows, transformation flows, outbound to ADLS/Databricks, data flows + script operator, Open SQL schema, Data Marketplace, SAP sandbox OData check |
+| B | Ingestion & integration ✅ | Connections, remote tables (remote / snapshot / real-time), schedules, replication flows, transformation flows, outbound to ADLS/Databricks, data flows + script operator, Open SQL schema, Data Marketplace, SAP sandbox OData check |
 | C | Modelling | Data Builder, SQL views, joins and unions, dimensions, text entities, association types, hierarchies, view persistence, Intelligent Lookup |
 | D | Semantic layer & security | Analytic model (calculated and restricted measures), variables, data access controls, cross-space sharing |
 | E | Orchestration & operations | Task chains, Data Integration Monitor, System Monitor, troubleshooting runbook |

@@ -9,7 +9,7 @@ and a link to its summary and evidence. Why each choice was made is in
 | Phase | Focus | Status | Summary / evidence |
 | ----- | ----- | ------ | ------------------ |
 | A | Foundation | ✅ | [summary](phase-a-foundation.md) · [detailed record](../../units/01-space-model-remote/README.md) |
-| B | Ingestion & integration | 🔄 nearly done | [summary](phase-b-ingestion.md) · [build log](../build-log.md) · [data dictionary](../data-dictionary.md) |
+| B | Ingestion & integration | ✅ | [summary](phase-b-ingestion.md) · [evidence](../evidence/phase-b/README.md) · [build log](../build-log.md) · [data dictionary](../data-dictionary.md) |
 | C | Modelling in the Data Builder | ⬜ | |
 | D | Semantic layer & security | ⬜ | |
 | E | Orchestration & operations | ⬜ | |
