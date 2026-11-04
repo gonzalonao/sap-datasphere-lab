@@ -10,7 +10,7 @@ and a link to its summary and evidence. Why each choice was made is in
 | ----- | ----- | ------ | ------------------ |
 | A | Foundation | ✅ | [summary](phase-a-foundation.md) · [detailed record](../../units/01-space-model-remote/README.md) |
 | B | Ingestion & integration | ✅ | [summary](phase-b-ingestion.md) · [evidence](../evidence/phase-b/README.md) · [build log](../build-log.md) · [data dictionary](../data-dictionary.md) |
-| C | Modelling in the Data Builder | ⬜ | |
+| C | Modelling in the Data Builder | 🔄 nearly done | [summary](phase-c-modelling.md) · [evidence](../evidence/phase-c/README.md) · [build log](../build-log.md) · [data dictionary](../data-dictionary.md) |
 | D | Semantic layer & security | ⬜ | |
 | E | Orchestration & operations | ⬜ | |
 | F | Consumption (SAC, Power BI) | ⬜ | |

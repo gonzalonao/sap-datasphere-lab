@@ -38,7 +38,7 @@ loads and remote connections can be exercised on the same data.
 | ----- | ----- | ------ |
 | [A](docs/phases/phase-a-foundation.md) | Foundation: space, first model, SAC story, remote table, time dimension, associations | ✅ done |
 | [B](docs/phases/phase-b-ingestion.md) | Ingestion & integration: remote tables, replication, schedules, replication flows, transformation flows, outbound to ADLS/Databricks (documented), data flows, Open SQL schema, Data Marketplace | ✅ |
-| C | Modelling: SQL views, joins and unions, dimensions, text entities, hierarchies, view persistence, Intelligent Lookup | todo |
+| [C](docs/phases/phase-c-modelling.md) | Modelling: SQL views, joins and unions, dimensions, text entities, hierarchies, view persistence, Intelligent Lookup | 🔄 nearly done |
 | D | Semantic layer & security: analytic model measures and variables, data access controls, cross-space sharing | todo |
 | E | Orchestration & operations: task chains, monitoring, troubleshooting | todo |
 | F | Consumption: SAP Analytics Cloud and Power BI | todo |

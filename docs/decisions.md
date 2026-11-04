@@ -2,6 +2,67 @@
 
 Design decisions and changes to the project plan, newest first.
 
+## 2026-11-04 — Intelligent Lookup: 21 names, three rules, one wrapper
+
+- **Decision:** `IL_NW_COUNTRY` matches the 21 distinct customer country names, not the 91 customers,
+  to `Country_Master_Data_by_DCA`. Rules run exact on name, fuzzy on name, then exact on the ISO-3
+  code, with a manual review on top. `DIM_NW_COUNTRY` wraps the output, and `DIM_NW_CUSTOMER_AZ`
+  associates to it; exposing it in the analytic model waits for Phase D.
+- **Why:** The dimension needs one row per country, and the match rate then counts countries instead
+  of weighting them by customers. Adding ISO columns to the fuzzy rule also caught `USA`, but concatenated
+  columns change the score of every name they compare, while an exact code rule can't produce a
+  false match. A wrapper is required anyway: the output is always a relational dataset and can't be
+  consumed directly or shared.
+- **Consequence:** Unmatched records are kept and flagged in the output, so a new country shows up
+  after a run instead of disappearing. Each pairing group holds one record, so group behaviour
+  wasn't exercised.
+
+## 2026-11-04 — Keep the federated view persisted, return the union to virtual
+
+- **Decision:** `V_S4_BP_BY_CATEGORY` stays persisted, with no schedule until Phase E's task chain.
+  `V_NW_SALES_UNION` goes back to virtual after its measurement.
+- **Why:** Federated view: 0.49 / 1.47 s → 0.01 / 0.01 s. Local union: 0.07 / 0.04 s → 0.03 / 0.01 s,
+  not worth serving the fact and the model a frozen snapshot. A structural redeploy could also drop
+  the persistence without notice.
+- **Consequence:** Persisting both first gave one view showing the gain and one showing the limits,
+  which a single view couldn't.
+
+## 2026-11-03 — One hierarchy type per dimension, all types in one model
+
+- **Decision:** Product is level-based, Employee parent-child (internal and external), Customer a
+  hierarchy with directory (`HIER_NW_CUSTOMER_DIR`, trees by location and by contact title). This
+  replaces the level-based customer hierarchy and the employee directory views.
+- **Why:** The tenant only allows one hierarchy type on a dimension, which blocked the directory on
+  Employee. The rule doesn't apply across dimensions. Customer's location tree can also hold Region
+  where it exists (60 of 91 customers have none), which a level-based hierarchy couldn't.
+- **Consequence:** Directory nodes are derived in SQL from the customer table, so they stay in step
+  with the source.
+
+## 2026-10-30 — Start `AM_NW_ORDER_LINE` in Phase C
+
+- **Decision:** Build the analytic model now with the fact and dimensions and no calculated measures,
+  and use its preview to drill each hierarchy. Phase D extends the same model.
+- **Why:** A dimension preview can't show drill-down, and one model grown over two phases beats a
+  throwaway.
+
+## 2026-10-29 — No shipper dimension
+
+- **Decision:** `FACT_NW_ORDER_LINE` has no shipper association.
+- **Why:** The CSV archive leg has no `ShipVia`, so the association would be null for two thirds of
+  the lines.
+
+## 2026-10-27 — Phase C modelling base: replicated tables, cutover union, layers
+
+- **Decision:** Model on Phase B's replicated Azure tables, with Phase A's objects kept as v1 under
+  their own names (hence `FACT_NW_ORDER_LINE`, `DIM_NW_CUSTOMER_AZ`). `V_NW_SALES_UNION` is a cutover:
+  CSV tables up to 1997-12-31, Azure from 1998-01-01, with a `SOURCE_SYSTEM` column. Layers: inbound,
+  harmonized `V_NW_*`, semantic `DIM_/TXT_/HIER_/FACT_`, analytic model. SQL views for harmonization,
+  SQLScript only where procedural steps help, graphical views for the union and semantic layer.
+  Category texts are a synthetic EN/ES/DE file.
+- **Why:** The delta-fed path is the production-shaped one. Both sources hold the same data, so a plain
+  union would double it, and a cutover is the standard migration pattern and still reconciles.
+  Northwind is English-only, and a text entity needs several languages to show anything.
+
 ## 2026-10-29 — Phase B close: keep the allowlisted IP, park the DP Agent
 
 - **Decision:** The plan was to undo Phase B's tenant-wide lab changes at the phase close.

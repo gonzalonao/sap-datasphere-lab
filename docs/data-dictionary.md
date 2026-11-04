@@ -66,6 +66,36 @@ Written by `DF_NW_EMPLOYEES` in *Truncate* mode. 9 rows, 13 columns: `EmployeeID
 | `RT_S4_BUSINESS_PARTNER` | `CN_NW_S4SBX` | Remote | – | SAP S/4HANA Cloud sandbox, Business Partner API |
 | `Country_Master_Data_by_DCA` | Data Marketplace | Installed product | 244 | Country, ISO alpha-2, alpha-3, numeric code, average latitude and longitude. Name set by the provider |
 
+## Modelling objects (Phase C)
+
+### Harmonized views
+
+| View | Language | Rows | Meaning |
+| ---- | -------- | ---- | ------- |
+| `V_NW_PRODUCT` | SQL | 77 | Products with category and supplier names; `Discontinued` is Boolean |
+| `V_NW_PRODUCT_RANK` | SQLScript | 77 | Revenue per product and `RANK_IN_CATEGORY` |
+| `V_NW_CUSTOMER_ORDERS` | Graphical | 91 | Customers left-joined to orders, with `ORDER_COUNT` |
+| `V_NW_SALES_UNION` | Graphical | 2,155 | Order lines: CSV up to 1997-12-31, Azure from 1998-01-01, with `SOURCE_SYSTEM` (`CSV_ARCHIVE`, `AZURE_LIVE`) |
+| `V_NW_COUNTRY_NAMES` | SQL | 21 | Distinct `Country` from `LT_NW_AZ_CUSTOMERS`, String(15), key `Country` |
+| `V_S4_BP_BY_CATEGORY` | SQL | 2 | Business partners per category from `RT_S4_BUSINESS_PARTNER`. Persisted |
+| `IL_NW_COUNTRY` | Intelligent Lookup | 21 | Output of the country match, with an unmatched flag |
+
+### Semantic objects
+
+| Object | Usage | Key | Rows | Associations and notes |
+| ------ | ----- | --- | ---- | ---------------------- |
+| `FACT_NW_ORDER_LINE` | Fact | `OrderID`, `ProductID` | 2,155 | Measures `Quantity`, `REVENUE`. → product, customer, employee, time (`ORDER_DATE`). `CustomerID` is String(5000), since the CSV leg's type wins; the association matches on value |
+| `DIM_NW_PRODUCT` | Dimension | `ProductID` | 77 | → category, → supplier. Hierarchy `H_CATEGORY_PRODUCT` |
+| `DIM_NW_CATEGORY` | Dimension | `CategoryID` | 8 | Text association → `TXT_NW_CATEGORY` |
+| `DIM_NW_SUPPLIER` | Dimension | `SupplierID` | 29 | |
+| `DIM_NW_EMPLOYEE` | Dimension | `EmployeeID` | 9 | Hierarchies `H_REPORTS_TO`, external `HIER_NW_EMPLOYEE` |
+| `DIM_NW_CUSTOMER_AZ` | Dimension | `CustomerID` | 91 | → `DIM_NW_COUNTRY`; hierarchy with directory `HIER_NW_CUSTOMER_DIR` |
+| `DIM_NW_COUNTRY` | Dimension | `Country` | 21 | `OFFICIAL_NAME`, `ALPHA_2`, `ALPHA_3`, `NUMERIC_CODE`, `LATITUDE`, `LONGITUDE`, plus the unmatched flag |
+| `TXT_NW_CATEGORY` | Text | `CategoryID`, `LANGUAGE` | 24 | From `LT_NW_CATEGORY_TEXTS`: EN/ES/DE, synthetic |
+| `HIER_NW_EMPLOYEE` | Hierarchy | `EmployeeID` | 9 | Parent `ReportsTo` |
+| `HIER_NW_CUSTOMER_DIR` | Hierarchy with directory | | 302 | Directory `DIM_NW_CUST_HIER_DIR` (2 trees), group nodes `DIM_NW_CUST_GROUP` (120) |
+| `AM_NW_ORDER_LINE` | Analytic model | | | Fact plus product, customer, employee, order date. Totals 51,317 / 1,265,792.64 |
+
 ## Open SQL schema `NW_LAB#ETL` (Phase B)
 
 | Table | Rows | Meaning |
