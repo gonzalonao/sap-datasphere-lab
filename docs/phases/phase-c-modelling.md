@@ -152,6 +152,10 @@ All in [`docs/decisions.md`](../decisions.md):
 
 ## Open and deferred
 
+- **Possible improvement:** `DIM_NW_PRODUCT` inherits `SUPPLIER_NAME` and `SUPPLIER_COUNTRY` from
+  `V_NW_PRODUCT`, and the association to `DIM_NW_SUPPLIER` provides the same values. Totals aren't
+  affected, so they stay for now; excluding them would leave one path to the supplier.
+  `CategoryName` isn't redundant, because a level-based hierarchy needs its levels in the dimension.
 - **`AM_NW_ORDER_LINE` measures and variables** → Phase D. So is exposing `DIM_NW_COUNTRY` in the
   model.
 - **Phase A's `FACT_NW_SALES`, `DIM_NW_CUSTOMER`, `AM_NW_SALES` and SAC story** stay as v1 until
