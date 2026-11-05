@@ -105,7 +105,7 @@ A rerun of the fixed loader against the tenant loaded the same 62 rows.
 From about 1,600 free Marketplace products, a country reference set was installed in one step
 as a remote table with 244 rows.
 
-## Phase C — Modelling in the Data Builder (2026-10-27 → 2026-11-04)
+## Phase C — Modelling in the Data Builder (2026-10-27 → 2026-11-05)
 
 ### Views
 
@@ -146,7 +146,8 @@ the preview, the location tree's revenue matched an independent CSV calculation 
 `V_DEMO_PUSHDOWN` from Phase B no longer existed, so `V_S4_BP_BY_CATEGORY` replaced it with the same
 query. *Runtime Metrics* showed *Remote Statements (0)* on the federated view; the cause is unknown. View
 Analyzer scored the local union 10, *Best Option*, at 0.07 s, which is how the score was found to be
-relative to its lineage.
+relative to its lineage. Removing the union's persisted data put it back to Virtual at 0 B with the model
+totals unchanged, and left the partition definition in place, which the docs don't mention.
 
 ### Intelligent Lookup
 
@@ -154,4 +155,8 @@ The first rule matched 18 of 21 names. String(15) mapped to the lookup's String(
 The prediction was that `USA` and `UK` would fail both rules, and `UK` didn't: the fuzzy rule proposed
 Ukraine, on the same *Review* tab as the correct `Venezuela` proposal. Adding ISO columns to the fuzzy rule
 also caught `USA`, which led to a separate exact rule on ISO-3. In this tenant the lookup and its output
-view share one name, and the output's columns carry `input_` and `lookup_` prefixes, renamed in the wrapper.
+view share one name, and the output's columns carry `input_` and `lookup_` prefixes, renamed in the wrapper. The flag column was missed
+in that rename and kept its name `/DWC/IDT/UNMATCHED_RECORD`, which only surfaced once Phase D added the
+dimension to the model: the deploy warned that the slashes get replaced. Renaming it to `UNMATCHED_RECORD`
+and redeploying the model cleared the warning. The docs say the column holds *Yes* for unmatched
+records; here matched rows show `false`.

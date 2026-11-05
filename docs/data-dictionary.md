@@ -90,7 +90,7 @@ Written by `DF_NW_EMPLOYEES` in *Truncate* mode. 9 rows, 13 columns: `EmployeeID
 | `DIM_NW_SUPPLIER` | Dimension | `SupplierID` | 29 | |
 | `DIM_NW_EMPLOYEE` | Dimension | `EmployeeID` | 9 | Hierarchies `H_REPORTS_TO`, external `HIER_NW_EMPLOYEE` |
 | `DIM_NW_CUSTOMER_AZ` | Dimension | `CustomerID` | 91 | → `DIM_NW_COUNTRY`; hierarchy with directory `HIER_NW_CUSTOMER_DIR` |
-| `DIM_NW_COUNTRY` | Dimension | `Country` | 21 | `OFFICIAL_NAME`, `ALPHA_2`, `ALPHA_3`, `NUMERIC_CODE`, `LATITUDE`, `LONGITUDE`, plus the unmatched flag |
+| `DIM_NW_COUNTRY` | Dimension | `Country` | 21 | `OFFICIAL_NAME`, `ALPHA_2`, `ALPHA_3`, `NUMERIC_CODE`, `LATITUDE`, `LONGITUDE`, `UNMATCHED_RECORD` (`false` on all 21) |
 | `TXT_NW_CATEGORY` | Text | `CategoryID`, `LANGUAGE` | 24 | From `LT_NW_CATEGORY_TEXTS`: EN/ES/DE, synthetic |
 | `HIER_NW_EMPLOYEE` | Hierarchy | `EmployeeID` | 9 | Parent `ReportsTo` |
 | `HIER_NW_CUSTOMER_DIR` | Hierarchy with directory | | 302 | Directory `DIM_NW_CUST_HIER_DIR` (2 trees), group nodes `DIM_NW_CUST_GROUP` (120) |

@@ -1,6 +1,6 @@
 # Phase C — Modelling in the Data Builder
 
-**Status:** 🔄 nearly done (one tenant cleanup and five screenshots open, see below) ·
+**Status:** ✅ done (2026-11-05) ·
 **Narrative and incidents:** [build log](../build-log.md) · **Evidence:** [screenshots](../evidence/phase-c/README.md) ·
 **Inventory:** [all phases](README.md)
 
@@ -24,7 +24,7 @@ to **2,155 lines, Quantity 51,317, revenue 1,265,792.64**.
 | Fact | `FACT_NW_ORDER_LINE` on the union: measures `Quantity` and `REVENUE`, associations to product, customer, employee and the generated time dimension |
 | Hierarchies | One type per dimension, all three in one model: level-based `H_CATEGORY_PRODUCT`; parent-child `H_REPORTS_TO` plus external `HIER_NW_EMPLOYEE`; hierarchy with directory `HIER_NW_CUSTOMER_DIR` with two trees, by location and by contact title |
 | Analytic model | `AM_NW_ORDER_LINE`: fact plus four dimensions, used here to drill every hierarchy. Measures and variables follow in Phase D |
-| Persistence | `V_S4_BP_BY_CATEGORY` persisted and kept; `V_NW_SALES_UNION` persisted with partitions, measured, and going back to virtual |
+| Persistence | `V_S4_BP_BY_CATEGORY` persisted and kept; `V_NW_SALES_UNION` persisted with partitions, measured, and returned to virtual |
 | Intelligent Lookup | `IL_NW_COUNTRY`: 21 country names matched to `Country_Master_Data_by_DCA` with three rules and a review, wrapped in `DIM_NW_COUNTRY` |
 
 ```mermaid
@@ -95,9 +95,11 @@ Both legs match a calculation from the raw CSV files.
 The gain follows the cost of reaching the source, not the row count. View Analyzer gave the local
 union a candidate score of **10, *Best Option***, because it was the only view in its lineage: the
 score ranks candidates within a lineage and doesn't say persisting is worth it. The union's
-partitions loaded 1,464 (archive, locked on the second run), 691 (live) and 0 (*OTHERS*), and it
-took 670 KB in memory. Saving at most 0.04 s didn't justify serving the fact a frozen snapshot, so
-it goes back to virtual.
+partitions loaded 1,464 (archive, locked on the second run), 691 (live) and 0 (*OTHERS*). The
+evidence shot shows 290 KB in memory and 197 KB on disk; an earlier reading showed 670 and 205, with
+the unit not noted and the difference not explained. Saving at most 0.04 s didn't justify serving the
+fact a frozen snapshot, so it went back to virtual on 2026-11-05: 0 B, model totals unchanged, and the
+partition definition still in place.
 
 ### Intelligent Lookup (21 countries)
 
@@ -108,7 +110,9 @@ it goes back to virtual.
 | Exact on the ISO-3 code | 1 | 95.2 % | `USA`, which is an ISO-3 code but not a country name |
 | Matched by hand | 1 | 100 % | `UK`: the fuzzy rule proposed **Ukraine**, and the ISO code is GB |
 
-All 21 ISO-2 codes were then checked against the public ISO 3166-1 list.
+All 21 ISO-2 codes were then checked against the public ISO 3166-1 list, and `UNMATCHED_RECORD` shows
+`false` on every row. The lookup's own diagram reads 86 % / 5 % / 10 %: its last figure counts `USA` and
+the manual `UK` together, and rounding takes the sum to 101.
 
 ## Key decisions
 
@@ -148,8 +152,6 @@ All in [`docs/decisions.md`](../decisions.md):
 
 ## Open and deferred
 
-- **Before the phase closes:** remove the persisted data on `V_NW_SALES_UNION` and check the model
-  totals, then add the remaining screenshots (two for the union, three for the lookup).
 - **`AM_NW_ORDER_LINE` measures and variables** → Phase D. So is exposing `DIM_NW_COUNTRY` in the
   model.
 - **Phase A's `FACT_NW_SALES`, `DIM_NW_CUSTOMER`, `AM_NW_SALES` and SAC story** stay as v1 until

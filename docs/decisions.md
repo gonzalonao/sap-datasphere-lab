@@ -20,12 +20,12 @@ Design decisions and changes to the project plan, newest first.
 ## 2026-11-04 — Keep the federated view persisted, return the union to virtual
 
 - **Decision:** `V_S4_BP_BY_CATEGORY` stays persisted, with no schedule until Phase E's task chain.
-  `V_NW_SALES_UNION` goes back to virtual after its measurement.
+  `V_NW_SALES_UNION` went back to virtual after its measurement (2026-11-05).
 - **Why:** Federated view: 0.49 / 1.47 s → 0.01 / 0.01 s. Local union: 0.07 / 0.04 s → 0.03 / 0.01 s,
   not worth serving the fact and the model a frozen snapshot. A structural redeploy could also drop
   the persistence without notice.
 - **Consequence:** Persisting both first gave one view showing the gain and one showing the limits,
-  which a single view couldn't.
+  which a single view couldn't. The union's partition definition stayed on the view after the removal.
 
 ## 2026-11-03 — One hierarchy type per dimension, all types in one model
 
