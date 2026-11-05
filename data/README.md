@@ -73,3 +73,13 @@ thousands. That gives **62 rows totalling 1,393,000**. The script writes them to
 `SALES_TARGETS` in the space's Open SQL schema through a database user (`hdbcli`, connection
 settings from environment variables). The numbers are synthetic and exist only to show an
 external write into the space.
+
+## Synthetic category texts (Phase C, text entity)
+
+[`synthetic/category_texts.csv`](synthetic/category_texts.csv) holds the 8 Northwind category
+names in English, Spanish and German: 24 rows, columns `CategoryID`, `LANGUAGE` (ISO 639-1,
+lowercase, one of the formats a Datasphere text entity accepts) and `CATEGORY_TEXT`. Northwind
+itself is English-only, so the Spanish and German names are written for this project
+(synthetic, no licence restrictions). The English rows match `Categories.CategoryName`. The file
+is imported as the local table `LT_NW_CATEGORY_TEXTS` and wrapped by the text entity
+`TXT_NW_CATEGORY`.

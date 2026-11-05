@@ -33,6 +33,19 @@ flowchart LR
 
 ## Current state
 
+After Phase C (November 2026), still in the one space `NW_LAB`; the split into an ingestion space
+and a modelling space is Phase D. Phase A's star schema stays as v1. Details and the layer
+diagram: [Phase C summary](phases/phase-c-modelling.md).
+
+| Layer | Objects |
+| ----- | ------- |
+| Inbound | Everything from Phase B (`LT_NW_AZ_*`, `LT_NW_AZ_SALES`, `LT_NW_AZ_EMPLOYEES_CLEAN`, remote tables, `Country_Master_Data_by_DCA`) and Phase A's CSV tables; `LT_NW_CATEGORY_TEXTS` (synthetic) |
+| Harmonized | `V_NW_PRODUCT`, `V_NW_PRODUCT_RANK`, `V_NW_CUSTOMER_ORDERS`, `V_NW_SALES_UNION`, `V_NW_COUNTRY_NAMES`, `V_S4_BP_BY_CATEGORY` (persisted), `IL_NW_COUNTRY` |
+| Semantic | `FACT_NW_ORDER_LINE`; `DIM_NW_PRODUCT`, `DIM_NW_CATEGORY`, `DIM_NW_SUPPLIER`, `DIM_NW_EMPLOYEE`, `DIM_NW_CUSTOMER_AZ`, `DIM_NW_COUNTRY`; `TXT_NW_CATEGORY`; `HIER_NW_EMPLOYEE`, `HIER_NW_CUSTOMER_DIR`, `DIM_NW_CUST_GROUP`, `DIM_NW_CUST_HIER_DIR`; `SAP.TIME.*` |
+| Consumption | `AM_NW_ORDER_LINE` (preview only so far); v1: `AM_NW_SALES` → SAC story `Northwind Sales Overview` |
+
+## After Phase B
+
 After Phase B (2026-10-29), still in the one space `NW_LAB` (2 GB disk / 1 GB memory). Phase A's
 star schema is unchanged; Phase B added every ingestion path next to it. Objects and columns:
 [`data-dictionary.md`](data-dictionary.md).
@@ -70,8 +83,7 @@ flowchart LR
 ```
 
 Solid arrows are data flows; dotted arrows are associations, resolved by the analytic
-model only when a query asks for the dimension. Phase C moves the model onto the Phase B
-tables (`LT_NW_AZ_SALES` as the fact source).
+model only when a query asks for the dimension.
 
 ## After Phase A
 

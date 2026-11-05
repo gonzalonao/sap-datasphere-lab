@@ -100,6 +100,63 @@ in inserts its plain name. `V_NW_SALES_VS_TARGET` full-outer-joins actuals per s
 and year to the targets: actual 1,265,792.64 against 1,393,000.00, with no nulls on either
 side. Reviewing the run showed that `hdbcli` autocommits by default, so the delete and the
 insert weren't one transaction; the loader now turns autocommit off and rolls back on error.
+A rerun of the fixed loader against the tenant loaded the same 62 rows.
 
 From about 1,600 free Marketplace products, a country reference set was installed in one step
 as a remote table with 244 rows.
+
+## Phase C — Modelling in the Data Builder (2026-10-27 → 2026-11-05)
+
+### Views
+
+`Discontinued` arrived from SQL Server's `bit` as a Boolean, so filters use `= TRUE`. The SQLScript
+view took three tries. A table variable failed with a syntax error, an inline subquery compiled, and
+the deploy then failed with error 1306 because the declared return columns had defaulted to
+NVARCHAR(100); declaring all seven by hand fixed it. Deleting `CategoryName` from `V_NW_PRODUCT`, which
+the SQLScript view selects, gave no warning, although the docs describe one. Version history restored
+it. A table function's body may be opaque to that check, but this wasn't tested against other consumers.
+
+### Joins and the union
+
+A graphical join defaults to inner. Choosing left with *Exactly One → Many* appears in *Preview SQL* as
+`LEFT EXACT ONE TO MANY JOIN`. The docs say a graphical `COUNT` counts distinct values, but the generated
+SQL is plain `COUNT(col)`: same result on a unique `OrderID`, different on anything else.
+
+Deploying the union gave four type warnings, because columns take their type from the first leg. The CSV
+leg's Integer64 keys didn't match Azure's Integer, or SmallInt for `Quantity`, so the archive leg now
+casts them. Both legs then reconciled to the cent against the CSV calculation.
+
+### Dimensions, the fact and hierarchies
+
+A new dimension's preview can show *no visible columns* with the settings greyed out, until another node
+is selected and back. `TXT_NW_CATEGORY` only shows in *Dependency Analysis* after *Show Next Level*, and
+that graph reads the deployed object, so a new association appears only after deploy. A scratch SQL view
+failed with `CSN_COMPILATION_FAIL` first for using a business name as a column, and then until the page
+was reloaded, which was editor state rather than the query.
+
+Hierarchy technical names are limited to 20 characters, which the docs don't mention. The directory
+association on Employee was greyed out with no explanation, because the dimension already had a
+parent-child hierarchy. That led to moving the
+directory to Customer and giving each dimension its own hierarchy type. Until a node type is flagged as
+data node, the entity reports *Set one node type value as leaf*, where the docs say *Set as Data Node*. In
+the preview, the location tree's revenue matched an independent CSV calculation at each level checked.
+
+### Persistence
+
+`V_DEMO_PUSHDOWN` from Phase B no longer existed, so `V_S4_BP_BY_CATEGORY` replaced it with the same
+query. *Runtime Metrics* showed *Remote Statements (0)* on the federated view; the cause is unknown. View
+Analyzer scored the local union 10, *Best Option*, at 0.07 s, which is how the score was found to be
+relative to its lineage. Removing the union's persisted data put it back to Virtual at 0 B with the model
+totals unchanged, and left the partition definition in place, which the docs don't mention.
+
+### Intelligent Lookup
+
+The first rule matched 18 of 21 names. String(15) mapped to the lookup's String(5000) without complaint.
+The prediction was that `USA` and `UK` would fail both rules, and `UK` didn't: the fuzzy rule proposed
+Ukraine, on the same *Review* tab as the correct `Venezuela` proposal. Adding ISO columns to the fuzzy rule
+also caught `USA`, which led to a separate exact rule on ISO-3. In this tenant the lookup and its output
+view share one name, and the output's columns carry `input_` and `lookup_` prefixes, renamed in the wrapper. The flag column was missed
+in that rename and kept its name `/DWC/IDT/UNMATCHED_RECORD`, which only surfaced once Phase D added the
+dimension to the model: the deploy warned that the slashes get replaced. Renaming it to `UNMATCHED_RECORD`
+and redeploying the model cleared the warning. The docs say the column holds *Yes* for unmatched
+records; here matched rows show `false`.

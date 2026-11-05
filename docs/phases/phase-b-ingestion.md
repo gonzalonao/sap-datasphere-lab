@@ -118,8 +118,6 @@ All in [`docs/decisions.md`](../decisions.md):
 
 - **Lab changes kept on purpose** ([decision](../decisions.md)): the laptop IP stays in the
   tenant's allowlist until Phase F; the DP Agent stays registered with its service stopped.
-- **Loader transaction fix** (`autocommit=False`) is linted and type-checked but not yet
-  rerun against the tenant.
 - **Country names** in Northwind (`USA`, `UK`) don't match the Marketplace's ISO names →
   Intelligent Lookup in Phase C, behind a `DIM_NW_COUNTRY` wrapper view.
 - **Task chain over replication flow → transformation flow → data flow** → Phase E.
