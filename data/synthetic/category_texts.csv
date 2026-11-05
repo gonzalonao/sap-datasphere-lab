@@ -1,0 +1,25 @@
+CategoryID,LANGUAGE,CATEGORY_TEXT
+1,en,Beverages
+1,es,Bebidas
+1,de,Getränke
+2,en,Condiments
+2,es,Condimentos
+2,de,Gewürze
+3,en,Confections
+3,es,Repostería
+3,de,Süßwaren
+4,en,Dairy Products
+4,es,Lácteos
+4,de,Milchprodukte
+5,en,Grains/Cereals
+5,es,Cereales
+5,de,Getreideprodukte
+6,en,Meat/Poultry
+6,es,Carnes y aves
+6,de,Fleisch/Geflügel
+7,en,Produce
+7,es,Frutas y verduras
+7,de,Obst/Gemüse
+8,en,Seafood
+8,es,Pescados y mariscos
+8,de,Meeresfrüchte
