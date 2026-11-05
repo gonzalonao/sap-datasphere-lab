@@ -1,6 +1,6 @@
 # Phase C evidence
 
-Screenshots from the SAP Datasphere tenant, taken during the build (2026-10-30 to 2026-11-03).
+Screenshots from the SAP Datasphere tenant, taken during the build (2026-10-30 to 2026-11-05).
 Tenant URLs and host names are cropped out. Steps refer to the
 [phase summary](../../phases/phase-c-modelling.md); the narrative is in the
 [build log](../../build-log.md).
@@ -29,6 +29,12 @@ Tenant URLs and host names are cropped out. Steps refer to the
 | [`c5-bp-baseline.png`](c5-bp-baseline.png) | C5 | *Runtime Metrics*, `V_S4_BP_BY_CATEGORY`, Virtual, one limited federated table |
 | [`c5-union-view-analyzer.png`](c5-union-view-analyzer.png) | C5 | View Analyzer on the union: candidate score 10, local sources N/A |
 | [`c5-bp-before-after.png`](c5-bp-before-after.png) | C5 | *Runtime Metrics*, previous vs. latest run: Virtual 0.49 / 1.47 s → Persisted 0.01 / 0.01 s |
+| [`c5-union-partition-metrics.png`](c5-union-partition-metrics.png) | C5 | *Partition Metrics*, second persistence run on the union: live partition 691, *OTHERS* 0, the archive partition N/A (Locked) |
+| [`c5-union-before-after.png`](c5-union-before-after.png) | C5 | *Runtime Metrics* on the union: Virtual 0.07 / 0.04 s → Persisted 0.03 / 0.01 s, taken before it went back to virtual |
 
-Five screenshots are still to come: the union's partition metrics and before/after, and the
-Intelligent Lookup's rules, its rates after review, and `DIM_NW_COUNTRY`.
+## Intelligent Lookup
+
+| File | Step | What it shows |
+| ---- | ---- | ------------- |
+| [`c6-il-rules.png`](c6-il-rules.png) | C6 | `IL_NW_COUNTRY` after review: three chained rules at 86 %, 5 % and 10 %, with 21 records in the output |
+| [`c6-dim-country.png`](c6-dim-country.png) | C6 | `DIM_NW_COUNTRY`: 21 rows with ISO codes, `UK` → GB, `USA` → US, `Venezuela` → VE, *Unmatched Record* `false` throughout |
