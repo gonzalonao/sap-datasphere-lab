@@ -83,3 +83,12 @@ itself is English-only, so the Spanish and German names are written for this pro
 (synthetic, no licence restrictions). The English rows match `Categories.CategoryName`. The file
 is imported as the local table `LT_NW_CATEGORY_TEXTS` and wrapped by the text entity
 `TXT_NW_CATEGORY`.
+
+## Synthetic permissions (Phase D, data access control)
+
+[`synthetic/permissions_country.csv`](synthetic/permissions_country.csv) is the permissions table for the
+*Operator and Values* data access control `DAC_NW_COUNTRY`: columns `PERMISSION_ID` (key), `USER_ID`,
+`RESTRICTION`, `CRITERION`, `OPERATOR`, `VALUE_1`, `VALUE_2`. `DEMO_USA` and `DEMO_DE_UK` are made-up
+identifiers, tested with *View as User*. `YOUR_USER_ID` is a placeholder: replace it with your own
+Datasphere user ID in a copy outside the repository before importing, so a real ID is never committed.
+The file is imported as the local table `LT_NW_PERMISSIONS_COUNTRY`.
