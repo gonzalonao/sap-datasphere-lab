@@ -14,3 +14,10 @@ Tenant URLs and host names are cropped out.
 | [`d1-preview-filter.png`](d1-preview-filter.png) | D1 | Filter `Customer Country` = USA: the constant-selection base stays 1,265,792.64 and the share stays 19.40 % |
 | [`d1-measures-list-top.png`](d1-measures-list-top.png) | D1 | Model properties, top of the list of 10 measures, taken during a deploy. The eye icon marks the auxiliary measure |
 | [`d1-measures-list.png`](d1-measures-list.png) | D1 | The rest of the list, with the model deployed |
+
+## Variables
+
+| File | Step | What it shows |
+| ---- | ---- | ------------- |
+| [`d2-fact-input-parameter.png`](d2-fact-input-parameter.png) | D2 | `FACT_NW_ORDER_LINE` with a filter node between the union and the output, and the input parameter `Minimum Quantity`. The data preview at the default 1 returns all 2,155 lines |
+| [`d2-prompt.png`](d2-prompt.png) | D2 | The model's prompt with its three variables: `Customer Country` (filter, optional), `Selected Country` (restricted measure, default Germany) and `Minimum Quantity` (standard, mapped to the fact's parameter). Behind it, minimum quantity 50 gives `Revenue` 378,969.71 and `Quantity` 15,288, which matches the CSVs |
