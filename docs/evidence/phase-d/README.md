@@ -20,4 +20,5 @@ Tenant URLs and host names are cropped out.
 | File | Step | What it shows |
 | ---- | ---- | ------------- |
 | [`d2-fact-input-parameter.png`](d2-fact-input-parameter.png) | D2 | `FACT_NW_ORDER_LINE` with a filter node between the union and the output, and the input parameter `Minimum Quantity`. The data preview at the default 1 returns all 2,155 lines |
+| [`d2-fact-source-mapping.png`](d2-fact-source-mapping.png) | D2 | The model's fact source: the input parameter `Minimum Quantity` shows *Mapped to: Minimum Quantity*, the standard variable. The mapping is set from the **⋯** menu on the parameter |
 | [`d2-prompt.png`](d2-prompt.png) | D2 | The model's prompt with its three variables: `Customer Country` (filter, optional), `Selected Country` (restricted measure, default Germany) and `Minimum Quantity` (standard, mapped to the fact's parameter). Behind it, minimum quantity 50 gives `Revenue` 378,969.71 and `Quantity` 15,288, which matches the CSVs |
