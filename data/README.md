@@ -94,3 +94,8 @@ identifier in a copy outside the repository before importing, so a real one is n
 form your identity provider gives Datasphere, which is the value *View as User* fills in when you pick
 yourself (in this build's tenant, the email address, not the ID shown in *Security → Users*).
 The file is imported as the local table `LT_NW_PERMISSIONS_COUNTRY`.
+
+[`synthetic/permissions_category.csv`](synthetic/permissions_category.csv) is the permissions table for the
+*Single Values* data access control `DAC_NW_CATEGORY`: columns `PERMISSION_ID` (key), `USER_ID`,
+`CategoryID`. Both identifiers are made up and tested with *View as User*; the builder is deliberately not
+listed, so their own preview shows no rows. Imported as the local table `LT_NW_PERMISSIONS_CATEGORY`.
