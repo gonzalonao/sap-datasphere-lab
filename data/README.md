@@ -90,5 +90,7 @@ is imported as the local table `LT_NW_CATEGORY_TEXTS` and wrapped by the text en
 *Operator and Values* data access control `DAC_NW_COUNTRY`: columns `PERMISSION_ID` (key), `USER_ID`,
 `RESTRICTION`, `CRITERION`, `OPERATOR`, `VALUE_1`, `VALUE_2`. `DEMO_USA` and `DEMO_DE_UK` are made-up
 identifiers, tested with *View as User*. `YOUR_USER_ID` is a placeholder: replace it with your own
-Datasphere user ID in a copy outside the repository before importing, so a real ID is never committed.
+identifier in a copy outside the repository before importing, so a real one is never committed. Use the
+form your identity provider gives Datasphere, which is the value *View as User* fills in when you pick
+yourself (in this build's tenant, the email address, not the ID shown in *Security → Users*).
 The file is imported as the local table `LT_NW_PERMISSIONS_COUNTRY`.
