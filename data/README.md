@@ -99,3 +99,8 @@ The file is imported as the local table `LT_NW_PERMISSIONS_COUNTRY`.
 *Single Values* data access control `DAC_NW_CATEGORY`: columns `PERMISSION_ID` (key), `USER_ID`,
 `CategoryID`. Both identifiers are made up and tested with *View as User*; the builder is deliberately not
 listed, so their own preview shows no rows. Imported as the local table `LT_NW_PERMISSIONS_CATEGORY`.
+
+[`synthetic/permissions_employee.csv`](synthetic/permissions_employee.csv) is the permissions table for the
+*Hierarchy* data access control `DAC_NW_EMPLOYEE`: columns `PERMISSION_ID` (key), `USER_ID`, `EmployeeID`.
+Each row names a node of the reporting line `HIER_NW_EMPLOYEE` and grants it with all its descendants.
+The identifiers are made up and tested with *View as User*. Imported as `LT_NW_PERMISSIONS_EMPLOYEE`.
