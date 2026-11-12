@@ -24,3 +24,9 @@ Tenant URLs and host names are cropped out.
 | [`d2-prompt.png`](d2-prompt.png) | D2 | The model's prompt with its three variables: `Customer Country` (filter, optional), `Selected Country` (restricted measure, default Germany) and `Minimum Quantity` (standard, mapped to the fact's parameter). Behind it, minimum quantity 50 gives `Revenue` 378,969.71 and `Quantity` 15,288, which matches the CSVs |
 | [`d2-sac-prompt.png`](d2-sac-prompt.png) | D2 | The same three variables prompted in an SAC story, in the same order, set to USA / USA / 50 |
 | [`d2-sac-story.png`](d2-sac-story.png) | D2 | The story table with those values: `Revenue` and `Revenue Selected Country` both 79,001.12 and `Quantity` 3,537, matching the CSVs. The prompt reopens from the **{…}** icon in the *Tools* group |
+
+## Data access controls
+
+| File | Step | What it shows |
+| ---- | ---- | ------------- |
+| [`d3-single-values-dac.png`](d3-single-values-dac.png) | D3 | The test view `V_NW_PRODUCT_DAC` over the product dimension, protected by the *Single Values* control `DAC_NW_CATEGORY` (shield icon in the properties) and previewed as the made-up user `DEMO_DAIRY_SEAFOOD`: 22 rows, only Dairy Products (4) and Seafood (8) |
