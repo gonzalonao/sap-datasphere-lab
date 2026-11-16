@@ -30,3 +30,4 @@ Tenant URLs and host names are cropped out.
 | File | Step | What it shows |
 | ---- | ---- | ------------- |
 | [`d3-single-values-dac.png`](d3-single-values-dac.png) | D3 | The test view `V_NW_PRODUCT_DAC` over the product dimension, protected by the *Single Values* control `DAC_NW_CATEGORY` (shield icon in the properties) and previewed as the made-up user `DEMO_DAIRY_SEAFOOD`: 22 rows, only Dairy Products (4) and Seafood (8) |
+| [`d3-hierarchy-dac.png`](d3-hierarchy-dac.png) | D3 | The test view `V_NW_EMPLOYEE_DAC` over the employee dimension, protected by the *Hierarchy* control `DAC_NW_EMPLOYEE` (reporting line `HIER_NW_EMPLOYEE`) and previewed as the made-up user `DEMO_BUCHANAN`: 4 rows, Buchanan (5) and the three people who report to him (6, 7, 9) |
