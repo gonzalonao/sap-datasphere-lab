@@ -104,3 +104,10 @@ listed, so their own preview shows no rows. Imported as the local table `LT_NW_P
 *Hierarchy* data access control `DAC_NW_EMPLOYEE`: columns `PERMISSION_ID` (key), `USER_ID`, `EmployeeID`.
 Each row names a node of the reporting line `HIER_NW_EMPLOYEE` and grants it with all its descendants.
 The identifiers are made up and tested with *View as User*. Imported as `LT_NW_PERMISSIONS_EMPLOYEE`.
+
+[`synthetic/permissions_customer_dir.csv`](synthetic/permissions_customer_dir.csv) is the permissions table
+for the *Hierarchy with Directory* data access control `DAC_NW_CUSTOMER_DIR`: columns `PERMISSION_ID` (key),
+`USER_ID`, `RESTRICTION_ID`, `ROOT_NODE_TYPE`, `TARGET_NODE_TYPE`, `HIERARCHY_ID`, `ROOT_VALUE`. Each row grants
+the customers under one group node (a country, region or contact title) of `HIER_NW_CUSTOMER_DIR`; rows with
+the same restriction for a user combine with AND, different restrictions with OR. The identifiers are made
+up and tested with *View as User*. Imported as `LT_NW_PERMISSIONS_CUSTOMER_DIR`.
