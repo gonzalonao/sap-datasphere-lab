@@ -111,3 +111,10 @@ for the *Hierarchy with Directory* data access control `DAC_NW_CUSTOMER_DIR`: co
 the customers under one group node (a country, region or contact title) of `HIER_NW_CUSTOMER_DIR`; rows with
 the same restriction for a user combine with AND, different restrictions with OR. The identifiers are made
 up and tested with *View as User*. Imported as `LT_NW_PERMISSIONS_CUSTOMER_DIR`.
+
+[`synthetic/user_groups.csv`](synthetic/user_groups.csv) (membership: `MEMBERSHIP_ID`, `USER_ID`,
+`GROUP_ID`) and [`synthetic/group_grants.csv`](synthetic/group_grants.csv) (grants in the *Operator and
+Values* shape: `GRANT_ID`, `GROUP_ID`, `RESTRICTION`, `CRITERION`, `OPERATOR`, `VALUE_1`, `VALUE_2`) feed the
+group-based permissions view `V_NW_PERMISSIONS_GROUP` behind `DAC_NW_GROUP_COUNTRY`. Assigning a user is
+one membership row; the view prefixes each restriction with its group so a user in two groups gets the
+union of both. Imported as `LT_NW_USER_GROUP` and `LT_NW_GROUP_GRANTS`; the identifiers are made up.
